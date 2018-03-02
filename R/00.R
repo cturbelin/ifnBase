@@ -8,7 +8,7 @@ NULL
 #' @noRd
 .Share = new.env()
 
-.Share$i18n = new.env(parent = emptyenv())
+.Share$i18n = list()
 
 #' Get package option from name
 #' From 'ifn' options() entry
@@ -68,4 +68,4 @@ share.option <- function(...) {
   base::options("ifn" = oo)
 }
 
-#
+

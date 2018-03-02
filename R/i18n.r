@@ -13,14 +13,14 @@
 #' @param language language
 #' @param debug show verbose messages when loading a file
 #' @export
-i18n.load <- function(..., language=NULL, debug=F) {
+i18n_load <- function(..., language=NULL, debug=F) {
  language = ifelse(is.null(language), .Share$language, language)
  files = list(...)
  for(file in files) {
    if( grepl("/$",file) ) {
     f = paste0(file, language,'.r')
    } else {
-     f = paste(file, language,'r')
+     f = paste(file, language,'r', sep='.')
    }
    if( !file.exists(f) ) {
      #f = paste(file, i18n_language, 'r', sep='.')
@@ -28,20 +28,25 @@ i18n.load <- function(..., language=NULL, debug=F) {
    }
    if( !file.exists(f) ) {
       warning(sprintf("i18n file '%s' doesnt exist", f))
-   }
-   if(debug) {
-    message("loading ",f,"\n")
-   }
-  sys.source(file=f, envir = .Share$i18n)
-  # Compat with old i18n files using a list named 'i18n' as root object
-  # New should be a list of variables
-  # text id should be valid names !
-  if( exists("i18n", envir = .Share$i18n) ) {
-    r = .Share$i18n$i18n
-    rm("i18n", envir = .Share$i18n)
-    list2env(r, envir = .Share$i18n)
-  }
+   } else {
+     if(debug) {
+      message("loading ",f,"\n")
+     }
 
+     env = new.env(parent = baseenv())
+     sys.source(file=f, envir = env)
+
+     env = as.list(env)
+     if( !is.null(env$i18n) ) {
+       # Compat with old i18n files using a list named 'i18n' as root object
+       # New should be a list of variables
+       # text id should be valid names !
+       r = env$i18n
+       env = r
+     }
+     # Update i18n with new ones
+     .Share$i18n = merge.list(env, .Share$i18n)
+   }
  }
  invisible()
 }
@@ -80,7 +85,7 @@ i18n.factor = function(x) {
 #' @param single single text id if count <= 1
 #' @param plural plural text id if count > 1
 #' @export
-i18n.inflexion = function(count, single, plural) {
+i18n_inflect = function(count, single, plural) {
   ifelse(count > 1, i18n(plural), i18n(single))
 }
 
@@ -109,7 +114,7 @@ titlelize = function(..., translate=T) {
 #' translate names attribute
 #' @param data data structure name to translate
 #' @export
-i18n.names = function(data) {
+i18n_names = function(data) {
   names(data) <- i18n(names(data))
   data
 }
