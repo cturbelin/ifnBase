@@ -107,6 +107,20 @@ load_population <- function(geo, year) {
  dbQuery('select * from pop_', geo, ' where year=',year)
 }
 
+#' Allow to define "type" of geographic levels & area
+#'
+#' For example, it can be used to differenciate some code, corresponding to overseas area to mainland codes
+#' The use of the function is not standardized yet.
+#'
+#' TODO: should be a more generic function allowing to query "feature" about
+#' Not exported currently, only to be used by platform defined functions by default returns TRUE for all queried area
+geo_is_type = function(geo, type, code) {
+  if( is.null(.Share$geo_is_type) ) {
+    return( rep(TRUE, length(code)) )
+  }
+  .Share$geo_is_type(geo, type, code)
+}
+
 #' @param geo geographic level, if null, return by age only population
 #' @param year year of the population
 #' @param age.breaks used to create age categories (from 5-year categories)
@@ -115,7 +129,7 @@ load_population <- function(geo, year) {
 #' @return data.frame('all','male','female','age.cat') for the given year
 #' @export
 load_population_age <- function(geo, year, age.breaks=NULL, version=NULL, ...) {
-  if( !is.null(.Share$load_population_age) ) {
+  if( is.null(.Share$load_population_age) ) {
     stop("Not implemented for this platfrom, please add this function in platform definition file")
   }
   .Share$load_population_age(geo=geo, year=year, age.breaks = age.breaks, version=version, ...)
