@@ -1,0 +1,182 @@
+---
+title: "infBase package introduction"
+author: "Clément Turbelin"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{infBase package introduction}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+InfluenzaNet R Analysis Framework
+==========================================
+
+# Purpose
+The purpose of this package is to provide a set of functions to help working on data analysis using InfluenzaNet database.
+
+Aims are :
+
+ - reduce the need of writing SQL queries to get data from the database
+ - standardize the data access using standardized functions (survey_* functions)
+ - fix some db problems: rename variables to meaningful names & levels
+ - standardize data management by providing functions (recode.intake, recode.weekly,..)
+
+Some library are made to wrap R libraries in order to write script without taking account of which R library is currently 
+used or where files are really located (graph.* functions or db* functions).
+
+We recommand an workspace organization (see [workspace](workspace.html))
+
+## Configuration
+
+Several configuration information should be provided in order the package works correctly
+
+Configuration is holded in a list, stored in R `options()` entry named 'ifn'
+
+It can be set before the package is loaded (in this case some initialization can be done automatically) or after the package is loaded.
+
+Options entry are defined in help page of `share.option()`
+
+For example :
+
+```{r eval=FALSE}
+options(ifn=list(
+  'db_driver'='RODBC', # Db driver ROBDC or RPostgreSQL
+  'db_dsn'=list(user='', password='...', database='mydb') # Database connexion parameters
+  'platform'='eu', # name of platform file (further called [platform_id])
+  'platform.path'='/home/influenzanet/R/platform/' # where platform file definition is located
+  'autoconnect'=TRUE # Autoconnect to database
+  'autoload.platform'=TRUE # Load platform file at startup
+  'base.out.path'='/home/influenzanet/output' # Were to put the output files (see init.path() & my.path())
+))
+
+library(ifnBase)
+
+```
+
+Some functions helps to have access to package specific options
+
+ * `share.option()` allow to get or set to its values, like options()
+ * `get_option(name) get option in 'ifn' entry called by `name`
+
+Basically it wil get or modify 'ifn' entry in base `options()` set of R. 
+
+## Managing file path
+
+**Please, never use absolute path. (allowed only in location.r)**
+
+To write good program, think as if the program should never know where are the files outside a project directory but
+the program should ask to the framework the path for the file. It provides a set of function to do that :
+ 
+We provided several function allowing to use files from a location outside from a given project. They assume an external location (called "share" as its is intented to be shared accross several projects).
+
+This location can have several directories :
+ 
+ - [share]/lib : common extra library (not (yet) in the framework
+ - [share]/data : project shared data
+ - [share]/platform : platform specific files, at minimal platform 
+
+ * `share.lib(name)` : Load a shared library (name is the file name in share/lib, or the relative path in it) without the '.r' extension 
+ * `share.path(file)`  : return a file path in share 
+ * `share.data.path(file)`  : return a file path in share/data
+ 
+### Output path 
+
+package options contains a `base.out.path` entry, this allow to put all the files and graph in a global output directory. If `base.out.path` is set to an empty string, the output will be done into the current directory (running one). As it is defined in the global configuration, a given script into a project should be agnostic from this.
+
+To do that, use the following two functions in you script
+
+ * init.path(dir) : add a directory in the current output path and make it as default output path
+ * my.path(file)  : return the file path in the current output path
+
+For example, 
+
+At the beginning of a script, you want to put all the generated files into a sub-directory of the ouput path.
+Just call :
+
+```r
+  init.path('web')
+```
+
+All further ouput (using my.path()) will be done into a "web" subdirectory of the current ouput path. If the "web" directory does not exists, it will be created.
+
+To know the path of a given file in the ouput path (to load the file or to output data), use the file name wrapped by the
+my.path() function:
+```r
+  my.path('myfile.csv')
+```
+my.path always returns the full path of a filename inside the current output path (even if the file does not exists)
+
+## Database functions
+
+* `dQuery(...)` : run a query (if several parameters are provided they are collapsed without separation (simple concatenation)
+* `dbConnect()` : reconnect to the db
+
+Database configuration
+
+- `db_driver` variable, should be defined in the and it is the name of the DB library used.
+- `db_dsn` is either a connection name (for RODBC for example) or a list of connection parameters
+
+For RODBC, db_dsn can have an entry 'file' pointing to a file containing all connection parameters
+
+## Graphics functions
+
+This functions are device graphic function wrappers. Default use `png()` function, but for some config others graphics devices could be used.
+
+* `graph.open(file, ...)` : starts a graphic output in a file (file name without extension)
+* `graph.close()` : ends the output
+* `graph.hook(function)` : register a hook function called after the graphic output (once the file is created)
+* `graph.save(file)` : wrapper around `ggsave` to output *ggplot2* graphs, with hooks
+
+You can also, use a function directly but if you need to change the driver or the type of ouput file, you will need to change
+all your script.
+
+Moreover, `graph.xxx()` function handle "hooks", a function that is automatically called after the graphic had been created.
+
+## ISO 8601 week number computation functions 
+These functions allow to manipulate ISO 8601 week number.
+
+A week number is reprensented as yearoftheweek * 100 + weeknumber (called yearweek number)
+
+* `ISOYearWeek(dates)` : yearweek number of each date
+* `weeksbydates(from, to)` : yearweek numbers for each date of a date interval
+* `mondayOfDate(d)` -> Monday of the date
+* `WeekStart(yw)` -> Monday of a yearweek vector
+* `YearStart(year)` -> Date of the first monday of the year
+* `makeWeekIndex(yw)` -> data.frame with a sequential index of weeks
+* `WeekStamp(yw)` : give the continuous index of the yearweek number (enabling easy arithmetic operations on week numbers)
+
+## Geographic levels
+
+Package provivdes a set of functions to handle geographic levels (to describe a way a territory, let's say a country, is divided in several areas in a hierarchical ways.). You can have several levels (country, regions, ...). Each level is divided into areas, which can be divided in sub-area in the lower level.
+
+The only assumption made is an area can only belongs to a single area on the upper level (it doesnt handle overlap). But it can handle several level hierarchies.
+
+Concepts & functions are described in [geography](geography.pdf) vignette
+
+## Others function
+
+* replace.names(df, ...) : replace names of a data.frame, parameters are  newname="oldname"
+* merge.list() : merge 2 list
+* random_string(): random string
+* select_columns() : extract columns from data.frame() and warn if does not exist
+
+## Loading libraries functions
+
+To load function of a library in share/ you have to use the `share.lib` function.
+
+```
+  share.lib('survey') # load survey functions
+  share.lib(c('survey','syndrom','i18n')) # load several
+```
+
+If you want to have a platform specific library (or load a platform specific implementation of a library) you can
+use share.lib. This will load the library in the platform library directory (in [share]/platform/[platform_id]/)
+
+```
+  share.lib('survey', platform=T) # load survey library using the platform specific implementation
+```

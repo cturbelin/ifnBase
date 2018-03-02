@@ -1,0 +1,91 @@
+---
+title: "Platform definition File"
+author: "Clément Turbelin"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{infBase Geographic levels}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Platform file
+
+Platform file describe characteristics of a given InfluenzaNet platform :
+
+- Define some options for the platform (default language for example)
+- describe available surveys (structure & coding) and mapping to DB tables
+- describe geographic levels & mapping to DB tables 
+
+It is just a R script with a list of variables or function calls.
+
+This file has to be stored in a directory (which can contains several platform definitions) and location is defined with `platform.path` package options (see *introduction* vignette).
+The name of this file define the platform id (code of the country for example).
+
+# Contents
+
+## Global parameters
+
+### `survey_default_language`
+Define the code of the language to use by default in i18n files.
+
+### `survey_use_channel` 
+boolean. If TRUE by default survey response will be loaded only for empty channel. If FALSE, channel column will be ignored.
+
+### `first.season.censored` (optional)
+boolean value. if TRUE the first season of each particpant need to be left censored (we dont have data before)
+
+### `health.status` (optional)
+If the data storage model is using a single table for each survey, you have to describe the table (or view) containing
+health status computed from each weekly survey 
+
+```{r eval=FALSE}
+list(
+ default="health_status_view" # Table name containing health status for each survey
+ id="weekly_id" # Name of the column containg the corresponding response id in the weekly's data response table. 
+)
+```
+
+## Survey description
+
+Each survey has to be described to allow the package to deal with the database and know how to load the survey data.
+
+Using the function `platform_define_survey()`
+
+For example for a short survey about vaccination
+
+```{r eval=FALSE}
+
+platform_define_survey(
+  name="mysurvey"
+  survey_id = 12,
+  mapping= list(
+    'age'='Q1'  # Q1 = Name in the DB -> 'age' name in the R data
+    'vaccination'='Q2',
+    'vacc.at_risk'='Q3_1',
+    'vacc.health_prof'='Q3_2'
+    'vacc.work'='Q3_3'
+    ),
+  recoding=list(
+    'vaccination'=c('yes'='1','no'='2', 'unknown'='3') # Describe recoding to meaningfull levels
+  ),
+  labels = list(
+    'vacc.reason'='vacc.*' # Define a pattern to identify all variables about vaccination reason
+  )
+)
+
+```
+
+## Survey History
+
+- platform_season_history(season, dates, ...): describes dates of a season & optionnally table name for each season (multiple table model)
+
+## Geographic tables
+
+`platform_geographic_levels` describes available geographic levels and how they are organized (hierarchies)
+
+`platform_geographic_tables` allows to describe for each level the table describing area and the columns mapping.

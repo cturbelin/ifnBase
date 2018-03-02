@@ -1,0 +1,119 @@
+---
+title: "infBase Geographic levels"
+author: "Clément Turbelin"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{infBase Geographic levels}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Concepts
+
+Theses concepts are used to describe administrative division of a given territory and to provide tools to make operation with these divisions in a generic way.
+
+### Geographic level
+  
+  A geographic level is a named way to divide a territory in a set of non overlaping area. The full available territory must be divided into area in the level (i.e. the division is complete over the territory).
+  
+  The concept is abstract from spatial concerns, an "area" of a level can regroup sub-area not spatially connected if needed, as long as the division is consistent (no overlap, and complete). 
+  
+  A level has a name, used to identify it and the related entities (tables, columns)...
+  
+### Geographic area  
+  
+  An area is a element of a level. Identified by a area code (unique in the level), and which can be divided into sub-area in a lower level.
+  
+### Geographic Hierarchy
+
+A geographic hierarchy path is an ordered list of levels where you can define for each level
+ - an upper level (except for the top level)
+ - a lower level (except for the bottom level)
+
+For a given area in a level, you can map it to only one area in the upper level and one or more areas in the lower level. In other words a hierarchy should describe a well formed tree with separated branches, with no junction between branches.
+
+## Geographic tables
+
+Each level has a dedicated table defining the list of available areas (territory divisions), called a geographic table.
+
+Geographic tables are named using the pattern 'geo_[name]' where [name] is the level name. For example you have four levels : 'country', 'nut2', 'nuts3', 'zip', you should have a geo_country, geo_nuts2, geo_nuts3, geo_zip.
+
+Each table contains :
+
+- a primary key: id of the area in the level, preferrably named by `code_[name]`
+- a title column: name of the area in the level
+- ids of the upper levels to allow query accross levels
+
+In order to be consistent you should use names for columns using the name of the corresponding level. Using the example 'code_country', 'code_nuts2', 'code_nuts3', 'code_zip' should be the name of the column for each levels (as primary key for the table of the level and in the other geo_* tables to describe hierarchy).
+
+Following these conventions, the geographic tables should be :
+
+geo_zip      | geo_nut3     | geo_nuts2    | geo_country   |
+-----------  |--------------|------------- |-------------  |
+code_zip*    | code_nuts3*  | code_nuts2*  | code_country* |
+title        | title        | title        | title         |
+code_nuts3   | code_nuts2   | code_country |               |
+code_nuts2   | code_country |              |               |
+code_country |              |              |               | 
+
+Primary keys are marked with the *. It is important that the name of the column refering to a given level must have the exact same name in all geographic tables. The column containing the title should also be the same in every table.
+
+Extract column could be available to describe property of each level.
+
+Platform file should describe available tables and how columns are named. It also handles hierarchies descriptions.
+
+## Configuration
+
+The list of levels & hierarchies should be defined in the *platform file* defining the `geo.levels` object and using the `create_geographic_levels`
+
+For example:
+```{r eval=FALSE}
+geo.levels = create_geographic_levels(c('zip','nuts3','nuts2','country'), table="geo_zip")
+```
+
+Will create a description to a simple geographic structure, with lowest level as "zip", all geographic columns will be be "code_[level]"
+and the hierarchy of levels will follow the order given in the list of levels.
+
+The main table used to create cross-levels query will be the lowest level table, named "geo_zip" (describe all area at the "zip" level and had a column for each upper level to map each zip to its upper level).
+
+Of course in this case, "zip" level should be a curated list of zip code, as a zip code can only be related to one area in the upper level (so a choice should has been map to simplify the mapping of zip codes).
+
+geo.tables = describe_geographic_tables(geo.levels)
+
+
+## Population tables
+
+### Global population
+Population tables contains population count for a given level, and a given year
+
+They are named usign the pattern : `pop_[name]`
+
+Table structute should be:
+ - code_[name]
+ - year
+ - population
+
+### Age-group & sex population
+
+Contains by 5-years age group & by sex population for a given year
+
+Table pattern: `pop_age5_[name]`
+
+Table structure:
+ - code_[name]
+ - year
+ - age.min : minimal age of the age group
+ - age.max : maximal age of the age group (last group could be NA)
+ - all : male + female
+ - male: male population
+ - female: female population
+
+
+
+
+

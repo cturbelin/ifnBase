@@ -1,0 +1,105 @@
+---
+title: "Workspace organization"
+author: "Clément Turbelin"
+date: "27/2/2018"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Workspace organisation 
+==========================================
+
+# Purpose
+The purpose of this workspace organization is to allow script running on different settings (platform, files organization,...).
+
+It also propose a project oriented organization of files to facilitate way of sharing scripts.
+
+# Organization
+
+A Working environment is organized in two levels, workspace and projects :
+
+ - workspace1 
+     - project1 
+     - ...
+     - project
+     - [share]
+
+This organization drives the way to set up the directories and the files.
+
+A workspace is a directory containing several R analysis projects which share a workspace configuration (for example DB settings, a platform type, ...). The R scripts live in the projects directories.
+
+Using subversion (and external repositories feature), it is possible to share projects between workspaces. If the project uses the coding convention of the framework, it will run in the new workspace without any modification if the workspaces are for the same platform otherwise modifications will be limited to the differences between the platforms (new questions, ...) (if not, it's time to improve the framework).
+
+On the root of the workspace directory, there are 2 files
+
+ * system.r : this is the global configuration of the workspace and the file called by all the projects in the workspace. It is under version. This file is minimal (just to load the local conf and the bootstrap system file). So all the code should be abstract from the running env (see ["location" file](doc-local_config.html)). You shouldn't have to modify it
+ * location.r : This is the environment specific configuration file, containing all the local configurations. It's *not under version*. it is described in ["location.r" file](doc-local_config.html)
+
+### The "share" directory is shared by all the workspaces on all the platforms. Actually, *this is the framework* !
+
+ * system.r : the (tiny) core of the (micro)framework
+ * lib/ contains the [share librairies](00Index.html) (with some sub-repositories) 
+ * data/ should contains some data files
+ * platform/ contains platform specific configuration files and internationalization
+    a subdirectory with the same name as the platform file could also contain platform specific librarie
+    ```r
+        share.lib('mylib', platform=T) # load the platform specific library named mylib
+    ```
+
+Others directories are the R projects
+
+A project is whatever you want (all scripts for a kind of data, of analysis, or a theme...). You can organize projects as you want. Sometimes a project is a time delimited project (for an article) or a project will regroup all scripts run by the web server to producces the results of a platform, ...
+  
+Organization of a project.
+-----------------------
+
+The framework does not force any organization for the files inside a project, but there is a convention (the "conf.r" file).
+
+To load the framework and make its functions availble, you just have to load the file in the workspace directory (upper level of the directory of a project).
+So the first line of a script in a project should be to include it. (see next section running a script of a project)
+
+```r
+ source('../system.r')  # Caution, use a relative path, never an absolute path
+```
+
+The recommended convention is to create a little file named "conf.r" in the project directory.
+it will contain all the project-specific configuration.
+The first line (and sometimes the only one) of this file should be 'source("../system.r")'
+
+Then, all the scripts in this project will simple load this little file in first place. The first line of all scripts in this project will become:
+
+```r
+ source('conf.r')
+```
+
+As all scripts should be run using their own directory as working directory, all paths must be relative to the project directory !
+
+In other words, a project should only know (or directly access) one file outside its own directory : the "system.r" file, all others files should not be reached directly : never write something like "../share/lib/survey.r". If a project needs a file outside its directory, it should be a shared library, so use `share.lib`() or `share.data.path` function.
+
+Think that a project should not "know" that another project exists in the same workspace. If two projects need the same file, this is a good evidence that this file should be placed in "share/" (as a framework's global library or as a platform specific one)
+
+By convention, all runable scripts must live in a project directory. If a file contains only function or variable definition it should be in a lib/ sub-directory or into a plateform specific directory.
+  
+Running a script of a project
+=========================
+To run a script, the working directory of R must be the directory of the project. All paths should be relative to this directory (never use absolute path).
+
+```bash
+    R --vanilla < myscript.r 
+```
+
+If you want to handle command line parameters, you should use Rscript to run the script
+
+```bash
+ Rscript myscript.r param=value
+```
+
+Using Rscript to run the script will allow to catch the parameters passed on the command line (using the "cli" shared library for example)
+
+Using RStudio
+============
+If you use RStudio, you have to create a RStudio project for each project in your workspace. By doing this, RStudio will always use the project directory as the working directory of R, and you will be able to use
+the "Run" or "Source" buttons directly.
