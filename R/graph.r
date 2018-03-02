@@ -9,15 +9,23 @@
 
 #' End a graphic export to a file. Use it instead of dev.off().
 #' this function also handle post export hooks
+#' @export
 graph.close <- function() {
  dev.off()
  .graph_run_hooks()
+}
+
+#' get last output graph
+#' @export
+graph_get_last <- function() {
+  .Share$graph.last
 }
 
 
 #' Export a ggplot2 and run graph hooks. To be used with ggplot2 graph instead of graph.close()
 #' @param filename filename of the graph
 #' @param ... others arguments passed to ggsave()
+#' @export
 graph.save <- function(filename, type=NULL, ...) {
     device = NULL
     if( !is.null(type) ) {
@@ -82,7 +90,6 @@ graph.hook <- function (fn, name=NULL) {
 #' @param width width (pixel)
 #' @param height height in px
 #' @param pitch  #' @param file
-
 #'
 #' @export
 graph.open <- function(file, width=NA, height=NA, pitch=12, type="png",...) {

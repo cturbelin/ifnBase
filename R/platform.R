@@ -244,7 +244,7 @@ platform_options = function(...) {
 #' Get the platform env
 #'
 #' Platform environment holds platform variables & definition structure.
-#'
+#' @export
 platform_env <- function() {
   .Share
 }

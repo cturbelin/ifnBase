@@ -4,7 +4,17 @@
 #' @param force bool, if TRUE force the loading of the lib, regardless of the cache
 #' @param platform, look for a library in share/platform/[libname].[platform].r
 #' @param optional if TRUE dont raise an error if the library doesnt exist. By default an error is thrown.
+#' @export
 share.lib <- function(file, force=F, platform=F, optional=F) {
+
+  if( !is.null(.Share$internal.libs) ) {
+    ff = file[file %in% .Share$internal.libs]
+    if(length(ff) > 0) {
+      warnings("Unable to use ", paste(ff, collapse = ', '), 'as share.lib name declared as internal')
+      file = file[ !file %in% ff]
+    }
+  }
+
   if(!force && any(file %in% .Share$loaded.libs)) {
     ff =  paste(file[file %in% .Share$loaded.libs], collapse=',')
     warning(paste(ff, " already loaded"))

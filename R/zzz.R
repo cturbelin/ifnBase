@@ -46,19 +46,13 @@
     oo$share.data = paste0(oo$share.path, "data/")
   }
 
-  if( exists(".Share", envir = env) ) {
-    share = get(".Share", envir = env)
-    message("Importing platform from global environment from .Share")
-    oo$platform = share$platform
-  }
-
   oo = merge.list(oo, defaults)
 
   do.call(share.option, oo)
 
   # Old libraries are now loaded by default, do not reload them
   # @todo allow to redefine them, so remove old share.lib import first
-  .Share$loaded.libs = c('week','db','survey','syndrom','geography','graph','intake','misc')
+  .Share$loaded.libs = c()
 
   if( isTRUE(oo$autoload.platform) ) {
      load_platform()

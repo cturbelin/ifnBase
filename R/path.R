@@ -38,12 +38,23 @@ share.lib.path <- function(file) {
 #' @param file file name to load
 #' @export
 share.cache.path <- function(file='') {
-  return(paste0(.Share$share.cache, file))
+  paste0(get_option('share.cache'), file)
 }
 
 #' path of a file in data
 #' @param file file name to load
 #' @export
 share.data.path <- function(file='') {
-  return(paste0(.Share$share.data, file))
+  paste0(get_option('share.data'), file)
+}
+
+#' path of a file in share/ directory
+#' @param file file name to load
+#' @export
+share.path <- function(file='') {
+ paste0(get_option('share.path'), file)
+}
+
+platform_path = function(file='') {
+  paste0(get_option('platform.path'), file)
 }

@@ -378,6 +378,7 @@ survey_single_table <- function(survey) {
 
 #' Get survey definition
 #' Survey definition is a list
+#' @export
 survey_definition = function(survey) {
   def = .Share$epiwork.tables[[ survey ]]
   if( is.null(def) ) {
@@ -460,11 +461,19 @@ season.def = function(season, silent=F) {
   h
 }
 
+#' Get liist of available season names
+#' @export
+get_historical_seasons = function() {
+  names(.Share$historical.tables)
+}
+
+
 #' Get Historical tables
 #'
 #' Historical tables is a list, with season year (first year of the season) as name and season definition
 #'
 #' @seealso season.def
+#' @export
 get_historical_tables <- function() {
   .Share$historical.tables
 }
