@@ -111,9 +111,12 @@ load_population <- function(geo, year) {
 #' @param year year of the population
 #' @param age.breaks used to create age categories (from 5-year categories)
 #' @param version version of the file to use as data source
-#' @param type test if each code level is a given type (@see geo_is_type)
+#' @param ... extra parameter
 #' @return data.frame('all','male','female','age.cat') for the given year
 #' @export
-load_population_age <- function(geo, year, age.breaks=NULL, version=NULL, type="metro") {
-  stop("Not implemented for this platfrom, please add this function in platform definition file")
+load_population_age <- function(geo, year, age.breaks=NULL, version=NULL, ...) {
+  if( !is.null(.Share$load_population_age) ) {
+    stop("Not implemented for this platfrom, please add this function in platform definition file")
+  }
+  .Share$load_population_age(geo=geo, year=year, age.breaks = age.breaks, version=version, ...)
 }
