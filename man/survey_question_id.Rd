@@ -10,6 +10,8 @@ survey_question_id(survey, varname, language = survey_default_language())
 \item{survey}{name of the survey}
 
 \item{varname}{variable name of the question (db's column name or R alias of the column)}
+
+\item{language}{language translation to use}
 }
 \value{
 int

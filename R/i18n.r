@@ -9,7 +9,7 @@
 #'
 #' i18n is a list of variables (name is text id) and value is the translation
 #'
-#'
+#' @param ... list of file prefix to load (see description)
 #' @param language language
 #' @param debug show verbose messages when loading a file
 #' @export
@@ -52,9 +52,14 @@ i18n_load <- function(..., language=NULL, debug=F) {
 }
 
 #' Translate a string
-#' @usage  i18n("stringtotranslate")
 #' @param x object to translate
 #' @return translation or the string itself it not found
+#'
+#' @usage i18n(x)
+#'
+#' @examples
+#' i18n("my_string_to_translate")
+#'
 #' @export
 i18n <- function(x) {
  UseMethod("i18n")

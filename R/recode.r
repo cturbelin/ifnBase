@@ -8,9 +8,10 @@ YES_NO_DNK = c('Yes','No','DNK')
 #' recode Y/N/DNK where Y=0 to boolean (wow!)
 #' Used to recode some InfluenzaNet variables to more error-proof coding
 #' So TRUE is YES level, FALSE = NO level and NA missing value.
+#' @param x value to recode
 #' @export
 recode.ynp = function(x) {
-  ifelse(is.na(x), NA, ifelse(x == 0, T, ifelse(x==1, F, NA)))
+  ifelse(is.na(x), NA, ifelse(x == 0, T, ifelse(x == 1, F, NA)))
 }
 
 #' Recode Intake variables to more error proof labels

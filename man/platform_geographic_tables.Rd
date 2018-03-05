@@ -8,6 +8,8 @@ platform_geographic_tables(def, default.title = "title")
 }
 \arguments{
 \item{def}{either a geo.levels structure or a list of table description for each level (name of the level as the name of each entry)}
+
+\item{default.title}{default column name for title}
 }
 \value{
 list()

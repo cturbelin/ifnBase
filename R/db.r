@@ -35,9 +35,11 @@ dbQuery <- function(...) {
 }
 
 dbConnect.RPostgreSQL <- function(dsn) {
-  library(RPostgreSQL)
+  if( !requireNamespace("RPostgreSQL") ) {
+    stop("RPostgreSQL needed to use this driver")
+  }
   dbiConnect <- DBI::dbConnect
- .Share$dbHandle <- dbiConnect(PostgreSQL(), user=dsn$user, password=dsn$password,host=dsn$host, dbname=dsn$dbname)
+ .Share$dbHandle <- dbiConnect(RPostgreSQL::PostgreSQL(), user=dsn$user, password=dsn$password,host=dsn$host, dbname=dsn$dbname)
  .Share$dbHandle
 }
 
@@ -46,12 +48,12 @@ dbQuery.RPostgreSQL <- function(..., show.errors = T, dbHandle=NULL) {
     dbHandle = .Share$dbHandle
   }
   query = paste0(...)
-  stm <- dbGetQuery(dbHandle, query)
+  stm <- DBI::dbGetQuery(dbHandle, query)
   if( is.data.frame(stm) || (is.logical(stm) && stm )) {
     return( stm )
   }
   # handle error
-  .Share$dbLastError <- dbGetException(dbHandle)
+  .Share$dbLastError <- DBI::dbGetException(dbHandle)
   cat('PgSQL error', "\n")
   cat('query : ', query, "\n")
   str(.Share$dbLastError)
@@ -60,15 +62,17 @@ dbQuery.RPostgreSQL <- function(..., show.errors = T, dbHandle=NULL) {
 
 # Connect to DB
 dbConnect.RODBC <- function(dsn) {
-  library(RODBC)
+  if( !requireNamespace("RODBC") ) {
+    stop("RODBC needed to use this driver")
+  }
   .Share$dbLastError = 0
   .Share$dbHandle = NULL
   if( is.list(dsn) ) {
       if(!is.null(dsn$file)) {
-        con <- odbcDriverConnect(paste0("FILEDSN=", dsn$file))
+        con <- RODBC::odbcDriverConnect(paste0("FILEDSN=", dsn$file))
       }
     } else {
-      con <- odbcConnect(dsn)
+      con <- RODBC::odbcConnect(dsn)
     }
   .Share$dbHandle <- con
   return(con)
@@ -79,15 +83,15 @@ dbQuery.RODBC <- function(..., show.errors = T, dbHandle=NULL) {
     dbHandle = .Share$dbHandle
   }
   query = paste0(...)
-  stm <- odbcQuery(dbHandle, query)
+  stm <- RODBC::odbcQuery(dbHandle, query)
   if (stm == -1) {
     # handle error
-    .Share$dbLastError <-odbcGetErrMsg(dbHandle)
+    .Share$dbLastError <- RODBC::odbcGetErrMsg(dbHandle)
     cat('ODBC error',"\n")
     cat('query : ', query, "\n")
     cat(.Share$dbLastError)
     return(-1)
   } else {
-   sqlGetResults(dbHandle, errors = show.errors)
+    RODBC::sqlGetResults(dbHandle, errors = show.errors)
   }
 }

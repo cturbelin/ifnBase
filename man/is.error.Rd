@@ -6,6 +6,9 @@
 \usage{
 is.error(x)
 }
+\arguments{
+\item{x}{object to test}
+}
 \description{
 Test if x is an error class from try
 }

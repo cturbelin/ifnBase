@@ -50,7 +50,7 @@ weeksbydates <- function(from, to) {
 #' @param d Date
 mondayOfDate <- function(d) {
   w = as.integer(format(d, format = "%w"))
-  w = ifelse(w == 0, 7, w) - 1
+  w = ifelse(w == 0L, 7L, w) - 1L
   return(d - w)
 }
 
@@ -67,15 +67,15 @@ YearStart <- function(WhichYear) {
 }
 
 #' Date of the monday of a YearWeek
-#' @param int yw yearweek number
+#' @param yw integer yearweek number
 #' @return Date
 WeekStart <- function(yw) {
-  if (is.factor(yw)) {
+  if ( is.factor(yw) ) {
     yw = as.character(yw)
   }
-  year = floor(as.numeric(yw) / 100)
-  week = as.numeric(yw) %% 100
-  d = YearStart(year) + ((week - 1) * 7)
+  year = floor(as.numeric(yw) / 100L)
+  week = as.numeric(yw) %% 100L
+  d = YearStart(year) + ((week - 1L) * 7L)
   return(d)
 }
 
@@ -119,10 +119,10 @@ format.week <- function(w, sep = 's', century = T) {
 }
 
 #' Make an index data.frame associating week index (wid) to a iso yearweek number
-#' @param int yw vector of yearweek number
-#' @param char[1] col.yw name of the yw column in the resulting data.frame
-#' @param char[1] col.idx name of the week index column in the resulting data.frame
-#' @param logical use weekstamp instead of order of the week (depends on the range of weeks)
+#' @param yw int vector of yearweek number
+#' @param col.yw chr[1] name of the yw column in the resulting data.frame
+#' @param col.idx char[1] name of the week index column in the resulting data.frame
+#' @param stamp logical use weekstamp instead of order of the week (depends on the range of weeks)
 #' @return data.frame(yw=int,wid=int)  yw=yearweek number, wid=index of the yw
 makeWeekIndex = function(yw,
                          col.yw = 'yw',
@@ -150,6 +150,7 @@ makeWeekIndex = function(yw,
 #' @param col.yw name of the column containing the yearweek number
 #' @param col.stamp name of the column containing the week stamp of each yearweek (@see WeekStamp), if not provided compute it
 #' @param date.start month-day date to take as the start of each season
+#' @param calc.index if TRUE add an index column
 #' @return inc with 'season.year' (year of the start ) and 'season.index' (index of the week in the season) columns
 calc.season.fixed = function(inc,
                              col.yw = 'yw',
@@ -183,4 +184,27 @@ calc.season.fixed = function(inc,
   }
   inc[, 'season.year'] = y
   inc
+}
+
+#' Return the season number of a yearweek or a Date
+#'
+#' Currently the season is defined from september to august of the next year and the season number is the year of the september month
+#' (i.e. the first year of the season).
+#'
+#' @param d date to compute season number from
+#'
+#' @export
+calc.season = function(d) {
+  if("Date" %in% class(d)) {
+    m = as.numeric(format(d, "%m"))
+    y = as.numeric(format(d, "%Y"))
+    return(ifelse(m >= 9, y, y - 1))
+  }
+  if( is.numeric(d) ) {
+    # Yearweek number
+    w = d %% 100
+    y = floor(d / 100)
+    return(ifelse(w >= 37, y, y - 1))
+  }
+  stop(paste("Not implemented for ", class(d)))
 }

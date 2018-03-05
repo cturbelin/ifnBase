@@ -51,6 +51,7 @@ survey_load_health_status = function(weekly, health.table=NULL) {
 
 #' Regroup mixed syndromes to non-specific for the 2012's influezanet syndromes set
 #' Resulting levels are more pretty : "no.symptom", "ili", "cold", "gastro", "non.specific", "allergy"
+#' @param x values to recode
 #' @export
 regroup.syndrome = function(x) {
   ll = levels(x)
@@ -163,6 +164,7 @@ syndromes.influenzanet.2012 = function(r, as.levels=F) {
 #' Compute the 2011's Influenzanet syndromes set  (NO-SYMPT/ILI/COMMON-COLD/GASTRO/OTHER)
 #' @seealso syndromes.influenzanet.2012
 #' @param r data.frame of weekly results
+#' @param as.levels return levels instead of numeric values
 syndromes.influenzanet.2011 = function(r, as.levels=F) {
   respi = r$sorethroat | r$cough | r$dyspnea
   gastro = r$nausea | r$vomiting | r$diarrhea | r$abdopain
@@ -182,6 +184,8 @@ syndromes.influenzanet.2011 = function(r, as.levels=F) {
 #' Prettify syndrome names from InfluenzaNet DB health status name to another set
 #' by default, transform to pretty names (for R) from the same set ()
 #' @export
+#' @param x vector of syndrome name to prettyfy
+#' @param pretty.set template name to use, entry in \code{syndromes.set}
 syndromes.prettify = function(x, pretty.set='influenzanet.2012') {
   ll = levels(x)
   from = syndromes.set[[ pretty.set]]
@@ -292,20 +296,22 @@ symptoms.ili.fever = function(r, level=F, include.miss=F) {
 
 
 #' Compute a generic gastroenteriritis definition (broader than French Sentinel definition)
+#' @param r data.frame() with syndrom columns
 #' @export
 symptoms.gastro = function(r) {
   r$nausea | r$vomiting | r$diarrhea | r$abdopain
 }
 
 #'  Compute gastroenteriritis definition according to French Sentinel's definition
+#' @param r data.frame() with syndrom columns
 #' @export
 symptoms.gastro.rs = function(r) {
  r$diarrhea
 }
 
 #' Acute Upper Respiratory Infection
+#' @param r data.frame() with syndrom columns
 #' @param wide.respiratory consider a wider respiratory syndrome if TRUE
-#' @param r weekly data
 #' @export
 symptoms.ira <- function(r, wide.respiratory=F) {
   sudden = !is.na(r$sympt.sudden) & r$sympt.sudden
@@ -331,6 +337,7 @@ symptoms.grog  <-  function(r) {
 
 #' Compute ECDC ILI Definition
 #' @param r weekly data
+#' @param with.chills use chills-like symptoms
 #' @export
 symptoms.ecdc <- function(r, with.chills=FALSE) {
   sudden = !is.na(r$sympt.sudden) & r$sympt.sudden

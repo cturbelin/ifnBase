@@ -1,7 +1,15 @@
-#' InfluenzaNet Analysis Base Package
-#' @name ifnBase
-#' @docType package
-NULL
+#' InfluenzaNet Data Analysis Base Package
+#'
+#' This package provides base set of function to help & standardize analaysis of an
+#' InfluezaNet database.
+#' It can be used to produce online data analysis or for research projects.
+#'
+#' @importFrom grDevices dev.off rainbow png postscript
+#' @importFrom graphics axTicks axis polygon rect segments points
+#' @importFrom methods is
+#' @importFrom stats aggregate
+#' @importFrom utils glob2rx str tail
+"_PACKAGE"
 
 #' .Share is a local configuration envirnment holding local values
 #' And platform specific stuffs
@@ -12,7 +20,9 @@ NULL
 
 #' Get package option from name
 #' From 'ifn' options() entry
-#' @seealso output_options
+#' @param name option name, if missing, all options are returned
+#' @seealso share.option
+#'
 #' @export
 get_option <- function(name = NULL) {
   o = getOption("ifn")

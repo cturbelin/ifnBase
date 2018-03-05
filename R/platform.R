@@ -28,7 +28,8 @@ load_platform = function() {
 
 #' Describe a survey of a platform
 #'
-#' Describe structure of a survey and the mapping from DB names & coding to R names & factor levels
+#' Describe structure of a survey and the mapping from DB names &
+#' coding to R names & factor levels
 #'
 #' @param name unique name of the survey
 #' @param survey_id id of the survey in the database
@@ -63,7 +64,7 @@ load_platform = function() {
 #' @seealso survey_recode
 #'
 #' @section labels
-#'  labels are named list of labels (a label is just a character string). It is used to identify list of recoding labels
+#' labels are named list of labels (a label is just a character string). It is used to identify list of recoding labels
 #' @export
 platform_define_survey <- function(name, survey_id, table, mapping, labels=NULL, codes=NULL, recodes=NULL, single.table = FALSE, geo.column=NULL, ...) {
 
@@ -161,8 +162,9 @@ platform_geographic_levels = function(levels,  level.base = NULL, table = 'geo_l
 }
 
 #' Create geographic tables description
-#' @param def either a geo.levels structure or a list of table description for each level (name of the level as the name of each entry)
 #'
+#' @param def either a geo.levels structure or a list of table description for each level (name of the level as the name of each entry)
+#' @param default.title default column name for title
 #' @return list()
 #'
 #' @details
@@ -173,6 +175,7 @@ platform_geographic_levels = function(levels,  level.base = NULL, table = 'geo_l
 #' }
 #'
 #' @export
+#' @importFrom methods is
 platform_geographic_tables = function(def, default.title = "title") {
   if( is(def, "geo_levels") ) {
     columns = attr(def, "columns")
@@ -222,6 +225,13 @@ platform_season_history <- function(season, dates, ...) {
 }
 
 #' Define some platform options
+#' @param ... list of options to set
+#'
+#' \describe{
+#'   \item{first.season.censored}{left censor first season participants for some countries}
+#'   \item{health.status}{structure of the health.status table in case of single table model for weekly}
+#' }
+#'
 platform_options = function(...) {
 
   oo = list(...)

@@ -6,6 +6,9 @@
 \usage{
 symptoms.gastro.rs(r)
 }
+\arguments{
+\item{r}{data.frame() with syndrom columns}
+}
 \description{
 Compute gastroenteriritis definition according to French Sentinel's definition
 }

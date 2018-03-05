@@ -2,19 +2,18 @@
 % Please edit documentation in R/survey.r
 \name{survey_aliases}
 \alias{survey_aliases}
-\title{Convert column name (InfluenzaNet column names) from (revert=F) and to aliases (revert=T)
-Description of mapping is set in the config variable epiwork.tables defined in the platform configuration files}
+\title{Convert column name (InfluenzaNet column names) from (revert=F) and to aliases (revert=T)}
 \usage{
 survey_aliases(cols, def, revert = F)
 }
 \arguments{
 \item{cols}{names of columns to rename}
 
-\item{revert}{if TRUE, aliases to Db names, if false (default) DB names to aliases}
+\item{def}{list of aliases}
 
-\item{aliases}{list of aliases}
+\item{revert}{if TRUE, aliases to Db names, if false (default) DB names to aliases}
 }
 \description{
-Convert column name (InfluenzaNet column names) from (revert=F) and to aliases (revert=T)
-Description of mapping is set in the config variable epiwork.tables defined in the platform configuration files
+Description of mapping is set in the config variable epiwork.tables defined
+in the platform configuration files
 }

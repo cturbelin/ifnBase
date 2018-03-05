@@ -24,8 +24,10 @@ graph_get_last <- function() {
 
 #' Export a ggplot2 and run graph hooks. To be used with ggplot2 graph instead of graph.close()
 #' @param filename filename of the graph
+#' @param type type of device to use
 #' @param ... others arguments passed to ggsave()
 #' @export
+#' @importFrom tools file_ext
 graph.save <- function(filename, type=NULL, ...) {
     device = NULL
     if( !is.null(type) ) {
@@ -49,6 +51,7 @@ graph.save <- function(filename, type=NULL, ...) {
 #' Declare a hook function called when graph.close() is called
 #' @param fn function to run as hook
 #' @param name unique name for the hook to prevent multiple registration
+#' @export
 graph.hook <- function (fn, name=NULL) {
   if ( is.null(.Share$graph.hook) ) {
     hooks = list()
@@ -89,12 +92,13 @@ graph.hook <- function (fn, name=NULL) {
 #' @param file filename (without extension)
 #' @param width width (pixel)
 #' @param height height in px
-#' @param pitch  #' @param file
-#'
+#' @param pitch pointsize value
+#' @param type type of output to use
+#' @param ... extra parameted
 #' @export
 graph.open <- function(file, width=NA, height=NA, pitch=12, type="png",...) {
   f = paste0(file, ".", type)
-  def = get_option("graph")
+  graph = get_option("graph")
   if( is.na(width) ) {
     width = graph$width
   }
@@ -117,7 +121,7 @@ graph.open <- function(file, width=NA, height=NA, pitch=12, type="png",...) {
 #' @export
 graph.colors = function(n, pal=NULL) {
   if( is.null(.Share$graph.brewer) ) {
-    .Share$graph.brewer = library(RColorBrewer, logical.return=T)
+    .Share$graph.brewer = requireNamespace("RColorBrewer", logical.return=T)
   }
   if(.Share$graph.brewer || isTRUE(pal == "rainbow")) {
     if( is.null(pal) ) {
@@ -127,7 +131,7 @@ graph.colors = function(n, pal=NULL) {
         pal = ifelse(n > 9, "Set3","Set1")
       }
     }
-    cc = brewer.pal(n, pal)
+    cc = RColorBrewer::brewer.pal(n, pal)
     if(length(cc) > n) {
       cc = cc[1:n]
     }
@@ -142,6 +146,8 @@ graph.colors = function(n, pal=NULL) {
 #' @param up upper value
 #' @param low lower value
 #' @param k rectangle width around the x
+#' @param col color value
+#' @param border border color
 #' @export
 box.sd <- function(x, up, low, k=0.25, col="grey", border=NA) {
  rect(x - k, low, x + k, up, col=col, border=border)
@@ -168,6 +174,13 @@ segment.sd <- function(i, estim, up, low, k=0.25, col="grey", lty=1, lwd=1, cex=
  }
 }
 
+#' Draw confidence interval with polygon
+#' @param ii data.frame
+#' @param col.x name of x column
+#' @param col.up name of upper value column
+#' @param col.low name of lower value column
+#' @param col color
+#' @param ... extra parameters passed to polygon
 #' @export
 polygon.ic = function(ii, col.x, col.up, col.low, col, ...) {
    x = c(ii[, col.x] , rev(ii[, col.x]))
@@ -188,7 +201,9 @@ polygon.ic = function(ii, col.x, col.up, col.low, col, ...) {
 #' @param sep separator between year and week number
 #' @param century use century for year number
 #' @param ticks if mode=weeks vector of week (1-53) number, if mode="\%\%" modulo to use
+#' @param ... extra parameters passed to axis
 #' @export
+#' @importFrom graphics axTicks axis
 axis.week <- function(side, ww, mode=c("ticks","year",'week','weeks','%%'), format="yw", col.yw="yw", sep='s', century=T, ticks=NULL, ...) {
   mode = match.arg(mode)
   if(mode == "ticks") {

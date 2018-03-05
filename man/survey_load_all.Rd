@@ -6,9 +6,17 @@
 \usage{
 survey_load_all(survey, language = survey_default_language())
 }
+\arguments{
+\item{survey}{survey name}
+
+\item{language}{translation language to use, by default use \code{survey_default_language}}
+}
 \value{
 definition of the survey (also update the global definition in memory)
 }
 \description{
 Load all definition data about a survey
+}
+\seealso{
+survey_default_language
 }

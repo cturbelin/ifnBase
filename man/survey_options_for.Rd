@@ -3,13 +3,16 @@
 \name{survey_options_for}
 \alias{survey_options_for}
 \title{Get the options for a survey's varname
-This is not the "options" defined
-TODO: change name}
+This is not the "options" defined}
 \usage{
 survey_options_for(survey, varname)
+}
+\arguments{
+\item{survey}{survey name}
+
+\item{varname}{variable name}
 }
 \description{
 Get the options for a survey's varname
 This is not the "options" defined
-TODO: change name
 }

@@ -8,6 +8,8 @@ symptoms.ecdc(r, with.chills = FALSE)
 }
 \arguments{
 \item{r}{weekly data}
+
+\item{with.chills}{use chills-like symptoms}
 }
 \description{
 Compute ECDC ILI Definition

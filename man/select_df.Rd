@@ -10,6 +10,8 @@ select_df(data, columns, error = FALSE)
 \item{data}{data.frame}
 
 \item{columns}{list of column to extract}
+
+\item{error}{raise error if unknown column}
 }
 \value{
 data.frame

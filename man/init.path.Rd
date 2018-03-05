@@ -8,9 +8,9 @@ by default, the path is added to the global output path (defined in OUT_PATH), u
 init.path(p, full.path = F)
 }
 \arguments{
-\item{char}{p path}
+\item{p}{chr path}
 
-\item{logical}{full.path, if TRUE p is considered as an absolute path}
+\item{full.path}{logical if TRUE p is considered as an absolute path}
 }
 \description{
 Define an ouput path for files, usable by my.path()

@@ -8,6 +8,8 @@ syndromes.influenzanet.2011(r, as.levels = F)
 }
 \arguments{
 \item{r}{data.frame of weekly results}
+
+\item{as.levels}{return levels instead of numeric values}
 }
 \description{
 Compute the 2011's Influenzanet syndromes set  (NO-SYMPT/ILI/COMMON-COLD/GASTRO/OTHER)

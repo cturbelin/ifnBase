@@ -7,6 +7,8 @@
 i18n_load(..., language = NULL, debug = F)
 }
 \arguments{
+\item{...}{list of file prefix to load (see description)}
+
 \item{language}{language}
 
 \item{debug}{show verbose messages when loading a file}

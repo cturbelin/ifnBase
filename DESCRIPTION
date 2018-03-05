@@ -1,20 +1,25 @@
 Package: ifnBase
 Type: Package
-Title: InfluenzaNet Analysis Base
-Version: 0.1.0
+Title: InfluenzaNet Data Analysis Base
+Version: 0.1.0.9000
+Imports:
+  methods
 Depends: 
-    R (>= 3.2.0), 
-    DBI,
-    methods 
+  R (>= 3.2.0) 
 Suggests: 
-  dplyr,
+  dplyr (>= 0.5.0),
   RPostgreSQL, 
+  DBI,
   RODBC,
   RColorBrewer,
-  knitr
-Author: Clément Turbelin <clement.turbelin@upmc.fr>
-Maintainer: Clément Turbelin <clement.turbelin@upmc.fr>
-Description: Base function for influenzaNet Analysis framework
+  knitr,
+  ggplot2 (>= 2.2.0)
+URL: https://github.com/cturbelin/ifnBase
+BugReports: https://github.com/cturbelin/ifnBase/issues
+Authors@R: c(
+    person("Clément", "Turbelin", , "clement.turbelin@sorbonne-universite.fr", role=c("aut", "cre"))
+  )
+Description: InfluenzaNet Data Analysis framework, base functions
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

@@ -9,6 +9,8 @@ graph.save(filename, type = NULL, ...)
 \arguments{
 \item{filename}{filename of the graph}
 
+\item{type}{type of device to use}
+
 \item{...}{others arguments passed to ggsave()}
 }
 \description{

@@ -30,7 +30,8 @@ platform_define_survey(name, survey_id, table, mapping, labels = NULL,
 \item{...}{extra parameters to set for the survey}
 }
 \description{
-Describe structure of a survey and the mapping from DB names & coding to R names & factor levels
+Describe structure of a survey and the mapping from DB names &
+coding to R names & factor levels
 }
 \seealso{
 survey_recode

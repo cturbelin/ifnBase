@@ -7,10 +7,13 @@ From 'ifn' options() entry}
 \usage{
 get_option(name = NULL)
 }
+\arguments{
+\item{name}{option name, if missing, all options are returned}
+}
 \description{
 Get package option from name
 From 'ifn' options() entry
 }
 \seealso{
-output_options
+share.option
 }

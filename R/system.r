@@ -1,6 +1,6 @@
 
 #' Load a share library
-#' @param file(s) name of the library to load (name of the .r file, without extension)
+#' @param file character vector of name(s) of the library to load (name of the .r file, without extension)
 #' @param force bool, if TRUE force the loading of the lib, regardless of the cache
 #' @param platform, look for a library in share/platform/[libname].[platform].r
 #' @param optional if TRUE dont raise an error if the library doesnt exist. By default an error is thrown.

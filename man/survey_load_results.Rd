@@ -22,6 +22,8 @@ survey_load_results(survey, cols, geo = NULL, date = NULL,
 
 \item{survey.users}{list of id of SurveyUsers, load data only for these ids}
 
+\item{debug}{if TRUE show query}
+
 \item{account}{boolean if TRUE include "account" id (account user id). Only works if "user" column is defined}
 
 \item{where}{where condition to apply on the query (caution, no check)}
@@ -31,6 +33,10 @@ survey_load_results(survey, cols, geo = NULL, date = NULL,
 \item{channel}{if not null get data only for a given channel value}
 
 \item{cols.sup}{supplementary column or SQL select clauses (caution no check)}
+
+\item{gid}{if TRUE load gid column}
+
+\item{country}{country name (if survey data has country column)}
 }
 \value{
 data.frame data of the survey

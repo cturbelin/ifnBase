@@ -6,6 +6,9 @@
 \usage{
 my.path(...)
 }
+\arguments{
+\item{...}{characters string to used (will be concatenated)}
+}
 \description{
 Return the path of a file in the current ouput path
 }

@@ -7,13 +7,13 @@
 makeWeekIndex(yw, col.yw = "yw", col.idx = "wid", stamp = F)
 }
 \arguments{
-\item{int}{yw vector of yearweek number}
+\item{yw}{int vector of yearweek number}
 
-\item{char[1]}{col.yw name of the yw column in the resulting data.frame}
+\item{col.yw}{chr[1] name of the yw column in the resulting data.frame}
 
-\item{char[1]}{col.idx name of the week index column in the resulting data.frame}
+\item{col.idx}{char[1] name of the week index column in the resulting data.frame}
 
-\item{logical}{use weekstamp instead of order of the week (depends on the range of weeks)}
+\item{stamp}{logical use weekstamp instead of order of the week (depends on the range of weeks)}
 }
 \value{
 data.frame(yw=int,wid=int)  yw=yearweek number, wid=index of the yw

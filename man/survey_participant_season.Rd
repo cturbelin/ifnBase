@@ -7,6 +7,11 @@ List of participants registred in weekly at least once for a given season}
 \usage{
 survey_participant_season(season, use.season.dates = F)
 }
+\arguments{
+\item{season}{season number to get}
+
+\item{use.season.dates}{restrict to season's starting & ending dates.}
+}
 \description{
 Get list of participant id (person_id = survey_user_id)
 List of participants registred in weekly at least once for a given season

@@ -2,12 +2,18 @@
 % Please edit documentation in R/misc.R
 \name{merge.list}
 \alias{merge.list}
-\title{Merge two lists
-from RCurl 0.94.0}
+\title{Merge two lists (x + y not in x)}
 \usage{
 \method{merge}{list}(x, y)
 }
+\arguments{
+\item{x}{primary list to update}
+
+\item{y}{secondary list, only entries not in x will be used}
+}
 \description{
-Merge two lists
+Missing entries in x will be taken from y
+}
+\details{
 from RCurl 0.94.0
 }

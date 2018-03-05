@@ -10,6 +10,8 @@ geo_level(geo.name, hierarchy = NULL, ...)
 \item{geo.name}{geographic level name (for example "nuts1", "nuts2")}
 
 \item{hierarchy}{name of a level hierarchy}
+
+\item{...}{extra information to store with level information}
 }
 \description{
 The available levels depends on the platform configuration

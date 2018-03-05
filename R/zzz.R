@@ -26,7 +26,7 @@
       old.name = name
     }
     if(is.null(oo[[name]]) && exists(old.name, envir=env)) {
-      message(paste("Importing ", old.name," from global env"))
+      packageStartupMessage(paste("Importing ", old.name," from global env"))
       oo[[name]] <- get(old.name, envir = env)
     }
   }
@@ -37,7 +37,7 @@
   # See vignettes workspace
   if(exists("BASE_PATH", envir = env)) {
     # If BASE_PATH exists, recreate workspace paths, as expected
-    message("Importing BASE_PATH from global environment")
+    packageStartupMessage("Importing BASE_PATH from global environment")
     base.path = get("BASE_PATH", envir = env)
     oo$share.path = paste0(base.path, "share/")
     oo$share.lib.path = paste0(oo$share.path, "lib/")

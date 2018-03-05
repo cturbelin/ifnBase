@@ -15,6 +15,8 @@ calc.season.fixed(inc, col.yw = "yw", col.stamp = NULL,
 \item{col.stamp}{name of the column containing the week stamp of each yearweek (@see WeekStamp), if not provided compute it}
 
 \item{date.start}{month-day date to take as the start of each season}
+
+\item{calc.index}{if TRUE add an index column}
 }
 \value{
 inc with 'season.year' (year of the start ) and 'season.index' (index of the week in the season) columns

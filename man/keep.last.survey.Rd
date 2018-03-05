@@ -2,9 +2,7 @@
 % Please edit documentation in R/survey.r
 \name{keep.last.survey}
 \alias{keep.last.survey}
-\title{Keep the last survey for each participant
-Some survey could have exactly the same timestamp
-So using this function is safer than only using timestamp}
+\title{Keep the last survey for each participant}
 \usage{
 keep.last.survey(data)
 }
@@ -12,7 +10,6 @@ keep.last.survey(data)
 \item{data}{data.frame with at least (timestamp,person_id, id) columns}
 }
 \description{
-Keep the last survey for each participant
 Some survey could have exactly the same timestamp
 So using this function is safer than only using timestamp
 }

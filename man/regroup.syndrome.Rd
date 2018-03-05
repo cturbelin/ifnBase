@@ -7,6 +7,9 @@ Resulting levels are more pretty : "no.symptom", "ili", "cold", "gastro", "non.s
 \usage{
 regroup.syndrome(x)
 }
+\arguments{
+\item{x}{values to recode}
+}
 \description{
 Regroup mixed syndromes to non-specific for the 2012's influezanet syndromes set
 Resulting levels are more pretty : "no.symptom", "ili", "cold", "gastro", "non.specific", "allergy"

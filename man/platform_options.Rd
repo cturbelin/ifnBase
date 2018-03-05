@@ -6,6 +6,14 @@
 \usage{
 platform_options(...)
 }
+\arguments{
+\item{...}{list of options to set
+
+\describe{
+  \item{first.season.censored}{left censor first season participants for some countries}
+  \item{health.status}{structure of the health.status table in case of single table model for weekly}
+}}
+}
 \description{
 Define some platform options
 }

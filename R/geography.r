@@ -7,6 +7,7 @@
 #'
 #' @param geo.name geographic level name (for example "nuts1", "nuts2")
 #' @param hierarchy name of a level hierarchy
+#' @param ... extra information to store with level information
 #' @export
 geo_level = function(geo.name, hierarchy = NULL, ...) {
   structure(geo.name, class="geo.level", hierarchy=hierarchy, ...)
@@ -114,6 +115,11 @@ load_population <- function(geo, year) {
 #'
 #' TODO: should be a more generic function allowing to query "feature" about
 #' Not exported currently, only to be used by platform defined functions by default returns TRUE for all queried area
+#'
+#' @param geo geographic levelv
+#' @param type feature to test for level's codes
+#' @param code list of code of the level's area to test for the feature given in type
+#' @return logical vector of length of code
 geo_is_type = function(geo, type, code) {
   if( is.null(.Share$geo_is_type) ) {
     return( rep(TRUE, length(code)) )

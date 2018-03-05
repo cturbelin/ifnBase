@@ -7,13 +7,13 @@
 share.lib(file, force = F, platform = F, optional = F)
 }
 \arguments{
+\item{file}{character vector of name(s) of the library to load (name of the .r file, without extension)}
+
 \item{force}{bool, if TRUE force the loading of the lib, regardless of the cache}
 
 \item{platform, }{look for a library in share/platform/[libname].[platform].r}
 
 \item{optional}{if TRUE dont raise an error if the library doesnt exist. By default an error is thrown.}
-
-\item{file(s)}{name of the library to load (name of the .r file, without extension)}
 }
 \description{
 Load a share library

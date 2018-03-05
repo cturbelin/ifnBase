@@ -7,6 +7,9 @@ Warning not for cryptographic use}
 \usage{
 random_string(n)
 }
+\arguments{
+\item{n}{length of string to generate}
+}
 \description{
 Get a random string of size n
 Warning not for cryptographic use

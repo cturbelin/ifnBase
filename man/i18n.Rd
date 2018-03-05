@@ -6,7 +6,7 @@
 \alias{i18n.factor}
 \title{Translate a string}
 \usage{
-i18n("stringtotranslate")
+i18n(x)
 
 \method{i18n}{default}(x)
 
@@ -20,4 +20,8 @@ translation or the string itself it not found
 }
 \description{
 Translate a string
+}
+\examples{
+i18n("my_string_to_translate")
+
 }

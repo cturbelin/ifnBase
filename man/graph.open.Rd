@@ -13,7 +13,11 @@ graph.open(file, width = NA, height = NA, pitch = 12, type = "png", ...)
 
 \item{height}{height in px}
 
-\item{pitch}{#' @param file}
+\item{pitch}{pointsize value}
+
+\item{type}{type of output to use}
+
+\item{...}{extra parameted}
 }
 \description{
 Open a graph using standard library

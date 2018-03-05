@@ -8,6 +8,9 @@ So TRUE is YES level, FALSE = NO level and NA missing value.}
 \usage{
 recode.ynp(x)
 }
+\arguments{
+\item{x}{value to recode}
+}
 \description{
 recode Y/N/DNK where Y=0 to boolean (wow!)
 Used to recode some InfluenzaNet variables to more error-proof coding

@@ -7,7 +7,7 @@
 symptoms.ira(r, wide.respiratory = F)
 }
 \arguments{
-\item{r}{weekly data}
+\item{r}{data.frame() with syndrom columns}
 
 \item{wide.respiratory}{consider a wider respiratory syndrome if TRUE}
 }

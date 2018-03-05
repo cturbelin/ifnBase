@@ -17,9 +17,11 @@ get_symptoms_aliases <- function() {
 }
 
 #' Convert column name (InfluenzaNet column names) from (revert=F) and to aliases (revert=T)
-#' Description of mapping is set in the config variable epiwork.tables defined in the platform configuration files
+#'
+#' Description of mapping is set in the config variable epiwork.tables defined
+#' in the platform configuration files
 #' @param cols names of columns to rename
-#' @param aliases list of aliases
+#' @param def list of aliases
 #' @param revert if TRUE, aliases to Db names, if false (default) DB names to aliases
 #' @export
 survey_aliases <- function(cols, def, revert=F) {
@@ -56,7 +58,9 @@ survey_aliases <- function(cols, def, revert=F) {
 #' @param season if not NULL, season number, will load data for a given season, by default load all data from "pollster_results_[survey]"
 #' @param channel if not null get data only for a given channel value
 #' @param cols.sup supplementary column or SQL select clauses (caution no check)
-#'
+#' @param gid if TRUE load gid column
+#' @param debug if TRUE show query
+#' @param country country name (if survey data has country column)
 #' @return data.frame data of the survey
 #' @export
 survey_load_results = function(survey, cols, geo=NULL, date=NULL, db.table=NULL, survey.users=NULL, debug=F, account=F, where=c(), season=NULL, channel=NULL, cols.sup=c(), gid=F, country=NULL) {
@@ -270,6 +274,7 @@ survey_load_translation <-function(survey, language=survey_default_language()) {
 #' get the question_id (id in the question table in the influenzanet db) of a question
 #' @param survey name of the survey
 #' @param varname variable name of the question (db's column name or R alias of the column)
+#' @param language language translation to use
 #' @return int
 #' @export
 survey_question_id <- function(survey, varname, language=survey_default_language()) {
@@ -280,7 +285,8 @@ survey_question_id <- function(survey, varname, language=survey_default_language
 
 #' Get the options for a survey's varname
 #' This is not the "options" defined
-#' TODO: change name
+#' @param survey survey name
+#' @param varname variable name
 #' @export
 survey_options_for <- function(survey, varname) {
 	id = survey_question_id(survey, varname)
@@ -289,7 +295,10 @@ survey_options_for <- function(survey, varname) {
 }
 
 #' Load all definition data about a survey
+#' @param survey survey name
+#' @param language translation language to use, by default use \code{survey_default_language}
 #' @return definition of the survey (also update the global definition in memory)
+#' @seealso survey_default_language
 #' @export
 survey_load_all <- function(survey, language=survey_default_language()) {
   def = .Share$epiwork.tables[[survey]]
@@ -326,6 +335,7 @@ survey_labels <- function(survey, question) {
 #' @param survey survey name
 #' @param pattern glob style pattern (ex "visit.*")
 #' @export
+#' @importFrom utils glob2rx
 survey_questions_like <- function(survey, pattern) {
   p = glob2rx(pattern)
   def = .Share$epiwork.tables[[survey]]
@@ -378,6 +388,7 @@ survey_single_table <- function(survey) {
 
 #' Get survey definition
 #' Survey definition is a list
+#' @param survey survey name
 #' @export
 survey_definition = function(survey) {
   def = .Share$epiwork.tables[[ survey ]]
@@ -401,6 +412,7 @@ calc.age = function(ym, time) {
   round(cur - y + (m / 12), 2)
 }
 
+#' @noRd
 flip.names <- function(x) {
   n = names(x)
   names(n) <- as.vector(x)
@@ -408,8 +420,10 @@ flip.names <- function(x) {
 }
 
 #' Keep the last survey for each participant
+#'
 #' Some survey could have exactly the same timestamp
 #' So using this function is safer than only using timestamp
+#'
 #' @param data data.frame with at least (timestamp,person_id, id) columns
 #' @export
 keep.last.survey = function(data) {
@@ -420,24 +434,6 @@ keep.last.survey = function(data) {
   data
 }
 
-#' Return the season number of a yearweek or a Date
-#' Currently the season is defined from september to august of the next year and the season number is the year of the september month
-#' (i.e. the first year of the season)
-#' @export
-calc.season = function(d) {
-  if("Date" %in% class(d)) {
-    m = as.numeric(format(d, "%m"))
-    y = as.numeric(format(d, "%Y"))
-    return(ifelse(m >= 9, y, y - 1))
-  }
-  if( is.numeric(d) ) {
-    # Yearweek number
-    w = d %% 100
-    y = floor(d / 100)
-    return(ifelse(w >= 37, y, y - 1))
-  }
-  stop(paste("Not implemented for ", class(d)))
-}
 
 #' Get historical season definition
 #'
@@ -451,6 +447,8 @@ calc.season = function(d) {
 #'  \item{dates}{list(start, end), starting and ending date of the season}
 #' }
 #'
+#' @param season season definition to get
+#' @param silent boolean (not used.)
 #' @return return the entry of historical.tables config for the season (first year of the season)
 #' @export
 season.def = function(season, silent=F) {
@@ -480,6 +478,8 @@ get_historical_tables <- function() {
 
 #' Get list of participant id (person_id = survey_user_id)
 #' List of participants registred in weekly at least once for a given season
+#' @param season season number to get
+#' @param use.season.dates restrict to season's starting & ending dates.
 #' @export
 survey_participant_season = function(season, use.season.dates=F) {
   h = season.def(season)
@@ -557,8 +557,11 @@ survey_load_participants = function(active.account=NULL, ids=NULL) {
 #' @param survey survey shortname
 #' @param cols list of columns to load
 #' @export
+#' @importFrom methods is
 survey_load_results_historic = function(ids, survey, cols) {
-  require(dplyr)
+  if(!requireNamespace("dplyr")) {
+    stop("dplyr required to use this function")
+  }
   years = sort(names(.Share$historical.tables), decreasing = TRUE)
 
   if( is(ids, 'gn_participants') ) {
@@ -589,7 +592,7 @@ survey_load_results_historic = function(ids, survey, cols) {
     }
     cat(nrow(ii),"\n")
     ii$season = year
-    intakes = bind_rows(intakes, ii)
+    intakes = dplyr::bind_rows(intakes, ii)
   }
   intakes
 }
@@ -601,11 +604,13 @@ survey_load_results_historic = function(ids, survey, cols) {
 #' @export
 survey_load_participations = function(ids, years=NULL) {
 
+  if(!requireNamespace("dplyr")) {
+    stop("dplyr required to use this function")
+  }
+
   if(is.null(years)) {
     years = sort(names(.Share$historical.tables), decreasing = TRUE)
   }
-
-  require(dplyr)
 
   if( is(ids, 'gn_participants') ) {
     rr = ids
@@ -614,6 +619,9 @@ survey_load_participations = function(ids, years=NULL) {
   }
   gids = paste0("'", paste(rr$global_id, collapse="','"),"'")
   participations = NULL
+
+  `%>%` <- dplyr::`%>%`
+
   for(year in years) {
 
     h = season.def(year)
@@ -622,15 +630,20 @@ survey_load_participations = function(ids, years=NULL) {
 
     ww = dbQuery("select global_id, timestamp from ", h$weekly, " where global_id in (", gids,")")
 
-    ii = ii %>% group_by(global_id) %>% summarise(intake=n())
-    ww = ww %>% group_by(global_id) %>% summarise(weekly=n())
-    ii = merge(ii, ww, by="global_id", all=TRUE)
+    ii = ii %>%
+          dplyr::group_by(global_id) %>%
+          dplyr::summarise(intake=n())
+    ww = ww %>%
+            dplyr::group_by(global_id) %>%
+            dplyr::summarise(weekly=n())
+
+        ii = merge(ii, ww, by="global_id", all=TRUE)
 
     if(nrow(ii) > 0) {
       ii$season = year
     }
 
-    participations = bind_rows(participations, ii)
+    participations = dplyr::bind_rows(participations, ii)
   }
   participations
 }

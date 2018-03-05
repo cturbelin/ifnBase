@@ -1,11 +1,15 @@
 #' Wrapper of message() for output
 #' You car redirect by using sink() function
+#' @param ... message (multiple will be concatenated)
+#' @param ln add new line
+#' @param level level if hierarchical levels handled (ignored if not)
 #' @export
 msg = function(..., ln=TRUE, level = 0) {
   message(..., appendLF = ln)
 }
 
 #' Test if x is an error class from try
+#' @param x object to test
 #' @export
 is.error <- function(x) {
   is(x, "try-error")
@@ -45,8 +49,14 @@ replace.names <- function(x, ...) {
   return(x)
 }
 
-#' Merge two lists
+#' Merge two lists (x + y not in x)
+#'
+#' Missing entries in x will be taken from y
+#'
+#'
 #' from RCurl 0.94.0
+#' @param x primary list to update
+#' @param y secondary list, only entries not in x will be used
 #' @export
 merge.list <- function(x, y)
 {
@@ -65,6 +75,7 @@ merge.list <- function(x, y)
 
 #' Get a random string of size n
 #' Warning not for cryptographic use
+#' @param n length of string to generate
 #' @export
 random_string = function(n) {
   paste0(sample(c(0:9, LETTERS, letters), n, replace=TRUE), collapse = '')
@@ -93,6 +104,7 @@ select_columns = function(data, columns, error=FALSE) {
 #' Select column from a data.frame,
 #' @param data data.frame
 #' @param columns list of column to extract
+#' @param error raise error if unknown column
 #' @return data.frame
 #' @export
 select_df <- function(data, columns, error=FALSE) {
@@ -100,6 +112,9 @@ select_df <- function(data, columns, error=FALSE) {
   data[, columns, drop=FALSE]
 }
 
+#' get file name with good extension .r or .R
+#' @noRd
+#' @noMd
 get_r_file = function(file, should.exists=FALSE) {
   f = paste0(file,".R")
   if( file.exists(f)) {

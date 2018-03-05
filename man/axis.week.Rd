@@ -24,6 +24,8 @@ axis.week(side, ww, mode = c("ticks", "year", "week", "weeks", "\%\%"),
 \item{century}{use century for year number}
 
 \item{ticks}{if mode=weeks vector of week (1-53) number, if mode="\%\%" modulo to use}
+
+\item{...}{extra parameters passed to axis}
 }
 \description{
 Create an axis from weekly data (when the plot use week index, and you want to label axe with classical week nubmers)

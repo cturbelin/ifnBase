@@ -6,6 +6,11 @@
 \usage{
 season.def(season, silent = F)
 }
+\arguments{
+\item{season}{season definition to get}
+
+\item{silent}{boolean (not used.)}
+}
 \value{
 return the entry of historical.tables config for the season (first year of the season)
 }

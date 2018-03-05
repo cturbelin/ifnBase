@@ -7,6 +7,9 @@ Survey definition is a list}
 \usage{
 survey_definition(survey)
 }
+\arguments{
+\item{survey}{survey name}
+}
 \description{
 Get survey definition
 Survey definition is a list

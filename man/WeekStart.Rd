@@ -7,7 +7,7 @@
 WeekStart(yw)
 }
 \arguments{
-\item{int}{yw yearweek number}
+\item{yw}{integer yearweek number}
 }
 \value{
 Date

@@ -14,6 +14,10 @@ box.sd(x, up, low, k = 0.25, col = "grey", border = NA)
 \item{low}{lower value}
 
 \item{k}{rectangle width around the x}
+
+\item{col}{color value}
+
+\item{border}{border color}
 }
 \description{
 Make a rectangle usefull for boxplot

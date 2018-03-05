@@ -7,6 +7,13 @@ You car redirect by using sink() function}
 \usage{
 msg(..., ln = TRUE, level = 0)
 }
+\arguments{
+\item{...}{message (multiple will be concatenated)}
+
+\item{ln}{add new line}
+
+\item{level}{level if hierarchical levels handled (ignored if not)}
+}
 \description{
 Wrapper of message() for output
 You car redirect by using sink() function

@@ -3,8 +3,8 @@
 
 #' Define an ouput path for files, usable by my.path()
 #' by default, the path is added to the global output path (defined in OUT_PATH), unless the parameter full.path is TRUE
-#' @param char p path
-#' @param logical full.path, if TRUE p is considered as an absolute path
+#' @param p chr path
+#' @param full.path logical if TRUE p is considered as an absolute path
 #' @family path functions
 #' @export
 init.path <- function(p, full.path=F) {
@@ -20,6 +20,7 @@ init.path <- function(p, full.path=F) {
 
 #' Return the path of a file in the current ouput path
 #' @family path functions
+#' @param ... characters string to used (will be concatenated)
 #' @export
 my.path <- function(...) {
   paste0(.Share$out.path, .Share$out.path.sep, ...)

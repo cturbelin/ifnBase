@@ -6,6 +6,16 @@
 \usage{
 geo_is_type(geo, type, code)
 }
+\arguments{
+\item{geo}{geographic levelv}
+
+\item{type}{feature to test for level's codes}
+
+\item{code}{list of code of the level's area to test for the feature given in type}
+}
+\value{
+logical vector of length of code
+}
 \description{
 For example, it can be used to differenciate some code, corresponding to overseas area to mainland codes
 The use of the function is not standardized yet.
