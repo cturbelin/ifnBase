@@ -66,28 +66,79 @@ load_platform = function() {
 #' @section labels
 #' labels are named list of labels (a label is just a character string). It is used to identify list of recoding labels
 #' @export
-platform_define_survey <- function(name, survey_id, table, mapping, labels=NULL, codes=NULL, recodes=NULL, single.table = FALSE, geo.column=NULL, ...) {
+platform_define_survey <- function(name, survey_id, table, mapping, labels=NULL, codes=NULL, recodes=NULL, single.table = FALSE, geo.column=NULL, template=NULL, ...) {
 
   def = list(...)
 
-  def$survey_id=survey_id
+  def$survey_id = survey_id
   def$table = table
+
+  errors = c()
+
+  raise_error <- function(msg) {
+    errors = c(errors, errors)
+  }
+
+  if( !is.null(template) ) {
+    if( is.null(survey_templates[[template]]) ) {
+      stop(paste0("Unknown template '", template,'"'))
+    }
+    def$template_name = template
+    template = survey_templates[[template]]
+
+    ## Import data from template
+    n = names(mapping)
+    new.entries = n[ !n %in% names(template$aliases)]
+
+    # Check if a mapping redefine some questions already defined in template
+    # TODO: allow explict overriding for some questions (using attribute for ex.)
+    lapply(new.entries, function(name) {
+      question = mapping[[name]]
+      if(question %in% template$aliases) {
+        raise_error(paste0('Mapping "',name,'" redefine question "',question,'"'))
+      }
+    })
+
+    # Check redefined of template are mapped to the same question
+    lapply(n[ n %in% names(template$aliases) ], function(name) {
+      new = mapping[[name]]
+      old = template$aliases[[name]]
+      if(new != old) {
+        raise_error(paste0('Mapping "',name,'" not associated with same question (',new,') as template (',old,')'))
+      }
+    })
+
+    # Update template mapping with new  & redefined ones
+    m = template$aliases
+    for(n in new.entries) {
+      m[[n]] <- mapping[[n]]
+    }
+    mapping = m
+
+  }
+
   def$aliases = mapping
 
   if( !is.null(recodes) ) {
-    nn = names(mapping)
+    nn = names(def$aliases)
     for(i in seq_along(recodes)) {
       n = names(recodes[i])
       if(! n %in% nn) {
          stop(paste0("recoding to a variable not declared in mapping '",n,'"'))
       }
       if(n %in% names(labels)) {
-         stop(paste0("recoding '",n,'" is already declared in mapping'))
+         stop(paste0("recoding '",n,'" is already declared in recodes'))
       }
       values = recodes[[i]]
       labels[[n]] <- names(values)
       codes[[n]] <- as.vector(values)
     }
+  }
+
+  if( length(errors) ) {
+    cond = simpleError("Errors in survey redefinition")
+    attr(cond, "errors") <- errors
+    stop(cond)
   }
 
   def$labels = labels
@@ -101,6 +152,15 @@ platform_define_survey <- function(name, survey_id, table, mapping, labels=NULL,
 
  .Share$epiwork.tables[[name]] <- def
 }
+
+check_survey_template <- function(template, mapping, recodes) {
+
+
+
+
+
+}
+
 
 describe_survey_recoding = function(survey, name, values) {
 
