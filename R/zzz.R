@@ -38,7 +38,7 @@
   if(exists("BASE_PATH", envir = env)) {
     # If BASE_PATH exists, recreate workspace paths, as expected
     packageStartupMessage("Importing BASE_PATH from global environment")
-    base.path = get("BASE_PATH", envir = env)
+    base.path = ensureEndingSlash(get("BASE_PATH", envir = env))
     oo$share.path = paste0(base.path, "share/")
     oo$share.lib.path = paste0(oo$share.path, "lib/")
     oo$platform.path = paste0(oo$share.path, "platform/")

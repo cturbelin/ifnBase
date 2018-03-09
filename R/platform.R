@@ -26,7 +26,7 @@ load_platform = function() {
     stop("platform id should be defined with share.option()")
   }
 
-  file = get_r_file(paste0(path, platform), should.exists = TRUE)
+  file = get_r_file(paste0(ensureEndingSlash(path), platform), should.exists = TRUE)
 
   sys.source(file, envir=.Share)
 }
@@ -47,11 +47,11 @@ load_platform = function() {
 #' @param geo.column name of the variable (R names)
 #' @param ... extra parameters to set for the survey
 #'
-#' @section mapping
+#' @section Mapping:
 #'
 #' The mapping allows to automatically transform db names to R names (more meaningfull and error-proof) each times data are loaded using `survey_load_results()`
 #'
-#' @section recoding
+#' @section Recoding:
 #'
 #' for each variable, it is possible to give a list(label1=code1, label2=code2) where `code1`, `code2` will be recoded to the corresponding label
 #' The idea is to give a human meaningful label to each numeric code used to store response value for questions based on an option list.
@@ -68,7 +68,7 @@ load_platform = function() {
 #'
 #' @seealso \code{\link{survey_recode}}
 #'
-#' @section labels
+#' @section Labels:
 #'
 #' labels are named list of labels (a label is just a character string). It is used to manipulate list of names for various purposes : list for variables
 #' for multi-valued questions (from "checkboxes"), a label provide a "name" to identify the list of all variables corresponding to one question.
@@ -84,67 +84,16 @@ platform_define_survey <- function(name, survey_id, table, mapping, labels=NULL,
   def$survey_id = survey_id
   def$table = table
 
-  # Old recoding structure, codes & labels were separated.
-  # recodes force label to be explicity associated with code, it is safer.
-  if( !is.null(codes) ) {
-    lapply(names(codes), function(name) {
-        if(name %in% names(recodes)) {
-          stop(paste0("'",name,"' is already defined in recodes, duplicate in codes. Remove it"))
-        }
+  r = create_survey_definition(mapping=mapping, labels=labels, codes=codes, recodes=recodes, template=template, only.errors = TRUE)
 
-        lab = labels[[name]]
-        if( is.null(lab) ) {
-          stop(paste0("Missing labels with codes for '",name,"'"))
-        }
-        recode = codes[[name]]
-        if(length(lab) != length(recode) ) {
-          stop(paste0("Labels for '",name,"' have not the same length of codes "))
-        }
-        names(recode) <- lab
-        recodes[[name]] <<- recode
-    })
-  } else {
-    # Import recodes labels to labels
-    lapply(names(recodes), function(name) {
-      if(name %in% names(labels)) {
-        stop(paste0(" recoding '",name,'" is already defined in labels'))
-      }
-      labels[[name]] <<- recodes[[name]]
-    })
+  if( length(r$checks) > 0 ) {
+    cond = simpleError("Survey error importing templates")
+    attr(cond, "errors") <- r$checks
+    stop(cond)
   }
 
   if( !is.null(template) ) {
-    if( is.null(survey_templates[[template]]) ) {
-      stop(paste0("Unknown template '", template,'"'))
-    }
     def$template_name = template
-    template = survey_templates[[template]]
-
-    r = check_survey_template(template, mapping, recodes, only.errors = TRUE)
-    if(length(r) > 0) {
-      print(r)
-      cond = simpleError("Survey checking errors, conflicts with template")
-      attr(cond, "errors") <- r
-      stop(cond)
-    }
-
-    # Update template mapping with new  & redefined ones
-    mapping = merge.list(mapping, template$aliases)
-
-    # Merge recodes
-    rr = list()
-    nn = unique(names(recodes), names(template$recodes))
-    for(name in nn) {
-        rr[[name]] = merge.list(recodes[[name]], template$recodes[[name]])
-    }
-    recodes = rr
-    rm(rr)
-  }
-
-  # Check if any mapping to protected names
-  n = names(mapping)
-  if(any(n %in% PROTECTED_QUESTIONS)) {
-    stop(paste0("Cannot define mapping to protected names : ", paste(n[n %in% PROTECTED_QUESTIONS ], collapse = ",")))
   }
 
   def$aliases = mapping
@@ -160,6 +109,89 @@ platform_define_survey <- function(name, survey_id, table, mapping, labels=NULL,
 
  .Share$epiwork.tables[[name]] <- def
 }
+
+#' Create a survey definition
+#'
+#' Create and check survey structure and import from template if provided.
+#' This function is mainly used internally by \code{\link{platform_define_survey()}}. Unless you want to test definition you should not need this function.
+#'
+#' @seealso \code{\link{platform_define_survey()}}
+#'
+#' @param mapping list() variable (name) to DB column (value) mapping
+#' @param labels list() named list of labels
+#' @param codes list() of codes **deprecated**
+#' @param recodes list() list of recoding
+#' @param template character
+#' @param only.errors if TRUE only check for errors
+#' @return list(mapping, labels, recodes, checks)
+#' @export
+create_survey_definition <- function( mapping, labels=NULL, codes=NULL, recodes=list(), template=NULL, only.errors=TRUE) {
+  # Old recoding structure, codes & labels were separated.
+  # recodes force label to be explicity associated with code, it is safer.
+  if( !is.null(codes) ) {
+    lapply(names(codes), function(name) {
+      if(name %in% names(recodes)) {
+        stop(paste0("'",name,"' is already defined in recodes, duplicate in codes. Remove it"))
+      }
+
+      lab = labels[[name]]
+      if( is.null(lab) ) {
+        stop(paste0("Missing labels with codes for '",name,"'"))
+      }
+      recode = codes[[name]]
+      if(length(lab) != length(recode) ) {
+        stop(paste0("Labels for '",name,"' have not the same length of codes "))
+      }
+      names(recode) <- lab
+      recodes[[name]] <<- recode
+    })
+  } else {
+    # Import recodes labels to labels
+    lapply(names(recodes), function(name) {
+      if(name %in% names(labels)) {
+        stop(paste0(" recoding '",name,'" is already defined in labels'))
+      }
+      labels[[name]] <<- recodes[[name]]
+    })
+  }
+
+  if( !is.null(template) ) {
+    if( is.null(survey_templates[[template]]) ) {
+      stop(paste0("Unknown template '", template,'"'))
+    }
+    template = survey_templates[[template]]
+
+    checks = check_survey_template(template, mapping, recodes, only.errors = only.errors)
+
+    # Update template mapping with new  & redefined ones
+    mapping = merge.list(mapping, template$aliases)
+
+    # Merge recodes
+    rr = list()
+    nn = unique(names(recodes), names(template$recodes))
+    for(name in nn) {
+      rr[[name]] = merge.list(recodes[[name]], template$recodes[[name]])
+    }
+    recodes = rr
+    rm(rr)
+  }
+
+  # Check if any mapping to protected names
+  n = names(mapping)
+  if(any(n %in% PROTECTED_QUESTIONS)) {
+    stop(paste0("Cannot define mapping to protected names : ", paste(n[n %in% PROTECTED_QUESTIONS ], collapse = ",")))
+  }
+
+  list(
+    mapping = mapping,
+    labels = labels,
+    recodes = recodes,
+    checks = checks
+  )
+
+}
+
+
 
 #' Check if a survey definition is compatible with a survey template
 #' @param template template name
@@ -197,6 +229,10 @@ check_survey_template <- function(template, mapping, recodes, only.errors=TRUE) 
   invisible(structure(results, class="survey_error"))
 }
 
+#' Print checks results
+#'
+#' @param errors list() errors generated by \code{\link{create_survey_definition}}
+#' @export
 print.survey_error = function(errors) {
   cat("Error merging survey with template\n")
   rr = lapply(errors, function(e) {
@@ -360,7 +396,7 @@ platform_geographic_tables = function(def, default.title = "title") {
 #' @param dates list(start=, end=) starting & ending of each season, YYYY-MM-DD format
 #' @param ... tables names for each survey containing data of the season in case of by-season storage model.
 #'
-#' @section data storage model
+#' @section Data storage model:
 #' InfluezaNet data for a survey can be stored using 2 ways :
 #'  - A single table contains data for all the seasons (if the survey didnt changed a lot)
 #'  - A new table is created for each season for a given survey
