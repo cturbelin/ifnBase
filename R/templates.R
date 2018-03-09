@@ -1,5 +1,6 @@
 
 #' Survey Template definitions
+#'
 #' Templates of Surveys
 #'
 #' Template for common surveys : intake & weekly
@@ -12,8 +13,7 @@
 #'  \item{eu:weekly}
 #' }
 #'
-#' @seealso \code{platform_define_survey}
-
+#' @seealso \code{\link{platform_define_survey}}
 survey_template = function(name) {
   def = survey_templates[[name]]
   if(is.null(def)) {
