@@ -13,7 +13,8 @@
 #' They should not vary from one season to another (another column means another name)
 #' @export
 get_symptoms_aliases <- function() {
-  .Share$epiwork.tables$weekly$labels$symptoms
+  def = survey_definition("weekly")
+  def$labels$symptoms
 }
 
 #' Convert column name (InfluenzaNet column names) from (revert=F) and to aliases (revert=T)
@@ -64,7 +65,7 @@ survey_aliases <- function(cols, def, revert=F) {
 #' @return data.frame data of the survey
 #' @export
 survey_load_results = function(survey, cols, geo=NULL, date=NULL, db.table=NULL, survey.users=NULL, debug=F, account=F, where=c(), season=NULL, channel=NULL, cols.sup=c(), gid=F, country=NULL) {
- def = .Share$epiwork.tables[[survey]]
+ def = survey_definition(survey)
  if( !is.null(season) ) {
    h = season.def(season)
    if( is.null(db.table) ) {
@@ -233,7 +234,7 @@ survey_load_options <- function(question_id, translation_id=NULL) {
 #' @param translation_id id of the translation to use
 #' @export
 survey_load_questions <- function(survey, translation_id=NULL) {
-  def = .Share$epiwork.tables[[survey]]
+  def = survey_definition(survey)
   survey_id = def$survey_id
   r = dbQuery('SELECT id as question_id, title, type, data_name from pollster_question where survey_id=',survey_id)
   if( isTRUE(translation_id) ) {
@@ -266,7 +267,7 @@ survey_default_language = function() {
 #' @param language code (as used in the db)
 #' @export
 survey_load_translation <-function(survey, language=survey_default_language()) {
-  def = .Share$epiwork.tables[[survey]]
+  def = survey_definition(survey)
   survey_id = def$survey_id
   dbQuery("SELECT id as translation_id, title from pollster_translationsurvey where survey_id=",survey_id," and language='",language,"'")
 }
@@ -290,7 +291,7 @@ survey_question_id <- function(survey, varname, language=survey_default_language
 #' @export
 survey_options_for <- function(survey, varname) {
 	id = survey_question_id(survey, varname)
-	def = .Share$epiwork.tables[[survey]]
+	def = survey_definition(survey)
 	def$options[ def$options$question_id %in% id,]
 }
 
@@ -301,7 +302,7 @@ survey_options_for <- function(survey, varname) {
 #' @seealso survey_default_language
 #' @export
 survey_load_all <- function(survey, language=survey_default_language()) {
-  def = .Share$epiwork.tables[[survey]]
+  def = survey_definition(survey)
   if( !is.null(def$questions) ) {
 	  return(def)
   }
@@ -321,7 +322,7 @@ survey_load_all <- function(survey, language=survey_default_language()) {
 #' @param question name of the question, or if multichoice name of the question group (sometimes a more generic name)
 #' @export
 survey_labels <- function(survey, question) {
-	def = .Share$epiwork.tables[[survey]]
+	def = survey_definition(survey)
 	labels = def$labels[[question]]
 	if(length(labels) == 1) {
 	  pattern = glob2rx(labels)
@@ -338,7 +339,7 @@ survey_labels <- function(survey, question) {
 #' @importFrom utils glob2rx
 survey_questions_like <- function(survey, pattern) {
   p = glob2rx(pattern)
-  def = .Share$epiwork.tables[[survey]]
+  def = survey_definition(survey)
   n = names(def$aliases)
   n[grep(pattern, n)]
 }
@@ -360,18 +361,25 @@ survey_questions_like <- function(survey, pattern) {
 #' @param translate if TRUE, try to translate the labels (using i18n function @seealso i18n)
 #' @export
 survey_recode <- function(x, question, survey, translate=F) {
-  def = .Share$epiwork.tables[[ survey ]]
-  labels = def$labels[[ question ]]
-  codes = def$codes[[ question ]]
-  if(is.null(codes)) {
+  def = survey_definition(survey)
+
+  recodes = def$recodes[[ question ]]
+
+  if(is.null(recodes)) {
     stop(sprintf("Unknown codes for question %s", question))
   }
+
+  codes = as.vector(recodes)
+  labels = names(recodes)
+
   if(is.null(labels)) {
     stop(sprintf("Unknown labels for question %s", question))
   }
+
   if(length(codes) != length(labels)) {
     stop(sprintf("invalid number of labels or codes for question %s", question))
   }
+
   if(translate) {
     labels = i18n(labels)
   }
@@ -382,7 +390,7 @@ survey_recode <- function(x, question, survey, translate=F) {
 #' @param survey survey name
 #' @export
 survey_single_table <- function(survey) {
-  def = .Share$epiwork.tables[[ survey ]]
+  def = survey_definition(survey)
   isTRUE(def$single.table)
 }
 
