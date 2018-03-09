@@ -33,6 +33,39 @@ platform_define_survey(name, survey_id, table, mapping, labels = NULL,
 Describe structure of a survey and the mapping from DB names &
 coding to R names & factor levels
 }
+\section{Mapping}{
+
+
+The mapping allows to automatically transform db names to R names (more meaningfull and error-proof) each times data are loaded using `survey_load_results()`
+}
+
+\section{Recoding}{
+
+
+for each variable, it is possible to give a list(label1=code1, label2=code2) where `code1`, `code2` will be recoded to the corresponding label
+The idea is to give a human meaningful label to each numeric code used to store response value for questions based on an option list.
+
+It is a good pratice to use variable style names (character + dot), without space and in english. Those labels could be translated
+later to another language in the analysis output (graphs, tables & so on). This aimed to produced shareable and language agnostic
+programs.
+For a given questions, all options should also start with the same prefix to allow quick selection of theses labels based on patterns
+
+For example:
+ main.activity = c('activity.fulltime'='0','activity.partial'='1','activity.self'='2', 'activity.student'='3','activity.home'='4','activity.unemployed'='5','activity.sick'='6','activity.retired'='7', 'activity.other'=8),
+
+Will describe recoding for the question named 'main.activity' (using attributed name, never the DB name).
+}
+
+\section{Labels}{
+
+
+labels are named list of labels (a label is just a character string). It is used to manipulate list of names for various purposes : list for variables
+for multi-valued questions (from "checkboxes"), a label provide a "name" to identify the list of all variables corresponding to one question.
+It is also used to get the list of recoded labels for a qualitative question.
+
+One of common labels is "symptoms" in weekly survey definition, providing the list of the variables names for symptoms question.
+}
+
 \seealso{
 \code{\link{survey_recode}}
 }

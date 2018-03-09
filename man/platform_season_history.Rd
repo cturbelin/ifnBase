@@ -18,6 +18,13 @@ platform_season_history(season, dates, ...)
 Define historical data
 For each season you can describe how data are organized
 }
+\section{Data storage model}{
+
+InfluezaNet data for a survey can be stored using 2 ways :
+ - A single table contains data for all the seasons (if the survey didnt changed a lot)
+ - A new table is created for each season for a given survey
+}
+
 \examples{
 # Single table model
 platfrom_season_history('2011', dates=list(start="2011-11-15", end="2012-04-15"))
