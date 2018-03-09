@@ -5,8 +5,8 @@
 \title{Describe a survey of a platform}
 \usage{
 platform_define_survey(name, survey_id, table, mapping, labels = NULL,
-  codes = NULL, recodes = NULL, single.table = FALSE, geo.column = NULL,
-  ...)
+  codes = NULL, recodes = list(), single.table = FALSE,
+  geo.column = NULL, template = NULL, ...)
 }
 \arguments{
 \item{name}{unique name of the survey}
@@ -34,5 +34,5 @@ Describe structure of a survey and the mapping from DB names &
 coding to R names & factor levels
 }
 \seealso{
-survey_recode
+\code{\link{survey_recode}}
 }

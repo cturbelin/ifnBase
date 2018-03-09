@@ -1,6 +1,11 @@
 # Platform definition helpers
 # These functions helps to create expected structures to describe platform characteristics
 
+#' List of not usable for data variable names in survey mapping
+#'
+PROTECTED_QUESTIONS = c('timestamp','channel','user')
+
+
 #' Load platform file containing definitions and specific functions into .Share environment
 #'
 #' Launch this function to init environment
@@ -61,22 +66,51 @@ load_platform = function() {
 #'
 #' Will describe recoding for the question named 'main.activity' (using attributed name, never the DB name).
 #'
-#' @seealso survey_recode
+#' @seealso \code{\link{survey_recode}}
 #'
 #' @section labels
-#' labels are named list of labels (a label is just a character string). It is used to identify list of recoding labels
+#'
+#' labels are named list of labels (a label is just a character string). It is used to manipulate list of names for various purposes : list for variables
+#' for multi-valued questions (from "checkboxes"), a label provide a "name" to identify the list of all variables corresponding to one question.
+#' It is also used to get the list of recoded labels for a qualitative question.
+#'
+#' One of common labels is "symptoms" in weekly survey definition, providing the list of the variables names for symptoms question.
+#'
 #' @export
-platform_define_survey <- function(name, survey_id, table, mapping, labels=NULL, codes=NULL, recodes=NULL, single.table = FALSE, geo.column=NULL, template=NULL, ...) {
+platform_define_survey <- function(name, survey_id, table, mapping, labels=NULL, codes=NULL, recodes=list(), single.table = FALSE, geo.column=NULL, template=NULL, ...) {
 
   def = list(...)
 
   def$survey_id = survey_id
   def$table = table
 
-  errors = c()
+  # Old recoding structure, codes & labels were separated.
+  # recodes force label to be explicity associated with code, it is safer.
+  if( !is.null(codes) ) {
+    lapply(names(codes), function(name) {
+        if(name %in% names(recodes)) {
+          stop(paste0("'",name,"' is already defined in recodes, duplicate in codes. Remove it"))
+        }
 
-  raise_error <- function(msg) {
-    errors = c(errors, errors)
+        lab = labels[[name]]
+        if( is.null(lab) ) {
+          stop(paste0("Missing labels with codes for '",name,"'"))
+        }
+        recode = codes[[name]]
+        if(length(lab) != length(recode) ) {
+          stop(paste0("Labels for '",name,"' have not the same length of codes "))
+        }
+        names(recode) <- lab
+        recodes[[name]] <<- recode
+    })
+  } else {
+    # Import recodes labels to labels
+    lapply(names(recodes), function(name) {
+      if(name %in% names(labels)) {
+        stop(paste0(" recoding '",name,'" is already defined in labels'))
+      }
+      labels[[name]] <<- recodes[[name]]
+    })
   }
 
   if( !is.null(template) ) {
@@ -86,63 +120,37 @@ platform_define_survey <- function(name, survey_id, table, mapping, labels=NULL,
     def$template_name = template
     template = survey_templates[[template]]
 
-    ## Import data from template
-    n = names(mapping)
-    new.entries = n[ !n %in% names(template$aliases)]
-
-    # Check if a mapping redefine some questions already defined in template
-    # TODO: allow explict overriding for some questions (using attribute for ex.)
-    lapply(new.entries, function(name) {
-      question = mapping[[name]]
-      if(question %in% template$aliases) {
-        raise_error(paste0('Mapping "',name,'" redefine question "',question,'"'))
-      }
-    })
-
-    # Check redefined of template are mapped to the same question
-    lapply(n[ n %in% names(template$aliases) ], function(name) {
-      new = mapping[[name]]
-      old = template$aliases[[name]]
-      if(new != old) {
-        raise_error(paste0('Mapping "',name,'" not associated with same question (',new,') as template (',old,')'))
-      }
-    })
+    r = check_survey_template(template, mapping, recodes, only.errors = TRUE)
+    if(length(r) > 0) {
+      print(r)
+      cond = simpleError("Survey checking errors, conflicts with template")
+      attr(cond, "errors") <- r
+      stop(cond)
+    }
 
     # Update template mapping with new  & redefined ones
-    m = template$aliases
-    for(n in new.entries) {
-      m[[n]] <- mapping[[n]]
-    }
-    mapping = m
+    mapping = merge.list(mapping, template$aliases)
 
+    # Merge recodes
+    rr = list()
+    nn = unique(names(recodes), names(template$recodes))
+    for(name in nn) {
+        rr[[name]] = merge.list(recodes[[name]], template$recodes[[name]])
+    }
+    recodes = rr
+    rm(rr)
+  }
+
+  # Check if any mapping to protected names
+  n = names(mapping)
+  if(any(n %in% PROTECTED_QUESTIONS)) {
+    stop(paste0("Cannot define mapping to protected names : ", paste(n[n %in% PROTECTED_QUESTIONS ], collapse = ",")))
   }
 
   def$aliases = mapping
 
-  if( !is.null(recodes) ) {
-    nn = names(def$aliases)
-    for(i in seq_along(recodes)) {
-      n = names(recodes[i])
-      if(! n %in% nn) {
-         stop(paste0("recoding to a variable not declared in mapping '",n,'"'))
-      }
-      if(n %in% names(labels)) {
-         stop(paste0("recoding '",n,'" is already declared in recodes'))
-      }
-      values = recodes[[i]]
-      labels[[n]] <- names(values)
-      codes[[n]] <- as.vector(values)
-    }
-  }
-
-  if( length(errors) ) {
-    cond = simpleError("Errors in survey redefinition")
-    attr(cond, "errors") <- errors
-    stop(cond)
-  }
-
   def$labels = labels
-  def$codes = codes
+  def$recodes = recodes
 
   if( !is.null(geo.column) ) {
     def$geo.column = geo.column
@@ -153,17 +161,109 @@ platform_define_survey <- function(name, survey_id, table, mapping, labels=NULL,
  .Share$epiwork.tables[[name]] <- def
 }
 
-check_survey_template <- function(template, mapping, recodes) {
+#' Check if a survey definition is compatible with a survey template
+#' @param template template name
+#' @param mapping new question mapping to test
+#' @param recodes new recoding to test
+#' @param only.errors boolean if TRUE only report errors
+#' @return list()
+#' @export
+check_survey_template <- function(template, mapping, recodes, only.errors=TRUE) {
 
+  results = list()
 
+  raise_question = function(type, value, problem, message) {
+    results[[length(results) + 1]] <<- list(type=type, value=value, problem=problem, message=message, context="mapping")
+    invisible()
+  }
 
+  check_list_mapping(mapping, template$aliases, raise_question, only.errors=only.errors)
 
+  for(recode_name in names(recodes)) {
+    if(is.null(template$recodes[[recode_name]])) {
+      next()
+    }
 
+    raise_recode = function(type, value, problem, message) {
+      results[[length(results) + 1]] <<- list(type=type, value=value, problem=problem, message=message, context="recode", name=recode_name)
+      invisible()
+    }
+
+    new = recodes[[recode_name]]
+    old = template$recodes[[recode_name]]
+    check_list_mapping(new, old, raise_recode, only.errors=only.errors)
+
+  }
+  invisible(structure(results, class="survey_error"))
+}
+
+print.survey_error = function(errors) {
+  cat("Error merging survey with template\n")
+  rr = lapply(errors, function(e) {
+    n = ""
+    if(e$context == "recode") {
+      n = paste0(" ", e$name)
+    }
+    paste0(" - ", e$type," in ", e$context, n, " [", e$problem, "] : ", e$message)
+  })
+  rr = paste(unlist(rr), collapse = "\n")
+  cat(rr)
+  cat("\n")
 }
 
 
-describe_survey_recoding = function(survey, name, values) {
+#' Check if two named list are compatible to merge
+#' \itemize {
+#'   \item only one value is mapped to a name
+#'   \item new can add new name with new value, not already in old
+#'   \item new cannot redefine a value with a new name (unless allow_override, not currently supported)
+#' }
+#'
+#' The checks are transmitted to a provided function raise()
+#' @param new list()
+#' @param old list()
+#' @param raise function(type, value, problem, message)
+#' @param only.errors only raise errors
+check_list_mapping = function(new, old, raise, only.errors=TRUE) {
 
+  # Be sure we compare on character string values
+  new = lapply(new, as.character)
+  old = lapply(old, as.character)
+
+  n = names(new)
+
+  new.entries = n[ !n %in% names(old)]
+
+  # Check if a new redefine some values already defined in old
+  # TODO: allow explict overriding for some values (using attribute for ex.)
+  lapply(new.entries, function(name) {
+    value = new[[name]]
+    if(value %in% old) {
+      raise(type="error", value=value, problem="override", paste0("'",name,"' redefine '",value,"'"))
+    }
+    if( !only.errors ) {
+      raise(type="info", value=value, problem="new", paste0("new ",value," mapped to ", name))
+    }
+  })
+
+  # Check redefined of old are mapped to the same value in new
+  lapply(n[ n %in% names(old) ], function(name) {
+    new.value = new[[name]]
+    old.value = old[[name]]
+    if(new.value != old.value) {
+      raise(type="error", value=old.value, problem="conflict", paste0("'",name,"' not associated with same value (",new.value,") as template (",old.value,")"))
+    }
+  })
+
+  tt = table(unlist(new))
+  if( !all(tt == 1) ) {
+    vv =names(tt[tt > 1])
+    lapply(vv, function(v) {
+      n = names(new[ new == v ])
+      raise(type="error", value=v, problem="duplicate", paste0("Duplicate value for entries ", paste(n, collapse = ",")))
+    })
+  }
+ invisible()
 }
 
 #' Create structure defining an geographic table system

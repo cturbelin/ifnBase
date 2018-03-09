@@ -1,9 +1,41 @@
 
-# Survey Template definitions
+#' Survey Template definitions
+#' Templates of Surveys
+#'
+#' Template for common surveys : intake & weekly
+#'
+#' Contains mapping definition and recoding for the common part of InfluenzaNet surveys
+#'
+#' names:
+#' \items{
+#'  \item{eu:intake}
+#'  \item{eu:weekly}
+#' }
+#'
+#' @seealso \code{platform_define_survey}
+
+survey_template = function(name) {
+  def = survey_templates[[name]]
+  if(is.null(def)) {
+    stop(paste0("Unknown survey template '",name,"'"))
+  }
+  def
+}
+
+#'
 survey_templates = list()
 
+#' create a recoding alias
+#'
+#' The recoding will be proceeded using the name provided
+#' @param name name of recode to use
+#' @export
 recode_alias = function(name) {
   structure(name, class="recode_alias")
+}
+
+allow_override = function(data) {
+  attr(data, "allow_override") <- TRUE
 }
 
 survey_templates[["eu:intake"]] = list(
@@ -146,57 +178,57 @@ survey_templates[["eu:intake"]] = list(
     notvac.reason = 'notvac.reason.*'
   ),
   recodes = list(
-  activities = c(
-      'activity.fulltime'="0",
-      'activity.partial'="1",
-      'activity.self'="2",
-      'activity.student'="3",
-      'activity.home'="4",
-      'activity.unemployed'="5",
-      'activity.sick'="6",
-      'activity.retired'="7",
-      'activity.other'="8"
-    ),
-    occupation = c(
-      'occupation.prof' = "0",
-      'occupation.office' = "1",
-      'occupation.shop' ="2",
-      'occupation.worker'="3",
-      'occupation.omanual'="4",
-      'occupation.other'="5"
-    ),
-    transport  = c(
-      'transport.walk'="0",
-      'transport.bike'="1",
-      'transport.scooter'="2",
-      'transport.car'="3",
-      'transport.public'="4",
-      'transport.other'="5"
-    ),
-    time.transport = c(
-      'transtime.no'="0",
-      'transtime.half'="1",
-      'transtime.hour'="2",
-      'transtime.less4h'="3",
-      'transtime.more4h'="4"
-    ),
-    often.ili = c(
-      'often.never'="1",
-      'often.once'="2",
-      'often.3'="3",
-      'often.6'="4",
-      'often.10'="5",
-      'often.dkn'="6"
-    ),
-    smoker = c(
-      'smoker.no'="0",
-      'smoker.occas'="1",
-      'smoker.dailyfew'="2",
-      'smoker.daily'="3",
-      'smoker.dkn'="4",
-      'smoker.stopped'="5",
-      'smoker.juststop'="6"
-    )
+    activities = c(
+        'activity.fulltime'="0",
+        'activity.partial'="1",
+        'activity.self'="2",
+        'activity.student'="3",
+        'activity.home'="4",
+        'activity.unemployed'="5",
+        'activity.sick'="6",
+        'activity.retired'="7",
+        'activity.other'="8"
+      ),
+      occupation = c(
+        'occupation.prof' = "0",
+        'occupation.office' = "1",
+        'occupation.shop' ="2",
+        'occupation.worker'="3",
+        'occupation.omanual'="4",
+        'occupation.other'="5"
+      ),
+      transport  = c(
+        'transport.walk'="0",
+        'transport.bike'="1",
+        'transport.scooter'="2",
+        'transport.car'="3",
+        'transport.public'="4",
+        'transport.other'="5"
+      ),
+      time.transport = c(
+        'transtime.no'="0",
+        'transtime.half'="1",
+        'transtime.hour'="2",
+        'transtime.less4h'="3",
+        'transtime.more4h'="4"
+      ),
+      often.ili = c(
+        'often.never'="1",
+        'often.once'="2",
+        'often.3'="3",
+        'often.6'="4",
+        'often.10'="5",
+        'often.dkn'="6"
+      ),
+      smoker = c(
+        'smoker.no'="0",
+        'smoker.occas'="1",
+        'smoker.dailyfew'="2",
+        'smoker.daily'="3",
+        'smoker.dkn'="4",
+        'smoker.stopped'="5",
+        'smoker.juststop'="6"
+      )
   )
 ) # eu:intake
 
