@@ -376,7 +376,7 @@ survey_templates[["eu:weekly"]] = list(
     off.work = c(
       'Yes' = 0,
      'No' = 1,
-     'other' = 2
+     'other' = 3 # Weird coding..
     ),
 
     # Q10c
