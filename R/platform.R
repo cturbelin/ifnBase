@@ -164,13 +164,16 @@ create_survey_definition <- function( mapping, labels=NULL, codes=NULL, recodes=
     checks = check_survey_template(template, mapping, recodes, only.errors = only.errors)
 
     # Update template mapping with new  & redefined ones
-    mapping = merge.list(mapping, template$aliases)
+    mapping = merge_by_value(mapping, template$aliases)
 
     # Merge recodes
     rr = list()
     nn = unique(names(recodes), names(template$recodes))
     for(name in nn) {
-      rr[[name]] = merge.list(recodes[[name]], template$recodes[[name]])
+      rr[[name]] = merge_by_value(recodes[[name]], template$recodes[[name]])
+      if( !check_unique(rr[name]) ) {
+        stop(paste0("Values are not unique for recode ", name))
+      }
     }
     recodes = rr
     rm(rr)
@@ -191,7 +194,25 @@ create_survey_definition <- function( mapping, labels=NULL, codes=NULL, recodes=
 
 }
 
+#' Check if list values are unique
+check_unique = function(x) {
+  if(is.list(x)) {
+    x = unlist(x)
+  }
+  all(table(x) == 1)
+}
 
+#' Merge two named lists
+merge_by_value = function(new, old) {
+  if( is.list(new) ) {
+    new = unlist(new)
+  }
+  if( is.list(old) ) {
+    old = unlist(old)
+  }
+  new = c(new, old[!old %in% new])
+  as.list(new)
+}
 
 #' Check if a survey definition is compatible with a survey template
 #' @param template template name
@@ -249,10 +270,12 @@ print.survey_error = function(errors) {
 
 
 #' Check if two named list are compatible to merge
-#' \itemize {
-#'   \item only one value is mapped to a name
-#'   \item new can add new name with new value, not already in old
-#'   \item new cannot redefine a value with a new name (unless allow_override, not currently supported)
+#'
+#' To be compatible with template, mapping should follow these rules:
+#' \itemize{
+#'   \item{only one value is mapped to a name}
+#'   \item{new can add new name with new value, not already in old}
+#'   \item{new cannot redefine a value with a new name (unless allow_override, not currently supported)}
 #' }
 #'
 #' The checks are transmitted to a provided function raise()
@@ -262,20 +285,29 @@ print.survey_error = function(errors) {
 #' @param only.errors only raise errors
 check_list_mapping = function(new, old, raise, only.errors=TRUE) {
 
-  # Be sure we compare on character string values
-  new = lapply(new, as.character)
-  old = lapply(old, as.character)
+  # Be sure we compare on character string values, keep values attributes
+  convert <- function(x) {
+    a = attributes(x)
+    x = as.character(x)
+    attributes(x) <- a
+    x
+  }
+
+  new = lapply(new, convert)
+  old = lapply(old, convert)
 
   n = names(new)
 
   new.entries = n[ !n %in% names(old)]
 
   # Check if a new redefine some values already defined in old
-  # TODO: allow explict overriding for some values (using attribute for ex.)
   lapply(new.entries, function(name) {
     value = new[[name]]
     if(value %in% old) {
-      raise(type="error", value=value, problem="override", paste0("'",name,"' redefine '",value,"'"))
+      # Allow explicit override for some values if it is explicit, althought not recommanded
+      override = attr(value, "allow_override")
+      type = ifelse(isTRUE(override), "warn", "error")
+      raise(type=type, value=value, problem="override", paste0("'",name,"' redefine '",value,"'"))
     }
     if( !only.errors ) {
       raise(type="info", value=value, problem="new", paste0("new ",value," mapped to ", name))

@@ -2,12 +2,7 @@
 % Please edit documentation in R/platform.R
 \name{check_list_mapping}
 \alias{check_list_mapping}
-\title{Check if two named list are compatible to merge
-\itemize {
-  \item only one value is mapped to a name
-  \item new can add new name with new value, not already in old
-  \item new cannot redefine a value with a new name (unless allow_override, not currently supported)
-}}
+\title{Check if two named list are compatible to merge}
 \usage{
 check_list_mapping(new, old, raise, only.errors = TRUE)
 }
@@ -21,5 +16,13 @@ check_list_mapping(new, old, raise, only.errors = TRUE)
 \item{only.errors}{only raise errors}
 }
 \description{
+To be compatible with template, mapping should follow these rules:
+\itemize{
+  \item{only one value is mapped to a name}
+  \item{new can add new name with new value, not already in old}
+  \item{new cannot redefine a value with a new name (unless allow_override, not currently supported)}
+}
+}
+\details{
 The checks are transmitted to a provided function raise()
 }

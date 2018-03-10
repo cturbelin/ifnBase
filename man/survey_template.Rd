@@ -15,7 +15,7 @@ Template for common surveys : intake & weekly
 Contains mapping definition and recoding for the common part of InfluenzaNet surveys
 
 names:
-\items{
+\itemize{
  \item{eu:intake}
  \item{eu:weekly}
 }

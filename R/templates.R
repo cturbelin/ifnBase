@@ -8,7 +8,7 @@
 #' Contains mapping definition and recoding for the common part of InfluenzaNet surveys
 #'
 #' names:
-#' \items{
+#' \itemize{
 #'  \item{eu:intake}
 #'  \item{eu:weekly}
 #' }
@@ -34,8 +34,12 @@ recode_alias = function(name) {
   structure(name, class="recode_alias")
 }
 
-allow_override = function(data) {
+#' Allow override of mapping or recoding from template
+#' @param data value to flag as overrided
+#' @export
+override = function(data) {
   attr(data, "allow_override") <- TRUE
+  data
 }
 
 survey_templates[["eu:intake"]] = list(
