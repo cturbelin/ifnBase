@@ -213,12 +213,12 @@ survey_templates[["eu:intake"]] = list(
         'transtime.more4h'="4"
       ),
       often.ili = c(
-        'often.never'="1",
-        'often.once'="2",
-        'often.3'="3",
-        'often.6'="4",
-        'often.10'="5",
-        'often.dkn'="6"
+        'often.never'="0",
+        'often.once'="1",
+        'often.3'="2",
+        'often.6'="3",
+        'often.10'="4",
+        'often.dkn'="5"
       ),
       smoker = c(
         'smoker.no'="0",
