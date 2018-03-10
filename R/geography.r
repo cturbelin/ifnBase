@@ -127,6 +127,10 @@ geo_is_type = function(geo, type, code) {
   .Share$geo_is_type(geo, type, code)
 }
 
+#' Load popuplation by age-group & sex
+#'
+#' Load popuplation data by 5-year (or multiple) age group & sex
+#'
 #' @param geo geographic level, if null, return by age only population
 #' @param year year of the population
 #' @param age.breaks used to create age categories (from 5-year categories)

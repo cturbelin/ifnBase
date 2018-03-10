@@ -2,11 +2,14 @@
 ## Global Convention
 ## An ISO 8601 is represented as a YearWeek number (YYYYWW) = yearOfTheWeek*100 + weekNumberInTheYear
 
-# ISOYearWeek(dates)
-# calculate ISO 8601 Yearweek number (YYYYWW) from dates (Date class)
+#' ISOYearWeek(dates)
+#'
+#' Compute ISO 8601 Yearweek number (YYYYWW) from dates (Date class)
+#'
 #' @param dates Date values
 #' @param yearweek value as number ( year of the week * 100 + week number, ex: 200515 is week 15 of 2005)
 #' @name isoyearweek
+NULL
 
 if (.Platform$OS.type == "unix") {
 
@@ -14,7 +17,6 @@ if (.Platform$OS.type == "unix") {
   ISOYearWeek <- function(dates) {
     as.numeric(format(dates, "%G%V"))
   }
-
 
 } else {
 
