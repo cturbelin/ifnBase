@@ -86,7 +86,8 @@ platform_define_survey <- function(name, survey_id, table, mapping, labels=NULL,
 
   r = create_survey_definition(mapping=mapping, labels=labels, codes=codes, recodes=recodes, template=template, only.errors = TRUE)
 
-  if( length(r$checks) > 0 ) {
+  errors = Filter(function(x) x$type == "error", r$checks)
+  if( length(errors) > 0 ) {
     cond = simpleError("Survey error importing templates")
     attr(cond, "errors") <- r$checks
     stop(cond)
@@ -96,10 +97,11 @@ platform_define_survey <- function(name, survey_id, table, mapping, labels=NULL,
     def$template_name = template
   }
 
-  def$aliases = mapping
+  def$aliases = r$mapping
 
-  def$labels = labels
-  def$recodes = recodes
+  def$labels = r$labels
+  def$recodes = r$recodes
+  def$checks = r$checks
 
   if( !is.null(geo.column) ) {
     def$geo.column = geo.column
@@ -154,7 +156,7 @@ create_survey_definition <- function( mapping, labels=NULL, codes=NULL, recodes=
       labels[[name]] <<- recodes[[name]]
     })
   }
-
+  checks = NULL
   if( !is.null(template) ) {
     if( is.null(survey_templates[[template]]) ) {
       stop(paste0("Unknown template '", template,'"'))
@@ -278,7 +280,20 @@ print.survey_error = function(errors) {
 #'   \item{new cannot redefine a value with a new name (unless allow_override, not currently supported)}
 #' }
 #'
-#' The checks are transmitted to a provided function raise()
+#' Overriding is allowed wraping the value with \code{\link{override()}} function
+#'
+#' @examples
+#'
+#' new = list("var1"="Q1", "var2"="Q2", "var3"="Q3", "var4"="Q1", "var5"="Q4")
+#' old = list("var0"="Q0", "var1"="Q1", "var2"="Q4")
+#' check_list_mapping(new, old, raise=raise)
+#' # Returs list of errors
+#'
+#' new = list("var1"="Q1", "var3"=override("Q2"))
+#' old = list("var2"="Q2")
+#' check_list_mapping(new, old, raise=raise) # Only throw warning
+#'
+#' The checks are transmitted to a provided function \code{\link{raise()}}
 #' @param new list()
 #' @param old list()
 #' @param raise function(type, value, problem, message)
@@ -341,8 +356,9 @@ check_list_mapping = function(new, old, raise, only.errors=TRUE) {
 #' @param columns list of column name for each level in the form list([name]=[column_name])
 #' @param hierarchies list of hierarchies list( hierarchy1=c(levels order), hierarchy2=(levels order), ...)
 #' @param default.hierarchy name of the default hierarchy to be used to get upper or lower column
+#' @param define if TRUE set the geo.levels during the call, set to FALSE if you dont want to change configuration
 #' @export
-platform_geographic_levels = function(levels,  level.base = NULL, table = 'geo_levels', columns = NULL, hierarchies=NULL, default.hierarchy='default') {
+platform_geographic_levels = function(levels,  level.base = NULL, table = 'geo_levels', columns = NULL, hierarchies=NULL, default.hierarchy='default', define=TRUE) {
 
   lev = names(levels)
   if( is.null(lev) ) {
@@ -378,7 +394,7 @@ platform_geographic_levels = function(levels,  level.base = NULL, table = 'geo_l
     }, names(hierarchies), hierarchies)
   }
 
-  structure(
+  geo = structure(
     lev,
     level.base = level.base,
     columns = columns,
@@ -387,12 +403,18 @@ platform_geographic_levels = function(levels,  level.base = NULL, table = 'geo_l
     default.path = default.hierarchy,
     class="geo_levels"
   )
+
+  if(define) {
+    .Share$geo.levels = geo
+  }
+  invisible(geo)
 }
 
 #' Create geographic tables description
 #'
 #' @param def either a geo.levels structure or a list of table description for each level (name of the level as the name of each entry)
 #' @param default.title default column name for title
+#' @param define if TRUE set the table configuration during the call
 #' @return list()
 #'
 #' @details
@@ -404,7 +426,7 @@ platform_geographic_levels = function(levels,  level.base = NULL, table = 'geo_l
 #'
 #' @export
 #' @importFrom methods is
-platform_geographic_tables = function(def, default.title = "title") {
+platform_geographic_tables = function(def, default.title = "title", define=TRUE) {
   if( is(def, "geo_levels") ) {
     columns = attr(def, "columns")
     tables = lapply(def, function(level) {
@@ -417,7 +439,11 @@ platform_geographic_tables = function(def, default.title = "title") {
   } else {
     tables = def
   }
-  structure(tables, class="geo_tables")
+  geo =structure(tables, class="geo_tables")
+  if(define) {
+    .Share$geo.tables = geo
+  }
+  invisible(geo)
 }
 
 
