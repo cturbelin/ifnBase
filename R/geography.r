@@ -104,7 +104,6 @@ load_geo_zone <- function(geo, type="metro", columns=c()) {
 #' @param year year of the population (estimation of the population for the year)
 #' @export
 load_population <- function(geo, year) {
- column = get_geo_column(geo)
  dbQuery('select * from pop_', geo, ' where year=',year)
 }
 
