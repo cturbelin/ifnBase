@@ -204,7 +204,7 @@ check_unique = function(x) {
   all(table(x) == 1)
 }
 
-#' Merge two named lists
+#' Merge two named lists by their values
 merge_by_value = function(new, old) {
   if( is.list(new) ) {
     new = unlist(new)
@@ -489,7 +489,7 @@ platform_season_history <- function(season, dates, ...) {
 #'   \item{first.season.censored}{left censor first season participants for some countries}
 #'   \item{health.status}{structure of the health.status table in case of single table model for weekly}
 #' }
-#'
+#' @export
 platform_options = function(...) {
 
   oo = list(...)

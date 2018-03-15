@@ -2,7 +2,7 @@
 # Geographic informations
 
 #' Get geographic structure description
-#'
+#' @export
 geo_definition <- function(name=NULL) {
   if(!is.null(name)) {
     return(attr(.Share$geo.levels, name))
@@ -42,12 +42,14 @@ geo_column <- function(geo) {
 
 #' Get Base geographic tables
 #' It should contains all levels, describe all upper levels from the base level
+#' @export
 geo_base_table = function() {
   geo_definition("table")
 }
 
 #' Get base level of geographic tables (lowest level)
 #'
+#' @export
 geo_base_level = function() {
   geo_definition("level.base")
 }
@@ -95,6 +97,7 @@ geo_hierarchy <- function(hierarchy=NULL) {
 
 #' Get geographic table definition for a given geographic level
 #' @param level geographic level name
+#' @export
 geo_level_table <- function(level) {
   .Share$geo.tables[[level]]
 }
