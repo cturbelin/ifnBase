@@ -2,10 +2,10 @@
 % Please edit documentation in R/platform.R
 \name{merge_by_value}
 \alias{merge_by_value}
-\title{Merge two named lists}
+\title{Merge two named lists by their values}
 \usage{
 merge_by_value(new, old)
 }
 \description{
-Merge two named lists
+Merge two named lists by their values
 }
