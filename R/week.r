@@ -9,31 +9,24 @@
 #' @param dates Date values
 #' @param yearweek value as number ( year of the week * 100 + week number, ex: 200515 is week 15 of 2005)
 #' @name isoyearweek
-NULL
-
-if (.Platform$OS.type == "unix") {
-
-  #' @rdname isoyearweek
-  ISOYearWeek <- function(dates) {
-    as.numeric(format(dates, "%G%V"))
-  }
-
-} else {
-
-  #' @rdname isoyearweek
-  ISOYearWeek <- function(dates) {
-    j = as.numeric(format(dates, "%w"))
-    j = ifelse(j == 0, 7, j) - 4 # day of week of the date (week starting on monday)
-    d = dates - j # Date of Thursday of the week
-    jan.4 = as.Date(paste(format(d, format = "%Y"), "-01-04", sep = ""))
-    wd = as.numeric(format(jan.4, "%w")) # Day of week of the Jan 4th of the year
-    wd = ifelse(wd == 0, 7, wd) # week starting on monday
-    lundi = jan.4 - (wd - 1) # Number of day from the monday of the Jan 4th
-    dif = ceiling(as.numeric(d - lundi) / 7) # Number of day of the thursday of the week of interest from this monday
-    yw = as.numeric(format(d, "%Y")) * 100 + dif # now the yearweek number
-    return(yw)
-  }
+#' @export
+ISOYearWeek <- function(dates) {
+  as.integer(format(dates, "%G%V"))
 }
+
+#' #' @rdname isoyearweek
+#' ISOYearWeek <- function(dates) {
+#'   j = as.numeric(format(dates, "%w"))
+#'   j = ifelse(j == 0, 7, j) - 4 # day of week of the date (week starting on monday)
+#'   d = dates - j # Date of Thursday of the week
+#'   jan.4 = as.Date(paste(format(d, format = "%Y"), "-01-04", sep = ""))
+#'   wd = as.numeric(format(jan.4, "%w")) # Day of week of the Jan 4th of the year
+#'   wd = ifelse(wd == 0, 7, wd) # week starting on monday
+#'   lundi = jan.4 - (wd - 1) # Number of day from the monday of the Jan 4th
+#'   dif = ceiling(as.numeric(d - lundi) / 7) # Number of day of the thursday of the week of interest from this monday
+#'   yw = as.numeric(format(d, "%Y")) * 100 + dif # now the yearweek number
+#'   return(yw)
+#' }
 
 #' weeksbydates(from,to)
 #' get yearweeks of each date in a date interval
@@ -41,9 +34,7 @@ if (.Platform$OS.type == "unix") {
 #' @param to Date class
 #' @return dataframe(dates, yearweek number, using the format YYYYWW, so Year * 100 + Week in the year)
 weeksbydates <- function(from, to) {
-  dates = seq(from = as.Date(from),
-              to = as.Date(to),
-              by = 1)
+  dates = seq(from = as.Date(from), to = as.Date(to), by = 1)
   weeks = ISOYearWeek(dates)
   return(data.frame("date" = dates, "yw" = weeks))
 }
@@ -75,8 +66,8 @@ WeekStart <- function(yw) {
   if ( is.factor(yw) ) {
     yw = as.character(yw)
   }
-  year = floor(as.numeric(yw) / 100L)
-  week = as.numeric(yw) %% 100L
+  year = floor(as.integer(yw) / 100L)
+  week = as.integer(yw) %% 100L
   d = YearStart(year) + ((week - 1L) * 7L)
   return(d)
 }
@@ -88,15 +79,15 @@ WeekStart <- function(yw) {
 #' It is usefull to plot week based data.
 #' @param yw yearweek value
 WeekStamp <- function(yw) {
-  monday = as.numeric(WeekStart(yw)) + 4
-  monday = floor(monday / 7)
+  monday = as.integer(WeekStart(yw)) + 4L
+  monday = monday %/% 7L
   class(monday) <- c('numeric', "weekstamp")
   monday
 }
 
 #' @noRd
 Stamp2Week <- function(stamp) {
-  monday = as.Date(stamp * 7, origin = '1970-01-01')
+  monday = as.Date(stamp * 7L, origin = '1970-01-01')
 }
 
 #' Format a yearweek value to a human readable format
@@ -112,11 +103,11 @@ format.week <- function(w, sep = 's', century = T) {
     w = as.character(w)
   }
   w = as.integer(w)
-  y = floor(w / 100)
+  y = w %/% 100L
   if (!century) {
-    y = y %% 100
+    y = y %% 100L
   }
-  w = sprintf(fmt = "%02d", as.integer(w %% 100))
+  w = sprintf(fmt = "%02d", w %% 100L)
   paste(y, sep, w, sep = '')
 }
 
@@ -165,11 +156,10 @@ calc.season.fixed = function(inc,
   # based on a fixed date (we use the monday of the week of this date)
   y = floor(yw / 100)
   # Monday of the week of the starting date
-  start = mondayOfDate(as.Date(paste(y, date.start, sep = '-'), format =
-                                 "%Y-%m-%d"))
+  start = mondayOfDate(as.Date(paste(y, date.start, sep = '-'), format ="%Y-%m-%d"))
   date = WeekStart(yw) # Monday of the week of each yearweek
 
-  y = ifelse(date >= start, y, y - 1) # Year of the season starting for each week
+  y = ifelse(date >= start, y, y - 1L) # Year of the season starting for each week
 
   if (calc.index) {
     start = as.Date(paste(y, date.start, sep = '-'), format = "%Y-%m-%d") # starting of the season for each week
