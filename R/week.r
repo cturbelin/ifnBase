@@ -14,25 +14,26 @@ ISOYearWeek <- function(dates) {
   as.integer(format(dates, "%G%V"))
 }
 
-#' #' @rdname isoyearweek
-#' ISOYearWeek <- function(dates) {
-#'   j = as.numeric(format(dates, "%w"))
-#'   j = ifelse(j == 0, 7, j) - 4 # day of week of the date (week starting on monday)
-#'   d = dates - j # Date of Thursday of the week
-#'   jan.4 = as.Date(paste(format(d, format = "%Y"), "-01-04", sep = ""))
-#'   wd = as.numeric(format(jan.4, "%w")) # Day of week of the Jan 4th of the year
-#'   wd = ifelse(wd == 0, 7, wd) # week starting on monday
-#'   lundi = jan.4 - (wd - 1) # Number of day from the monday of the Jan 4th
-#'   dif = ceiling(as.numeric(d - lundi) / 7) # Number of day of the thursday of the week of interest from this monday
-#'   yw = as.numeric(format(d, "%Y")) * 100 + dif # now the yearweek number
-#'   return(yw)
-#' }
+# Old implementation
+# ISOYearWeek <- function(dates) {
+#   j = as.numeric(format(dates, "%w"))
+#   j = ifelse(j == 0, 7, j) - 4 # day of week of the date (week starting on monday)
+#   d = dates - j # Date of Thursday of the week
+#   jan.4 = as.Date(paste(format(d, format = "%Y"), "-01-04", sep = ""))
+#   wd = as.numeric(format(jan.4, "%w")) # Day of week of the Jan 4th of the year
+#   wd = ifelse(wd == 0, 7, wd) # week starting on monday
+#   lundi = jan.4 - (wd - 1) # Number of day from the monday of the Jan 4th
+#   dif = ceiling(as.numeric(d - lundi) / 7) # Number of day of the thursday of the week of interest from this monday
+#   yw = as.numeric(format(d, "%Y")) * 100 + dif # now the yearweek number
+#   return(yw)
+# }
 
 #' weeksbydates(from,to)
 #' get yearweeks of each date in a date interval
 #' @param from date (Date class)
 #' @param to Date class
 #' @return dataframe(dates, yearweek number, using the format YYYYWW, so Year * 100 + Week in the year)
+#' @export
 weeksbydates <- function(from, to) {
   dates = seq(from = as.Date(from), to = as.Date(to), by = 1)
   weeks = ISOYearWeek(dates)
@@ -41,6 +42,7 @@ weeksbydates <- function(from, to) {
 
 #' Monday of the week of the date
 #' @param d Date
+#' @export
 mondayOfDate <- function(d) {
   w = as.integer(format(d, format = "%w"))
   w = ifelse(w == 0L, 7L, w) - 1L
@@ -50,6 +52,7 @@ mondayOfDate <- function(d) {
 #' Date of the first monday of the Year
 #' @param WhichYear int year
 #' @return Date
+#' @export
 YearStart <- function(WhichYear) {
   NewYear = as.Date(paste(WhichYear, 1, 1), format = "%Y %m %d")
   WeekDay = as.numeric(format(NewYear, "%w")) - 1 #Generate weekday index where Monday = 0
@@ -62,6 +65,7 @@ YearStart <- function(WhichYear) {
 #' Date of the monday of a YearWeek
 #' @param yw integer yearweek number
 #' @return Date
+#' @export
 WeekStart <- function(yw) {
   if ( is.factor(yw) ) {
     yw = as.character(yw)
@@ -78,6 +82,7 @@ WeekStart <- function(yw) {
 #' This provide a continuous index for week number which not depend on period bound (unlike makeWeekIndex)
 #' It is usefull to plot week based data.
 #' @param yw yearweek value
+#' @export
 WeekStamp <- function(yw) {
   monday = as.integer(WeekStart(yw)) + 4L
   monday = monday %/% 7L
@@ -94,6 +99,7 @@ Stamp2Week <- function(stamp) {
 #' @param w vector of yearweek values
 #' @param sep separator to use
 #' @param century use century for year value
+#' @export
 format.week <- function(w, sep = 's', century = T) {
   if (length(w) == 0) {
     return(character())
@@ -117,6 +123,7 @@ format.week <- function(w, sep = 's', century = T) {
 #' @param col.idx char[1] name of the week index column in the resulting data.frame
 #' @param stamp logical use weekstamp instead of order of the week (depends on the range of weeks)
 #' @return data.frame(yw=int,wid=int)  yw=yearweek number, wid=index of the yw
+#' @export
 makeWeekIndex = function(yw,
                          col.yw = 'yw',
                          col.idx = 'wid',
@@ -145,6 +152,7 @@ makeWeekIndex = function(yw,
 #' @param date.start month-day date to take as the start of each season
 #' @param calc.index if TRUE add an index column
 #' @return inc with 'season.year' (year of the start ) and 'season.index' (index of the week in the season) columns
+#' @export
 calc.season.fixed = function(inc,
                              col.yw = 'yw',
                              col.stamp = NULL,

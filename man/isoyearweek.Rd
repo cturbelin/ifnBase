@@ -2,7 +2,11 @@
 % Please edit documentation in R/week.r
 \name{isoyearweek}
 \alias{isoyearweek}
+\alias{ISOYearWeek}
 \title{ISOYearWeek(dates)}
+\usage{
+ISOYearWeek(dates)
+}
 \arguments{
 \item{dates}{Date values}
 
