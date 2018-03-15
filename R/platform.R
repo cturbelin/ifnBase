@@ -439,7 +439,7 @@ platform_geographic_tables = function(def=NULL, default.title = "title", define=
     tables = def
     nn = names(def)
     levels = geo_definition()
-    if( all(levels %in% nn) ) {
+    if( !all(levels %in% nn) ) {
       m = levels[!levels %in% nn]
       stop(paste("Some levels are not described in a geographic table", paste(m, collapse = ",")))
     }
