@@ -4,12 +4,15 @@
 \alias{platform_geographic_tables}
 \title{Create geographic tables description}
 \usage{
-platform_geographic_tables(def, default.title = "title")
+platform_geographic_tables(def = NULL, default.title = "title",
+  define = TRUE)
 }
 \arguments{
-\item{def}{either a geo.levels structure or a list of table description for each level (name of the level as the name of each entry)}
+\item{def}{list of table description for each level (name of the level as the name of each entry), if NULL a default table structure is created}
 
 \item{default.title}{default column name for title}
+
+\item{define}{if TRUE set the table configuration during the call}
 }
 \value{
 list()

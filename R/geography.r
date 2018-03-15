@@ -1,30 +1,83 @@
 ##
 # Geographic informations
 
+#' Get geographic structure description
+#'
+geo_definition <- function(name=NULL) {
+  if(!is.null(name)) {
+    return(attr(.Share$geo.levels, name))
+  }
+  .Share$geo.levels
+}
+
 #' Create a geographic level object
 #'
 #' The available levels depends on the platform configuration
 #'
-#' @param geo.name geographic level name (for example "nuts1", "nuts2")
+#' @param level geographic level name (for example "nuts1", "nuts2")
 #' @param hierarchy name of a level hierarchy
 #' @param ... extra information to store with level information
 #' @export
-geo_level = function(geo.name, hierarchy = NULL, ...) {
-  structure(geo.name, class="geo.level", hierarchy=hierarchy, ...)
+geo_level = function(level, hierarchy = NULL, ...) {
+  if(hierarchy) {
+    h = geo_hierarchy(hierarchy)
+    if(!level %in% h) {
+      stop(paste0("level '", level,"' is not in hierarchy ", hierarchy))
+    }
+  }
+  structure(level, class="geo.level", hierarchy=hierarchy, ...)
 }
 
 #' Get geographic column name for a given level
 #' @param geo geographic level name
 #' @export
-get_geo_column <- function(geo) {
-  def = attr(.Share$geo.levels, "columns")[[geo]]
+geo_column <- function(geo) {
+  columns = geo_definition("columns")
+  def = columns[[geo]]
   if( is.null(def) ) {
     stop("Unknown geograpic level, update 'geo.levels' columns attribute list to define them")
   }
-  def
+  unlist(def)
 }
 
+#' Get Base geographic tables
+#' It should contains all levels, describe all upper levels from the base level
+geo_base_table = function() {
+  geo_definition("table")
+}
+
+#' Get base level of geographic tables (lowest level)
+#'
+geo_base_level = function() {
+  geo_definition("level.base")
+}
+
+#' Get information needed to make a join with geo tables
+#' from base geographic level to any other level
+#' @return list()
+#'
+#' \describe{
+#'  \item{table}{name of the table associating all levels}
+#'  \item{base.column}{name of the column for the lowest level}
+#'  \item{join.country}{TRUE if the join should include the "country" column (european data or cross country site)}
+#' }
+#'
+get_geo_join = function() {
+  base.level = geo_base_level()
+  list(
+    table = geo_base_table(),
+    base.level = base.level,
+    base.column = geo_column(base.level),
+    join.country = geo_definition("join.country")
+  )
+}
+
+
 #' Get a hierarchy path of geographic levels
+#'
+#' A hierarchy path is a list of ordered geographic levels from the lowest to the uppest
+#'
+#' Several hierarchy could be defined to handle several kind of levels aggregation for example
 #'
 #' Depending of the context several kind of geographic levels can be used
 #' Inside a hierarchy, all levels should be totaly nested (all sublevel should be mapped to ONE upper level)
@@ -32,12 +85,18 @@ get_geo_column <- function(geo) {
 #' @param hierarchy name of the hierarchy path to use
 #'
 #' @export
-get_geo_hierarchy <- function(hierarchy=NULL) {
-  hh = attr(.Share$geo.levels, "hierarchies")
+geo_hierarchy <- function(hierarchy=NULL) {
+  hh = geo_definition("hierarchies")
   if( is.null(hierarchy) ) {
-    hierarchy = attr(.Share$geo.levels, "default.path")
+    hierarchy = geo_definition("default.path")
   }
   hh[[hierarchy]]
+}
+
+#' Get geographic table definition for a given geographic level
+#' @param level geographic level name
+geo_level_table <- function(level) {
+  .Share$geo.tables[[level]]
 }
 
 #' Navigate through geographic levels (get the upper level, the lower level, ...)
@@ -51,7 +110,7 @@ geo_level_nav <- function(geo, side, hierarchy=NULL) {
       hierarchy = attr(geo, "hierarchy")
     }
   }
-  h = get_geo_hierarchy(hierarchy)
+  h = geo_hierarchy(hierarchy)
   side = switch(side, "upper"=1, "lower"=-1, side)
   i = match(geo, h) + side
   if(i <= 0 || i > length(h)) {
@@ -66,11 +125,11 @@ geo_level_nav <- function(geo, side, hierarchy=NULL) {
 #' @param columns list of extra columns to fetch (if the geographic table has extra columns...)
 #' @export
 load_geo_zone <- function(geo, type="metro", columns=c()) {
- def = .Share$geo.tables[[geo]]
+ def = geo_level_table(geo)
  if( is.null(def) ) {
 	stop("Unknown geograpic level, update 'geo.tables' list to define them")
  }
- col.geo = get_geo_column(geo)
+ col.geo = geo_column(geo)
  if( is.null(col.geo) ) {
    # level is not defined in geo.levels
    # So it is not handled in hierarchy

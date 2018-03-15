@@ -69,11 +69,11 @@ Platform file should describe available tables and how columns are named. It als
 
 ## Configuration
 
-The list of levels & hierarchies should be defined in the *platform file* defining the `geo.levels` object and using the `create_geographic_levels`
+The list of levels & hierarchies should be defined in the *platform file* using the `platform_geographic_levels`
 
 For example:
 ```{r eval=FALSE}
-geo.levels = create_geographic_levels(c('zip','nuts3','nuts2','country'), table="geo_zip")
+platform_geographic_levels(c('zip','nuts3','nuts2','country'), table="geo_zip")
 ```
 
 Will create a description to a simple geographic structure, with lowest level as "zip", all geographic columns will be be "code_[level]"
@@ -83,8 +83,7 @@ The main table used to create cross-levels query will be the lowest level table,
 
 Of course in this case, "zip" level should be a curated list of zip code, as a zip code can only be related to one area in the upper level (so a choice should has been map to simplify the mapping of zip codes).
 
-geo.tables = describe_geographic_tables(geo.levels)
-
+platform_geographic_tables(NULL)
 
 ## Population tables
 

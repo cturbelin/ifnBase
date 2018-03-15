@@ -126,19 +126,18 @@ survey_load_results = function(survey, cols, geo=NULL, date=NULL, db.table=NULL,
        stop("geographic column not defined for this column")
      }
      geo.column = def$geo.column
-     gg = c()
      if( is.logical(geo) ) {
-        gg = unlist(.Share$geo.levels)
-     } else {
-        gg = .Share$geo.levels[geo]
+        # get default hierarchy list
+        geo = geo_hierarchy()
      }
+     gg = sapply(geo, geo_column)
      cc = c(cc, gg)
      if(debug) {
        cat("Joining geo table g, including columns", paste(gg, collapse=', '),"\n")
      }
-     geo.levels.table = attr(.Share$geo.levels, "table")
-     j = paste0(' left join ', geo.levels.table,' g on g."', .Share$geo.levels[[.Share$geo.level.base]],'"=p."', geo.column, '"')
-     if( isTRUE( attr(.Share$geo.levels,"join.country") ) ) {
+     join = get_geo_join()
+     j = paste0(' left join ', join$table,' g on g."', join$base.column,'"=p."', geo.column, '"')
+     if( isTRUE( join$join.country ) ) {
        j = paste(j,' and g."country"=p."country"')
      }
  } else {

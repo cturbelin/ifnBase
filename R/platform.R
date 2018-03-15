@@ -412,7 +412,7 @@ platform_geographic_levels = function(levels,  level.base = NULL, table = 'geo_l
 
 #' Create geographic tables description
 #'
-#' @param def either a geo.levels structure or a list of table description for each level (name of the level as the name of each entry)
+#' @param def list of table description for each level (name of the level as the name of each entry), if NULL a default table structure is created
 #' @param default.title default column name for title
 #' @param define if TRUE set the table configuration during the call
 #' @return list()
@@ -425,27 +425,31 @@ platform_geographic_levels = function(levels,  level.base = NULL, table = 'geo_l
 #' }
 #'
 #' @export
-#' @importFrom methods is
-platform_geographic_tables = function(def, default.title = "title", define=TRUE) {
-  if( is(def, "geo_levels") ) {
-    columns = attr(def, "columns")
+platform_geographic_tables = function(def=NULL, default.title = "title", define=TRUE) {
+  if( is.null(def) ) {
+    def = geo_definition()
     tables = lapply(def, function(level) {
       list(
         table = paste0("geo_", level),
         title = default.title,
-        column = columns[level]
+        column = geo_column(level)
       )
     })
   } else {
     tables = def
+    nn = names(def)
+    levels = geo_definition()
+    if( all(levels %in% nn) ) {
+      m = levels[!levels %in% nn]
+      stop(paste("Some levels are not described in a geographic table", paste(m, collapse = ",")))
+    }
   }
-  geo =structure(tables, class="geo_tables")
+  geo = structure(tables, class="geo_tables")
   if(define) {
     .Share$geo.tables = geo
   }
   invisible(geo)
 }
-
 
 #' Define historical data
 #' For each season you can describe how data are organized

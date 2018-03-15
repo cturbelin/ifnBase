@@ -5,7 +5,8 @@
 \title{Create structure defining an geographic table system}
 \usage{
 platform_geographic_levels(levels, level.base = NULL, table = "geo_levels",
-  columns = NULL, hierarchies = NULL, default.hierarchy = "default")
+  columns = NULL, hierarchies = NULL, default.hierarchy = "default",
+  define = TRUE)
 }
 \arguments{
 \item{levels}{list of levels with level name in names and column name in value, if it not a named vector, the use value as level}
@@ -19,6 +20,8 @@ platform_geographic_levels(levels, level.base = NULL, table = "geo_levels",
 \item{hierarchies}{list of hierarchies list( hierarchy1=c(levels order), hierarchy2=(levels order), ...)}
 
 \item{default.hierarchy}{name of the default hierarchy to be used to get upper or lower column}
+
+\item{define}{if TRUE set the geo.levels during the call, set to FALSE if you dont want to change configuration}
 }
 \description{
 Create structure defining an geographic table system

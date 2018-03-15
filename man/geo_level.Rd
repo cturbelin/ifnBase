@@ -4,10 +4,10 @@
 \alias{geo_level}
 \title{Create a geographic level object}
 \usage{
-geo_level(geo.name, hierarchy = NULL, ...)
+geo_level(level, hierarchy = NULL, ...)
 }
 \arguments{
-\item{geo.name}{geographic level name (for example "nuts1", "nuts2")}
+\item{level}{geographic level name (for example "nuts1", "nuts2")}
 
 \item{hierarchy}{name of a level hierarchy}
 

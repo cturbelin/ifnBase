@@ -6,49 +6,6 @@
 #' names are pretty labels, values coded
 FEVER.CODES = c('<37'=0,'[37,37.5)'=1,'[37.5,38)'=2,'[38,39)'=3,'[39,40)'=4, '>40'=5)
 
-#' Load health status for each weekly responses
-#'
-#' load health status from the table (or view) in db. If weekly are store in separated tables by season,
-#' the weekly data.frame should have a "season" attribute telling which table to use (historical.tables variable should map table for each seasons)
-#' @export
-#' @param weekly a data.frame loaded by survey_load_results (weekly survey)
-#' @param health.table name of a health status coding view. CAUTION if used, no check is done (is right table used for the right season)
-survey_load_health_status = function(weekly, health.table=NULL) {
-  h = attr(.Share$epiwork.tables, "health.status")
-  id = ifelse(is.null(h), "pollster_results_weekly_id", h$id)
-  if( is.null(health.table) ) {
-    default.health.table = ifelse(is.null(h), 'pollster_health_status', h$default)
-    if( survey_single_table("weekly") ) {
-      # In the single table model, there is only one table where health status is stored
-      health.table = default.health.table
-    } else {
-      # Try to detect the table to use by determining the season currently in use
-      # One table for each season, then t
-      season = attr(weekly, 'season')
-      if( is.null(season) ) {
-        # we dont have attribute
-        stop("season attribute not found in weekly, cannot determine wich table to use")
-      } else {
-        if( is.na(season)) {
-          # current season
-          health.table = default.health.table
-        } else {
-          def = season.def(season)
-          if( is.null(def$health) ) {
-            stop(paste("health table not defined in historic.tables for season", season))
-          }
-          health.table = def$health
-        }
-      }
-    }
-  }
-  cat("loading health status using table", health.table,"\n")
-  health.status = dbQuery(paste('SELECT "',id,'" as id, status FROM ', health.table, sep=''))
-  weekly = merge(weekly, health.status, by='id', all.x=T)
-  weekly$status = factor(weekly$status)
-  weekly
-}
-
 #' Regroup mixed syndromes to non-specific for the 2012's influezanet syndromes set
 #' Resulting levels are more pretty : "no.symptom", "ili", "cold", "gastro", "non.specific", "allergy"
 #' @param x values to recode

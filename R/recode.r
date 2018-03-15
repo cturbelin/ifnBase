@@ -57,6 +57,49 @@ recode.intake = function(intake, translate=T, remove=T) {
   intake
 }
 
+#' Load health status for each weekly responses
+#'
+#' load health status from the table (or view) in db. If weekly are store in separated tables by season,
+#' the weekly data.frame should have a "season" attribute telling which table to use (historical.tables variable should map table for each seasons)
+#' @export
+#' @param weekly a data.frame loaded by survey_load_results (weekly survey)
+#' @param health.table name of a health status coding view. CAUTION if used, no check is done (is right table used for the right season)
+survey_load_health_status = function(weekly, health.table=NULL) {
+  h = .Share$health.status
+  id = ifelse(is.null(h), "pollster_results_weekly_id", h$id)
+  if( is.null(health.table) ) {
+    default.health.table = ifelse(is.null(h), 'pollster_health_status', h$default)
+    if( survey_single_table("weekly") ) {
+      # In the single table model, there is only one table where health status is stored
+      health.table = default.health.table
+    } else {
+      # Try to detect the table to use by determining the season currently in use
+      # One table for each season, then t
+      season = attr(weekly, 'season')
+      if( is.null(season) ) {
+        # we dont have attribute
+        stop("season attribute not found in weekly, cannot determine wich table to use")
+      } else {
+        if( is.na(season)) {
+          # current season
+          health.table = default.health.table
+        } else {
+          def = season.def(season)
+          if( is.null(def$health) ) {
+            stop(paste("health table not defined in historic.tables for season", season))
+          }
+          health.table = def$health
+        }
+      }
+    }
+  }
+  cat("loading health status using table", health.table,"\n")
+  health.status = dbQuery(paste('SELECT "',id,'" as id, status FROM ', health.table, sep=''))
+  weekly = merge(weekly, health.status, by='id', all.x=T)
+  weekly$status = factor(weekly$status)
+  weekly
+}
+
 #' Apply common recoding for weekly data
 #' @param weekly data.frame weekly data (return by survey_load_results)
 #' @param health.status if TRUE try to get the health status for each row as stored in the db.
