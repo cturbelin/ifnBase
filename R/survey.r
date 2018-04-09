@@ -534,29 +534,30 @@ survey_participant_previous_season = function(season, ids=NULL, use.season.dates
 #' @param ids list of survey_user ids
 #' @export
 survey_load_participants = function(active.account=NULL, ids=NULL) {
-
+  
   where = c()
   join = c()
-
+  select = c()
   if( isTRUE(active.account) ) {
-
+    
     join = c(join, 'left join auth_user a on a.id=s.user_id')
     where = c(where, 'a.is_active=True')
-
+    select = c(select, 'a.last_login' ,'a.date_joined')
   }
-
+  
   if( !is.null(ids) ) {
-    where = c(where, paste0('s.id in(', paste(ids, collapse = ','),')'))
+    where = c(where, paste0('s.id in(', paste(ids, collapse = ','),')'))  
   }
-
+  
   where = if(length(where)> 0) paste0(' WHERE ', paste(where, collapse = ' AND ')) else ''
   join = if(length(join) > 0) paste(join, collapse = ' ')
-
-  r = dbQuery('select s.id as person_id, s.global_id, s.user_id, deleted, last_login, date_joined from survey_surveyuser s ', join, where)
-
+  select = if(length(select) >0) paste0(',', paste(select, collapse = ',')) else ''
+    
+  r = dbQuery('select s.id as person_id, s.global_id, s.user_id, deleted',select,' from survey_surveyuser s ', join, where)
+  
   class(r) <- c('gn_participants', class(r))
-
-  r
+  
+  r  
 }
 
 #' Load historical data for a set of users
