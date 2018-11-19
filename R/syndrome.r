@@ -92,6 +92,7 @@ regroup.syndrome = function(x) {
 #' @param r weekly data (as return by survey_load_results)
 #' @param as.levels if TRUE returns factors
 #' @seealso syndromes.set
+#' @export
 syndromes.influenzanet.2012 = function(r, as.levels=F) {
 #' syndromes set computation for the 2012's version
  # c('no.sympt','ili', 'allergy.gastro','allergy','cold.gastro', 'cold','gastroenteritis','sympt.other')
@@ -122,6 +123,7 @@ syndromes.influenzanet.2012 = function(r, as.levels=F) {
 #' @seealso syndromes.influenzanet.2012
 #' @param r data.frame of weekly results
 #' @param as.levels return levels instead of numeric values
+#' @export
 syndromes.influenzanet.2011 = function(r, as.levels=F) {
   respi = r$sorethroat | r$cough | r$dyspnea
   gastro = r$nausea | r$vomiting | r$diarrhea | r$abdopain
