@@ -12,7 +12,7 @@
 #'  \item{eu:intake}
 #'  \item{eu:weekly}
 #' }
-#'
+#' @export
 #' @seealso \code{\link{platform_define_survey}}
 survey_template = function(name) {
   def = survey_templates[[name]]
