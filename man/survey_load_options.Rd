@@ -22,3 +22,4 @@ low level function
 \seealso{
 Other survey definition functions: \code{\link{survey_load_questions}}
 }
+\concept{survey definition functions}

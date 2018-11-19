@@ -6,8 +6,8 @@
 \usage{
 survey_load_results(survey, cols, geo = NULL, date = NULL,
   db.table = NULL, survey.users = NULL, debug = F, account = F,
-  where = c(), season = NULL, channel = NULL, cols.sup = c(), gid = F,
-  country = NULL)
+  where = c(), season = NULL, channel = NULL, cols.sup = c(),
+  gid = F, country = NULL)
 }
 \arguments{
 \item{survey}{: survey name (as defined in epiwork.tables)}

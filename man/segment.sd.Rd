@@ -4,8 +4,8 @@
 \alias{segment.sd}
 \title{Draw segments to represent a confidence Interval}
 \usage{
-segment.sd(i, estim, up, low, k = 0.25, col = "grey", lty = 1, lwd = 1,
-  cex = 1, pch = 16)
+segment.sd(i, estim, up, low, k = 0.25, col = "grey", lty = 1,
+  lwd = 1, cex = 1, pch = 16)
 }
 \arguments{
 \item{i}{x values}

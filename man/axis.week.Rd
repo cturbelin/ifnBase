@@ -5,8 +5,8 @@
 \title{Axis for yearweek data}
 \usage{
 axis.week(side, ww, mode = c("ticks", "year", "week", "weeks", "\%\%"),
-  format = "yw", col.yw = "yw", sep = "s", century = T, ticks = NULL,
-  ...)
+  format = "yw", col.yw = "yw", sep = "s", century = T,
+  ticks = NULL, ...)
 }
 \arguments{
 \item{side}{side of the axeis}

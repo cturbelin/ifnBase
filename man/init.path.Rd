@@ -19,3 +19,4 @@ by default, the path is added to the global output path (defined in OUT_PATH), u
 \seealso{
 Other path functions: \code{\link{my.path}}
 }
+\concept{path functions}

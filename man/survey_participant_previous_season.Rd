@@ -4,8 +4,8 @@
 \alias{survey_participant_previous_season}
 \title{List of participants registred in weekly at least once in previous season (regarding given [season])}
 \usage{
-survey_participant_previous_season(season, ids = NULL, use.season.dates = F,
-  seasons = NULL)
+survey_participant_previous_season(season, ids = NULL,
+  use.season.dates = F, seasons = NULL)
 }
 \arguments{
 \item{season}{season year}

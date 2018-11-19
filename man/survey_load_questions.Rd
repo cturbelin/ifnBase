@@ -17,3 +17,4 @@ load questions of a survey from the database
 \seealso{
 Other survey definition functions: \code{\link{survey_load_options}}
 }
+\concept{survey definition functions}

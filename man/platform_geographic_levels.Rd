@@ -4,9 +4,9 @@
 \alias{platform_geographic_levels}
 \title{Create structure defining an geographic table system}
 \usage{
-platform_geographic_levels(levels, level.base = NULL, table = "geo_levels",
-  columns = NULL, hierarchies = NULL, default.hierarchy = "default",
-  define = TRUE)
+platform_geographic_levels(levels, level.base = NULL,
+  table = "geo_levels", columns = NULL, hierarchies = NULL,
+  default.hierarchy = "default", define = TRUE)
 }
 \arguments{
 \item{levels}{list of levels with level name in names and column name in value, if it not a named vector, the use value as level}
