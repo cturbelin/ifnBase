@@ -14,7 +14,7 @@
 #' @param debug show verbose messages when loading a file
 #' @export
 i18n_load <- function(..., language=NULL, debug=F) {
- language = ifelse(is.null(language), .Share$language, language)
+ if( is.null(language) ) language = .Share$language
  files = list(...)
  for(file in files) {
    if( grepl("/$",file) ) {
