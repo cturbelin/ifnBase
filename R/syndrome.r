@@ -89,12 +89,12 @@ regroup.syndrome = function(x) {
 #' Compute syndrome classification of weekly data according to 2012 InfluenzaNet rules (as defined in the web platform)
 #' This function do not require the data to be in the weekly table (i.e. do not use the DB view). So it is useables with
 #' generated data or without the weekly id
+#' @export
 #' @param r weekly data (as return by survey_load_results)
 #' @param as.levels if TRUE returns factors
 #' @seealso syndromes.set
-#' @export
-syndromes.influenzanet.2012 = function(r, as.levels=F) {
-#' syndromes set computation for the 2012's version
+syndromes_influenzanet_2012 = function(r, as.levels=F) {
+  #' syndromes set computation for the 2012's version
  # c('no.sympt','ili', 'allergy.gastro','allergy','cold.gastro', 'cold','gastroenteritis','sympt.other')
 
   respi = r$sorethroat | r$cough | r$dyspnea
@@ -120,11 +120,11 @@ syndromes.influenzanet.2012 = function(r, as.levels=F) {
 }
 
 #' Compute the 2011's Influenzanet syndromes set  (NO-SYMPT/ILI/COMMON-COLD/GASTRO/OTHER)
+#' @export
 #' @seealso syndromes.influenzanet.2012
 #' @param r data.frame of weekly results
 #' @param as.levels return levels instead of numeric values
-#' @export
-syndromes.influenzanet.2011 = function(r, as.levels=F) {
+syndromes_influenzanet_2011 = function(r, as.levels=F) {
   respi = r$sorethroat | r$cough | r$dyspnea
   gastro = r$nausea | r$vomiting | r$diarrhea | r$abdopain
   x = ifelse( r$no.sympt, 1,
@@ -171,7 +171,7 @@ syndromes.prettify = function(x, pretty.set='influenzanet.2012') {
 syndromes.set = list(
   'influenzanet.2011'=list(
     levels=c('NO-SYMPT','ILI','COMMON-COLD','GASTRO','OTHER'),
-    provider=syndromes.influenzanet.2011
+    provider=syndromes_influenzanet_2011
   ),
   'influenzanet.2012'=list(
     levels=c('no.sympt','ili', 'allergy.gastro','allergy','cold.gastro', 'cold','gastroenteritis','sympt.other'),
@@ -185,7 +185,7 @@ syndromes.set = list(
       "COMMON-COLD-and-GASTROINTESTINAL"="cold.gastro",
       "NON-SPECIFIC-SYMPTOMS"="sympt.other"
     ),
-    provider=syndromes.influenzanet.2012
+    provider=syndromes_influenzanet_2012
   ),
   'grouped'=list(
     levels=c("no.symptom", "ili", "cold", "gastro", "non.specific", "allergy"),
