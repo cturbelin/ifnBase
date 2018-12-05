@@ -1,4 +1,3 @@
-
 #' Survey Template definitions
 #'
 #' Templates of Surveys
