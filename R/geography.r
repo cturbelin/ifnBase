@@ -19,7 +19,7 @@ geo_definition <- function(name=NULL) {
 #' @param ... extra information to store with level information
 #' @export
 geo_level = function(level, hierarchy = NULL, ...) {
-  if(hierarchy) {
+  if(!is.null(hierarchy)) {
     h = geo_hierarchy(hierarchy)
     if(!level %in% h) {
       stop(paste0("level '", level,"' is not in hierarchy ", hierarchy))
