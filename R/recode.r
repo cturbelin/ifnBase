@@ -10,7 +10,7 @@ YES_NO_DNK = c('Yes','No','DNK')
 #' So TRUE is YES level, FALSE = NO level and NA missing value.
 #' @param x value to recode
 #' @export
-recode.ynp = function(x) {
+recode_ynp = function(x) {
   ifelse(is.na(x), NA, ifelse(x == 0, T, ifelse(x == 1, F, NA)))
 }
 
@@ -20,7 +20,7 @@ recode.ynp = function(x) {
 #' @param translate translate levels
 #' @param remove bool unused
 #' @export
-recode.intake = function(intake, translate=T, remove=T) {
+recode_intake = function(intake, translate=T, remove=T) {
 
   trans <- function(x) {
     if(translate) {
@@ -105,14 +105,14 @@ survey_load_health_status = function(weekly, health.table=NULL) {
 #' @param health.status if TRUE try to get the health status for each row as stored in the db.
 #' @seealso survey_load_health_status
 #' @export
-recode.weekly <- function(weekly, health.status=T) {
+recode_weekly <- function(weekly, health.status=T) {
 
-  weekly$sympt.sudden = recode.ynp(weekly$sympt.sudden)
+  weekly$sympt.sudden = recode_ynp(weekly$sympt.sudden)
   weekly$same.episode[weekly$same.episode == 3] <- NA
 
   # Same episode is coded with 0 as Yes level, recoding it to human readable levels
   weekly$same.episode = factor(weekly$same.episode, 0:2, YES_NO_DNK)
-  weekly$fever.sudden = recode.ynp(weekly$fever.sudden)
+  weekly$fever.sudden = recode_ynp(weekly$fever.sudden)
 
   weekly$highest.temp[ weekly$highest.temp == 6] <- NA
 

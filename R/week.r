@@ -100,12 +100,12 @@ Stamp2Week <- function(stamp) {
 #' @param sep separator to use
 #' @param century use century for year value
 #' @export
-format.week <- function(w, sep = 's', century = T) {
+format_week <- function(w, sep = 's', century = T) {
   if (length(w) == 0) {
     return(character())
   }
   if (is.factor(w)) {
-    warning("week number as factor, format.week expect numeric values")
+    warning("week number as factor, format_week expect numeric values")
     w = as.character(w)
   }
   w = as.integer(w)
@@ -114,7 +114,7 @@ format.week <- function(w, sep = 's', century = T) {
     y = y %% 100L
   }
   w = sprintf(fmt = "%02d", w %% 100L)
-  paste(y, sep, w, sep = '')
+  paste0(y, sep, w)
 }
 
 #' Make an index data.frame associating week index (wid) to a iso yearweek number
@@ -153,7 +153,7 @@ makeWeekIndex = function(yw,
 #' @param calc.index if TRUE add an index column
 #' @return inc with 'season.year' (year of the start ) and 'season.index' (index of the week in the season) columns
 #' @export
-calc.season.fixed = function(inc,
+calc_season_fixed = function(inc,
                              col.yw = 'yw',
                              col.stamp = NULL,
                              date.start = '09-01',
@@ -194,7 +194,7 @@ calc.season.fixed = function(inc,
 #' @param d date to compute season number from
 #'
 #' @export
-calc.season = function(d) {
+calc_season = function(d) {
   if("Date" %in% class(d)) {
     m = as.numeric(format(d, "%m"))
     y = as.numeric(format(d, "%Y"))

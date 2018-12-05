@@ -119,7 +119,7 @@ graph.open <- function(file, width=NA, height=NA, pitch=12, type="png",...) {
 #' @param n number of colors to get (caution, it can be fewer than expected for some palettes)
 #' @param pal name of the palette to use
 #' @export
-graph.colors = function(n, pal=NULL) {
+graph_colors = function(n, pal=NULL) {
   if( is.null(.Share$graph.brewer) ) {
     .Share$graph.brewer = requireNamespace("RColorBrewer", logical.return=T)
   }
@@ -141,38 +141,6 @@ graph.colors = function(n, pal=NULL) {
   }
 }
 
-#' Make a rectangle usefull for boxplot
-#' @param x x value
-#' @param up upper value
-#' @param low lower value
-#' @param k rectangle width around the x
-#' @param col color value
-#' @param border border color
-#' @export
-box.sd <- function(x, up, low, k=0.25, col="grey", border=NA) {
- rect(x - k, low, x + k, up, col=col, border=border)
-}
-
-#' Draw segments to represent a confidence Interval
-#' @param i x values
-#' @param estim estimation point
-#' @param up upper bound
-#' @param low lower bound
-#' @param k size of the horizontal segment
-#' @param col color of the segments
-#' @param lty linetype (@seealso points)
-#' @param lwd line width
-#' @param cex cex of the estimation point
-#' @param pch for the estimation point
-#' @export
-segment.sd <- function(i, estim, up, low, k=0.25, col="grey", lty=1, lwd=1, cex=1, pch=16) {
- segments(i, up, i, low, col=col, lty=lty, lwd=lwd)
- segments(i - k, up, i + k, up, col=col, lty=lty, lwd=lwd)
- segments(i - k, low, i + k, low, col=col, lty=lty, lwd=lwd)
- if(!missing(estim))  {
-  points(i, estim, pch=pch, cex=cex, col=col)
- }
-}
 
 #' Draw confidence interval with polygon
 #' @param ii data.frame
@@ -182,7 +150,7 @@ segment.sd <- function(i, estim, up, low, k=0.25, col="grey", lty=1, lwd=1, cex=
 #' @param col color
 #' @param ... extra parameters passed to polygon
 #' @export
-polygon.ic = function(ii, col.x, col.up, col.low, col, ...) {
+polygon_ic = function(ii, col.x, col.up, col.low, col, ...) {
    x = c(ii[, col.x] , rev(ii[, col.x]))
    y = c(ii[, col.up], rev(ii[, col.low]) )
    polygon(x, y, col=col, border=col, ...)
@@ -204,7 +172,7 @@ polygon.ic = function(ii, col.x, col.up, col.low, col, ...) {
 #' @param ... extra parameters passed to axis
 #' @export
 #' @importFrom graphics axTicks axis
-axis.week <- function(side, ww, mode=c("ticks","year",'week','weeks','%%'), format="yw", col.yw="yw", sep='s', century=T, ticks=NULL, ...) {
+axis_week <- function(side, ww, mode=c("ticks","year",'week','weeks','%%'), format="yw", col.yw="yw", sep='s', century=T, ticks=NULL, ...) {
   mode = match.arg(mode)
   if(mode == "ticks") {
     wid = axTicks(side)
@@ -235,7 +203,7 @@ axis.week <- function(side, ww, mode=c("ticks","year",'week','weeks','%%'), form
   # Format the week
   if( !is.null(format) ) {
     if(format == "yw") {
-      yw = format.week(yw, sep=sep, century=century)
+      yw = format_week(yw, sep=sep, century=century)
     }
     if(format == "w") {
       yw = yw %% 100

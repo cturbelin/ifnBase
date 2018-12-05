@@ -479,6 +479,26 @@ platform_season_history <- function(season, dates, ...) {
   }
   def = list(...)
   def$dates = dates
+
+  check_date = function(v, after=NULL) {
+    if(is.na(v)) {
+      return()
+    }
+    d = as.Date(v)
+    if(is.na(d)) {
+      stop(paste0(deparse(substitute(v)), "Unable to parse date '", v,"'"))
+    }
+    if(!is.null(after) ) {
+      after = as.Date(after)
+      if(d < after) {
+        stop(paste(deparse(substitute(v)), "should be after", after))
+      }
+    }
+  }
+
+  check_date(dates$start)
+  check_date(dates$end, after=dates$start)
+
   .Share$historical.tables[[as.character(season)]] <- def
 }
 
