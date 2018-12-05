@@ -25,7 +25,7 @@
 #'
 #' @export
 get_option <- function(name = NULL) {
-  o = getOption("ifn")
+  o = base::getOption("ifn")
   if (is.null(name)) {
     o
   } else {
@@ -54,7 +54,7 @@ get_option <- function(name = NULL) {
 #' @export
 share.option <- function(...) {
   opts = list(...)
-  oo = getOption("ifn")
+  oo = base::getOption("ifn")
   if (is.null(oo)) {
     oo = list()
   }
