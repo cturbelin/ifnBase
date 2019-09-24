@@ -46,6 +46,7 @@ override = function(data) {
 
 survey_templates[["eu:intake"]] = list(
   geo.column="Q3",
+
   aliases=list(
 
     "for.whom"="Q0",
@@ -287,7 +288,7 @@ survey_templates[["eu:weekly"]] = list(
 
    # "website"="Q8c",
 
-    "hospitalization"="Q14",
+   # "hospitalization"="Q14",
 
     # visits
     "visit.no"="Q7_0",
@@ -350,9 +351,8 @@ survey_templates[["eu:weekly"]] = list(
       "visit.no",
       "visit.GP",
       "visit.plan",
-      "visit.spe",
-      "visit.sau",
-      "visit.hosp",
+      "visit.emergency",
+      "visit.hospital",
       "visit.other"
     ),
     antibio = c("antibio.med", "antibio.home"),
