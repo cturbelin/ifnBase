@@ -17,7 +17,7 @@ Suggests:
 URL: https://github.com/cturbelin/ifnBase
 BugReports: https://github.com/cturbelin/ifnBase/issues
 Authors@R: c(
-    person("Clément", "Turbelin", , "clement.turbelin@sorbonne-universite.fr", role=c("aut", "cre"))
+    person("Clément", "Turbelin", email="clement.turbelin@sorbonne-universite.fr", role=c("aut", "cre"))
   )
 Description: InfluenzaNet Data Analysis framework, base functions
 License: GPL-3
