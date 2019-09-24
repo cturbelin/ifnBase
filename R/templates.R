@@ -1,3 +1,5 @@
+# Templates related functions
+
 #' Survey Template definitions
 #'
 #' Templates of Surveys
@@ -21,7 +23,8 @@ survey_template = function(name) {
   def
 }
 
-#'
+#' survey templates list
+#' @noRd
 survey_templates = list()
 
 #' create a recoding alias
