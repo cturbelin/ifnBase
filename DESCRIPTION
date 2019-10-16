@@ -19,7 +19,7 @@ BugReports: https://github.com/cturbelin/ifnBase/issues
 Authors@R: c(
     person("Clément", "Turbelin", email="clement.turbelin@sorbonne-universite.fr", role=c("aut", "cre"))
   )
-Description: InfluenzaNet Data Analysis framework, base functions
+Description: This package contains base functions to work with Influenzanet data at country or european level.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

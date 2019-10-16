@@ -1,4 +1,4 @@
-.onLoad <- function(libname, pkgname) {
+.onAttach <- function(libname, pkgname) {
 
   defaults = list(
     graph = list(type="png", height=400, width=300),

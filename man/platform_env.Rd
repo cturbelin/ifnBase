@@ -4,8 +4,16 @@
 \alias{platform_env}
 \title{Get the platform env}
 \usage{
-platform_env()
+platform_env(name = NULL)
+}
+\arguments{
+\item{name}{name of the value to get in the platform envirnoment}
+}
+\value{
+if name is NULL, returns the full environment, if not get the named element in the environment
+
+Platform environment holds platform variables & definition structure.
 }
 \description{
-Platform environment holds platform variables & definition structure.
+Get the platform env
 }

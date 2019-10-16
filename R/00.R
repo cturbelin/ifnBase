@@ -38,6 +38,8 @@ get_option <- function(name = NULL) {
 #'
 #' Options for the package are stored in an options() entry named 'ifn'. It should be a list
 #'
+#' Packages options describe the running package environment
+#'
 #' \describe{
 #'  \item{graph}{ named list with default graph options list(width, height, type)}
 #'  \item{platform}{unique id of the platform, ISO name of the country and 'eu' for european}

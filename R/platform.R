@@ -540,9 +540,16 @@ platform_options = function(...) {
 }
 
 #' Get the platform env
+#' @param name name of the value to get in the platform envirnoment
+#'
+#' @return if name is NULL, returns the full environment, if not get the named element in the environment
 #'
 #' Platform environment holds platform variables & definition structure.
 #' @export
-platform_env <- function() {
-  .Share
+platform_env <- function(name=NULL) {
+  if(is.null(name)) {
+    .Share
+  } else {
+    .Share[[name]]
+  }
 }

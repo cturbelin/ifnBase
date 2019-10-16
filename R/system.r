@@ -15,6 +15,13 @@ share.lib <- function(file, force=F, platform=F, optional=F) {
     }
   }
 
+  # Compat for old internal libraries included in this package
+  if( "ggplot2" %in% file) {
+      with_ggplot()
+      file = file[ !file %in% "ggplot2" ]
+  }
+
+  # Check already loaded libs
   if(!force && any(file %in% .Share$loaded.libs)) {
     ff =  paste(file[file %in% .Share$loaded.libs], collapse=',')
     warning(paste(ff, " already loaded"))
@@ -38,5 +45,3 @@ share.lib <- function(file, force=F, platform=F, optional=F) {
   })
   invisible()
 }
-
-
