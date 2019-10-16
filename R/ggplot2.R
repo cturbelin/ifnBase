@@ -8,6 +8,7 @@
 #'
 #' @param theme theme() value to use as default theme
 #' @export
+#' @importFrom ggplot2 element_line theme element_rect element_text theme_set
 with_ggplot = function(theme=NULL) {
   require(ggplot2)
 
@@ -40,11 +41,30 @@ with_ggplot = function(theme=NULL) {
   theme_set(theme)
 }
 
+#' @param which index of default color (1 or 2)
+get_default_color = function(which=1) {
+  colors = platform_env("colors")
+  if(is.null(colors)) {
+    colors = c("#007AB8", "#7AB800")
+  }
+  return(colors[which])
+}
+
 #' Percentage barplot
 #' @param values vector
-#' @param order if "desc" use decreasing order,
+#' @param order if "desc" use decreasing order
+#' @param label.size size of the labels (can use relative size using ggplot2::rel())
+#' @param axis.label if TRUE show axis label
+#' @param color fill color default will use color
+#' @param
+#' @importFrom ggplot2 rel aes ggplot geom_bar scale_fill_brewer geom_text
 #' @export
-gg_barplot_percent = function(values, order="desc", label.size=rel(.9), axis.label=F, color=colors.web$blue, scale_color=NULL, x.rotate=90, x.vjust=NULL, label.nudge=.3)  {
+gg_barplot_percent = function(values, order="desc", label.size=rel(.9), axis.label=F, color=NULL, scale_color=NULL, x.rotate=90, x.vjust=NULL, label.nudge=.3)  {
+
+  if(is.null(color)) {
+    color = get_default_color(1)
+  }
+
   if ("mfreq" %in% class(values)) {
     tt = values["count", ]
     i = !is.na(tt)
@@ -110,15 +130,15 @@ plot_age_pyramid = function(data, female, prop=T, w=.5, scales=list()) {
 
   data$prop[female] = -data$prop[female]
   data$w = ifelse(data$pop == "pop", w * .8, .8)
-  ggplot(data, aes(x = age.cat, group=pop, fill=pop, y=prop, width=w, alpha=pop)) +
-    geom_bar(stat = "identity") +
-    geom_hline(aes(yintercept = 0), color="darkgrey") +
-    scale_fill_manual(values=colors, labels=labels) +
-    scale_alpha_manual(values=alphas, labels=labels) +
-    geom_text(y=-ymax, x=xmax, label=i18n("female"), hjust="left", show.legend = FALSE) +
-    geom_text(y=ymax, x=xmax, label=i18n("male"), hjust="right", show.legend = FALSE) +
-    scale_y_continuous(breaks = y_scale, labels=y_labels, limits=c(-ymax, ymax)) +
-    coord_flip()
+  ggplot(data, ggplot2::aes(x = age.cat, group=pop, fill=pop, y=prop, width=w, alpha=pop)) +
+    ggplot2::geom_bar(stat = "identity") +
+    ggplot2::geom_hline(aes(yintercept = 0), color="darkgrey") +
+    ggplot2::scale_fill_manual(values=colors, labels=labels) +
+    ggplot2::scale_alpha_manual(values=alphas, labels=labels) +
+    ggplot2::geom_text(y=-ymax, x=xmax, label=i18n("female"), hjust="left", show.legend = FALSE) +
+    ggplot2::geom_text(y=ymax, x=xmax, label=i18n("male"), hjust="right", show.legend = FALSE) +
+    ggplot2::scale_y_continuous(breaks = y_scale, labels=y_labels, limits=c(-ymax, ymax)) +
+    ggplot2::coord_flip()
 
 }
 
@@ -152,14 +172,15 @@ scale_x_wid = function(ww, week.sep="s", breaks="auto", col.yw="yw", label="yw",
   if(is.function(label)) {
     label_formatter = label
   } else {
-    label_formatter = switch(label,
-                             "yw"=function(yw) {
-                               format_week(yw, sep=week.sep)
-                             },
-                             "year"=function(yw) {
-                               floor(yw/100)
-                             },
-                             stop(paste0("Unknown label formatter '", label,"'"))
+    label_formatter = switch(
+      label,
+      "yw" = function(yw) {
+        format_week(yw, sep = week.sep)
+      },
+      "year" = function(yw) {
+        floor(yw / 100)
+      },
+      stop(paste0("Unknown label formatter '", label, "'"))
     )
   }
 
@@ -194,7 +215,7 @@ scale_x_wid = function(ww, week.sep="s", breaks="auto", col.yw="yw", label="yw",
     c(floor(limits[1]), ceiling(limits[2]))
   }
 
-  breaks.fun = waiver()
+  breaks.fun = ggplot2::waiver()
 
   if( is.character(breaks) ) {
     if(!breaks %in% c("auto","start", 'all', 'by','year','week')) {
@@ -251,6 +272,6 @@ scale_x_wid = function(ww, week.sep="s", breaks="auto", col.yw="yw", label="yw",
       breaks_checker(breaks(limits))
     }
   }
-  scale_x_continuous(labels=label_wid, breaks=breaks.fun)
+  ggplot2::scale_x_continuous(labels=label_wid, breaks=breaks.fun)
 
 }
