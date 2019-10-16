@@ -1,8 +1,11 @@
 
 #' Load a share library
+#'
+#' This function is only usefull if the project comply to the project organization described in vignette #' \code{vignette("workspace", package = "ifnBase")}
+#'
 #' @param file character vector of name(s) of the library to load (name of the .r file, without extension)
 #' @param force bool, if TRUE force the loading of the lib, regardless of the cache
-#' @param platform, look for a library in share/platform/[libname].[platform].r
+#' @param platform, look for a library in share/platform/[libname].[platform].R
 #' @param optional if TRUE dont raise an error if the library doesnt exist. By default an error is thrown.
 #' @export
 share.lib <- function(file, force=F, platform=F, optional=F) {

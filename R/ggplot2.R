@@ -41,6 +41,10 @@ with_ggplot = function(theme=NULL) {
   theme_set(theme)
 }
 
+#' Get default color
+#'
+#' Default color for a given platform can be configured in platform environment, a vector of at least 2 colors are expected
+#'
 #' @param which index of default color (1 or 2)
 get_default_color = function(which=1) {
   colors = platform_env("colors")
@@ -56,7 +60,10 @@ get_default_color = function(which=1) {
 #' @param label.size size of the labels (can use relative size using ggplot2::rel())
 #' @param axis.label if TRUE show axis label
 #' @param color fill color default will use color
-#' @param
+#' @param scale_color use this scale for fill colors, TRUE will use brewer palette
+#' @param x.rotate rotation angle for labels
+#' @param x.vjust vertical justification for x axis
+#' @param label.nudge nudge for y-axis labels
 #' @importFrom ggplot2 rel aes ggplot geom_bar scale_fill_brewer geom_text
 #' @export
 gg_barplot_percent = function(values, order="desc", label.size=rel(.9), axis.label=F, color=NULL, scale_color=NULL, x.rotate=90, x.vjust=NULL, label.nudge=.3)  {

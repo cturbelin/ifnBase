@@ -1,5 +1,6 @@
 ##
 # Geographic informations
+# Set of geographic functions to navigate
 
 #' Get geographic structure description
 #' @export
