@@ -46,7 +46,7 @@
     oo$share.data = paste0(oo$share.path, "data/")
   }
 
-  oo = merge.list(oo, defaults)
+  oo = merge_list(oo, defaults)
 
   do.call(share.option, oo)
 

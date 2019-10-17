@@ -45,7 +45,7 @@ i18n_load <- function(..., language=NULL, debug=F) {
        env = r
      }
      # Update i18n with new ones
-     .Share$i18n = merge.list(env, .Share$i18n)
+     .Share$i18n = merge_list(env, .Share$i18n)
    }
  }
  invisible()

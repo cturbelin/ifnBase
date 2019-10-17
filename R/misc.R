@@ -59,7 +59,7 @@ replace.names <- function(x, ...) {
 #' @param x primary list to update
 #' @param y secondary list, only entries not in x will be used
 #' @export
-merge.list <- function(x, y)
+merge_list <- function(x, y)
 {
   if(length(x) == 0)
     return(y)
