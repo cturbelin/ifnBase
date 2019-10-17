@@ -10,7 +10,9 @@
 #' @export
 #' @importFrom ggplot2 element_line theme element_rect element_text theme_set
 with_ggplot = function(theme=NULL) {
-  require(ggplot2)
+  if(!requireNamespace("ggplot2")) {
+    stop("ggplot2 package is needed")
+  }
 
   if( is.null(theme) ) {
     theme = theme_minimal(base_size=8)
@@ -230,6 +232,11 @@ scale_x_wid = function(ww, week.sep="s", breaks="auto", col.yw="yw", label="yw",
     }
 
     if(breaks == "auto") {
+      if(!requireNamespace("scales")) {
+        stop("this option requires 'scales' package to be available")
+      }
+
+
       breaks.fun <- function(limits) {
         limits = extend_limits(limits)
         d = diff(limits)

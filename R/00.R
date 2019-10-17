@@ -9,6 +9,7 @@
 #' @importFrom methods is
 #' @importFrom stats aggregate
 #' @importFrom utils glob2rx str tail
+#' @import ggplot2
 "_PACKAGE"
 
 #' .Share is a local configuration envirnment holding local values
