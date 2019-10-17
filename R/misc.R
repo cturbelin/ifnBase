@@ -129,7 +129,7 @@ get_r_file = function(file, should.exists=FALSE) {
 }
 
 #' Ensure path has an ending /
-ensureEndingSlash = function(x) {
+ending_slash = function(x) {
   paste0(x,ifelse(grepl("/$", x),"","/"))
 }
 

@@ -26,7 +26,7 @@ load_platform = function() {
     stop("platform id should be defined with share.option()")
   }
 
-  file = get_r_file(paste0(ensureEndingSlash(path), platform), should.exists = TRUE)
+  file = get_r_file(paste0(ending_slash(path), platform), should.exists = TRUE)
 
   sys.source(file, envir=.Share)
 }
