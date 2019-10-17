@@ -11,10 +11,10 @@ share.lib(file, force = F, platform = F, optional = F)
 
 \item{force}{bool, if TRUE force the loading of the lib, regardless of the cache}
 
-\item{platform, }{look for a library in share/platform/[libname].[platform].r}
+\item{platform, }{look for a library in share/platform/[libname].[platform].R}
 
 \item{optional}{if TRUE dont raise an error if the library doesnt exist. By default an error is thrown.}
 }
 \description{
-Load a share library
+This function is only usefull if the project comply to the project organization described in vignette #' \code{vignette("workspace", package = "ifnBase")}
 }

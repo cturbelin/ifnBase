@@ -18,6 +18,14 @@ gg_barplot_percent(values, order = "desc", label.size = rel(0.9),
 \item{axis.label}{if TRUE show axis label}
 
 \item{color}{fill color default will use color}
+
+\item{scale_color}{use this scale for fill colors, TRUE will use brewer palette}
+
+\item{x.rotate}{rotation angle for labels}
+
+\item{x.vjust}{vertical justification for x axis}
+
+\item{label.nudge}{nudge for y-axis labels}
 }
 \description{
 Percentage barplot

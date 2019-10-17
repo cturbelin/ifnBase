@@ -3,6 +3,7 @@
 #' @param ... message (multiple will be concatenated)
 #' @param ln add new line
 #' @param level level if hierarchical levels handled (ignored if not)
+#' Deprecated
 #' @export
 msg = function(..., ln=TRUE, level = 0) {
   message(..., appendLF = ln)

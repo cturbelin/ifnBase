@@ -12,7 +12,8 @@ msg(..., ln = TRUE, level = 0)
 
 \item{ln}{add new line}
 
-\item{level}{level if hierarchical levels handled (ignored if not)}
+\item{level}{level if hierarchical levels handled (ignored if not)
+Deprecated}
 }
 \description{
 Wrapper of message() for output

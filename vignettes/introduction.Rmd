@@ -142,13 +142,13 @@ These functions allow to manipulate ISO 8601 week number.
 
 A week number is reprensented as yearoftheweek * 100 + weeknumber (called yearweek number)
 
-* `ISOYearWeek(dates)` : yearweek number of each date
+* `iso_yearweek(dates)` : yearweek number of each date
 * `weeksbydates(from, to)` : yearweek numbers for each date of a date interval
-* `mondayOfDate(d)` -> Monday of the date
-* `WeekStart(yw)` -> Monday of a yearweek vector
-* `YearStart(year)` -> Date of the first monday of the year
-* `makeWeekIndex(yw)` -> data.frame with a sequential index of weeks
-* `WeekStamp(yw)` : give the continuous index of the yearweek number (enabling easy arithmetic operations on week numbers)
+* `monday_of_date(d)` -> Monday of the date
+* `monday_of_week(yw)` -> Monday of a yearweek vector
+* `monday_of_year(year)` -> Date of the first monday of the year
+* `make_week_index(yw)` -> data.frame with a sequential index of weeks
+* `week_stamp(yw)` : give the continuous index of the yearweek number (enabling easy arithmetic operations on week numbers)
 
 ## Geographic levels
 

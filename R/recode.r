@@ -127,6 +127,6 @@ recode_weekly <- function(weekly, health.status=T) {
     weekly = survey_load_health_status(weekly)
   }
   weekly$date = as.Date(weekly$timestamp) # date
-  weekly$yw = ISOYearWeek(weekly$date)
+  weekly$yw = iso_yearweek(weekly$date)
   weekly
 }

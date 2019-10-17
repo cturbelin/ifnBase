@@ -162,7 +162,7 @@ polygon_ic = function(ii, col.x, col.up, col.low, col, ...) {
 #' Create an axis from weekly data (when the plot use week index, and you want to label axe with classical week nubmers)
 #'
 #' @param side side of the axeis
-#' @param ww data.frame(), with cols wid=week index, [col.yw]=yearweek value (@see makeWeekIndex)
+#' @param ww data.frame(), with cols wid=week index, [col.yw]=yearweek value (@see make_week_index)
 #' @param mode "ticks" follow ticks, "year" each 1st week of each year, "week" (or weeks) some given weeks, "\%\%" root of modulo
 #' @param format "yw" pretty week format, "w"=only week number, NULL=disable
 #' @param col.yw name of the yearweek value colum in ww

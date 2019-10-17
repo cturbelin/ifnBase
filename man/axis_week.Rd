@@ -11,7 +11,7 @@ axis_week(side, ww, mode = c("ticks", "year", "week", "weeks", "\%\%"),
 \arguments{
 \item{side}{side of the axeis}
 
-\item{ww}{data.frame(), with cols wid=week index, [col.yw]=yearweek value (@see makeWeekIndex)}
+\item{ww}{data.frame(), with cols wid=week index, [col.yw]=yearweek value (@see make_week_index)}
 
 \item{mode}{"ticks" follow ticks, "year" each 1st week of each year, "week" (or weeks) some given weeks, "\%\%" root of modulo}
 

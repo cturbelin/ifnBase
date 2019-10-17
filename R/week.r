@@ -2,89 +2,73 @@
 ## Global Convention
 ## An ISO 8601 is represented as a YearWeek number (YYYYWW) = yearOfTheWeek*100 + weekNumberInTheYear
 
-#' ISOYearWeek(dates)
+#' iso_yearweek(dates)
 #'
 #' Compute ISO 8601 Yearweek number (YYYYWW) from dates (Date class)
 #'
 #' @param dates Date values
 #' @param yearweek value as number ( year of the week * 100 + week number, ex: 200515 is week 15 of 2005)
-#' @name isoyearweek
 #' @export
-ISOYearWeek <- function(dates) {
+iso_yearweek <- function(dates) {
   as.integer(format(dates, "%G%V"))
 }
 
-# Old implementation
-# ISOYearWeek <- function(dates) {
-#   j = as.numeric(format(dates, "%w"))
-#   j = ifelse(j == 0, 7, j) - 4 # day of week of the date (week starting on monday)
-#   d = dates - j # Date of Thursday of the week
-#   jan.4 = as.Date(paste(format(d, format = "%Y"), "-01-04", sep = ""))
-#   wd = as.numeric(format(jan.4, "%w")) # Day of week of the Jan 4th of the year
-#   wd = ifelse(wd == 0, 7, wd) # week starting on monday
-#   lundi = jan.4 - (wd - 1) # Number of day from the monday of the Jan 4th
-#   dif = ceiling(as.numeric(d - lundi) / 7) # Number of day of the thursday of the week of interest from this monday
-#   yw = as.numeric(format(d, "%Y")) * 100 + dif # now the yearweek number
-#   return(yw)
-# }
-
-#' weeksbydates(from,to)
-#' get yearweeks of each date in a date interval
+#' week_of_date(from,to)
+#' get yearweek from a date interval date interval
 #' @param from date (Date class)
 #' @param to Date class
 #' @return dataframe(dates, yearweek number, using the format YYYYWW, so Year * 100 + Week in the year)
 #' @export
-weeksbydates <- function(from, to) {
+week_of_date <- function(from, to) {
   dates = seq(from = as.Date(from), to = as.Date(to), by = 1)
-  weeks = ISOYearWeek(dates)
+  weeks = iso_yearweek(dates)
   return(data.frame("date" = dates, "yw" = weeks))
 }
 
 #' Monday of the week of the date
 #' @param d Date
 #' @export
-mondayOfDate <- function(d) {
+monday_of_date <- function(d) {
   w = as.integer(format(d, format = "%w"))
   w = ifelse(w == 0L, 7L, w) - 1L
   return(d - w)
 }
 
-#' Date of the first monday of the Year
-#' @param WhichYear int year
+#' Date of the first monday of the year
+#' @param year int year
 #' @return Date
 #' @export
-YearStart <- function(WhichYear) {
-  NewYear = as.Date(paste(WhichYear, 1, 1), format = "%Y %m %d")
-  WeekDay = as.numeric(format(NewYear, "%w")) - 1 #Generate weekday index where Monday = 0
-  WeekDay[WeekDay == -1] <- 6
-  YearStart = NewYear - WeekDay + 7
-  YearStart[WeekDay < 4] = NewYear[WeekDay < 4] - WeekDay[WeekDay < 4]
+monday_of_year <- function(year) {
+  NewYear = as.Date(paste(year, 1L, 1L), format = "%Y %m %d")
+  WeekDay = as.integer(format(NewYear, "%w")) - 1 #Generate weekday index where Monday = 0
+  WeekDay[WeekDay == -1] <- 6L
+  YearStart = NewYear - WeekDay + 7L
+  YearStart[WeekDay < 4L] = NewYear[WeekDay < 4L] - WeekDay[WeekDay < 4L]
   return(YearStart)
 }
 
-#' Date of the monday of a YearWeek
+#' Date of the monday of a yearweek
 #' @param yw integer yearweek number
 #' @return Date
 #' @export
-WeekStart <- function(yw) {
+monday_of_week <- function(yw) {
   if ( is.factor(yw) ) {
     yw = as.character(yw)
   }
   year = floor(as.integer(yw) / 100L)
   week = as.integer(yw) %% 100L
-  d = YearStart(year) + ((week - 1L) * 7L)
+  d = monday_of_year(year) + ((week - 1L) * 7L)
   return(d)
 }
 
-
 #' Compute a "Week" stamp (like timestamp) : week number from 1970-01-01
 #'
-#' This provide a continuous index for week number which not depend on period bound (unlike makeWeekIndex)
+#' This provide a continuous index for week number which not depend on period bound (unlike make_week_index)
 #' It is usefull to plot week based data.
 #' @param yw yearweek value
 #' @export
-WeekStamp <- function(yw) {
-  monday = as.integer(WeekStart(yw)) + 4L
+week_stamp <- function(yw) {
+  monday = as.integer(monday_of_week(yw)) + 4L
   monday = monday %/% 7L
   class(monday) <- c('numeric', "weekstamp")
   monday
@@ -124,14 +108,14 @@ format_week <- function(w, sep = 's', century = T) {
 #' @param stamp logical use weekstamp instead of order of the week (depends on the range of weeks)
 #' @return data.frame(yw=int,wid=int)  yw=yearweek number, wid=index of the yw
 #' @export
-makeWeekIndex = function(yw,
+make_week_index = function(yw,
                          col.yw = 'yw',
                          col.idx = 'wid',
                          stamp = F) {
   ww = unique(yw)
   ww = ww[order(ww)]
   if (stamp) {
-    idx = WeekStamp(ww)
+    idx = week_stamp(ww)
   } else {
     idx =  1:length(ww)
   }
@@ -148,7 +132,7 @@ makeWeekIndex = function(yw,
 #'
 #' @param inc data.frame() data
 #' @param col.yw name of the column containing the yearweek number
-#' @param col.stamp name of the column containing the week stamp of each yearweek (@see WeekStamp), if not provided compute it
+#' @param col.stamp name of the column containing the week stamp of each yearweek (@see week_stamp), if not provided compute it
 #' @param date.start month-day date to take as the start of each season
 #' @param calc.index if TRUE add an index column
 #' @return inc with 'season.year' (year of the start ) and 'season.index' (index of the week in the season) columns
@@ -164,21 +148,21 @@ calc_season_fixed = function(inc,
   # based on a fixed date (we use the monday of the week of this date)
   y = floor(yw / 100)
   # Monday of the week of the starting date
-  start = mondayOfDate(as.Date(paste(y, date.start, sep = '-'), format ="%Y-%m-%d"))
-  date = WeekStart(yw) # Monday of the week of each yearweek
+  start = monday_of_date(as.Date(paste(y, date.start, sep = '-'), format ="%Y-%m-%d"))
+  date = monday_of_week(yw) # Monday of the week of each yearweek
 
   y = ifelse(date >= start, y, y - 1L) # Year of the season starting for each week
 
   if (calc.index) {
     start = as.Date(paste(y, date.start, sep = '-'), format = "%Y-%m-%d") # starting of the season for each week
 
-    start = WeekStamp(ISOYearWeek(start)) # Stamp of the starting of the season
+    start = week_stamp(iso_yearweek(start)) # Stamp of the starting of the season
 
-    # weekstamp of the yearweek
+    # week_stamp of the yearweek
     if (!is.null(col.stamp)) {
       stamp = inc[[col.stamp]]
     } else {
-      stamp = WeekStamp(yw)
+      stamp = week_stamp(yw)
     }
     inc[, 'season.index'] = as.integer((stamp - start) + 1) # first index is 1
   }

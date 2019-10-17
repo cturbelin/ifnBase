@@ -12,7 +12,7 @@ calc_season_fixed(inc, col.yw = "yw", col.stamp = NULL,
 
 \item{col.yw}{name of the column containing the yearweek number}
 
-\item{col.stamp}{name of the column containing the week stamp of each yearweek (@see WeekStamp), if not provided compute it}
+\item{col.stamp}{name of the column containing the week stamp of each yearweek (@see week_stamp), if not provided compute it}
 
 \item{date.start}{month-day date to take as the start of each season}
 
