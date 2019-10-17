@@ -27,7 +27,7 @@ To be compatible with template, mapping should follow these rules:
 Overriding is allowed wraping the value with \code{\link{override()}} function
 }
 \examples{
-
+\dontrun{
 new = list("var1"="Q1", "var2"="Q2", "var3"="Q3", "var4"="Q1", "var5"="Q4")
 old = list("var0"="Q0", "var1"="Q1", "var2"="Q4")
 check_list_mapping(new, old, raise=raise)
@@ -36,6 +36,6 @@ check_list_mapping(new, old, raise=raise)
 new = list("var1"="Q1", "var3"=override("Q2"))
 old = list("var2"="Q2")
 check_list_mapping(new, old, raise=raise) # Only throw warning
-
-The checks are transmitted to a provided function \\code{\\link{raise()}}
+}
+# The checks are transmitted to a provided function \\code{\\link{raise()}}
 }

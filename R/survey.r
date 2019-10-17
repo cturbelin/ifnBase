@@ -410,7 +410,7 @@ survey_definition = function(survey) {
 #' @param ym year-month vector
 #' @param time reference time
 #' @export
-calc.age = function(ym, time) {
+calc_age = function(ym, time) {
   y = as.numeric(as.character(substr(ym,1,4)))
   m = as.numeric(as.character(substr(ym,6, 7)))
   year = as.numeric(format(time, format="%Y"))
@@ -591,7 +591,7 @@ survey_load_results_historic = function(ids, survey, cols) {
     }
 
     ii = survey_load_results(survey, cols=cols, survey.users = ids, season = year)
-    ii = keep.last.survey(ii)
+    ii = keep_last_survey(ii)
 
     if(survey == "intake") {
       ii$code_com = as.character(ii$code_com)

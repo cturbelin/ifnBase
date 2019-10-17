@@ -143,7 +143,7 @@ These functions allow to manipulate ISO 8601 week number.
 A week number is reprensented as yearoftheweek * 100 + weeknumber (called yearweek number)
 
 * `iso_yearweek(dates)` : yearweek number of each date
-* `weeksbydates(from, to)` : yearweek numbers for each date of a date interval
+* `week_of_date(from, to)` : yearweek numbers for each date of a date interval
 * `monday_of_date(d)` -> Monday of the date
 * `monday_of_week(yw)` -> Monday of a yearweek vector
 * `monday_of_year(year)` -> Date of the first monday of the year
@@ -161,7 +161,7 @@ Concepts & functions are described in [geography](geography.pdf) vignette
 ## Others function
 
 * replace.names(df, ...) : replace names of a data.frame, parameters are  newname="oldname"
-* merge.list() : merge 2 list
+* merge_list() : merge 2 list
 * random_string(): random string
 * select_columns() : extract columns from data.frame() and warn if does not exist
 

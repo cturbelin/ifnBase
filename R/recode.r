@@ -32,7 +32,7 @@ recode_intake = function(intake, translate=T, remove=T) {
 
   # recode some variables
   if( !is.null(intake$date.birth) ) {
-    intake$age = calc.age(intake$date.birth, intake$timestamp) # @see share/lib/survey
+    intake$age = calc_age(intake$date.birth, intake$timestamp) # @see share/lib/survey
     if(remove) {
       intake = subset(intake, select=-date.birth) # remove uneeded variables
     }
@@ -126,7 +126,7 @@ recode_weekly <- function(weekly, health.status=T) {
   if(health.status) {
     weekly = survey_load_health_status(weekly)
   }
-  weekly$date = as.Date(weekly$timestamp) # date
+  weekly$date = as.Date(trunc(weekly$timestamp, "day")) # date
   weekly$yw = iso_yearweek(weekly$date)
   weekly
 }
