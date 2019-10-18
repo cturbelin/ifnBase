@@ -27,6 +27,8 @@ platform_define_survey(name, survey_id, table, mapping, labels = NULL,
 
 \item{geo.column}{name of the variable (R names)}
 
+\item{template}{name of the template to override}
+
 \item{...}{extra parameters to set for the survey}
 }
 \description{

@@ -24,7 +24,7 @@ To be compatible with template, mapping should follow these rules:
 }
 }
 \details{
-Overriding is allowed wraping the value with \code{\link{override()}} function
+Overriding is allowed wraping the value with \code{\link{override}} function
 }
 \examples{
 \dontrun{

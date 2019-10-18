@@ -6,6 +6,9 @@
 \usage{
 check_unique(x)
 }
+\arguments{
+\item{x}{vector or list of values to check for unicity}
+}
 \description{
 Check if list values are unique
 }

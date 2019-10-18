@@ -6,6 +6,9 @@
 \usage{
 geo_definition(name = NULL)
 }
+\arguments{
+\item{name}{geographic level name}
+}
 \description{
 Get geographic structure description
 }

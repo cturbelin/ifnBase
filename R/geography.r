@@ -3,6 +3,7 @@
 # Set of geographic functions to navigate
 
 #' Get geographic structure description
+#' @param name geographic level name
 #' @export
 geo_definition <- function(name=NULL) {
   if(!is.null(name)) {

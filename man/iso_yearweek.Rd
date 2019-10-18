@@ -8,8 +8,9 @@ iso_yearweek(dates)
 }
 \arguments{
 \item{dates}{Date values}
-
-\item{yearweek}{value as number ( year of the week * 100 + week number, ex: 200515 is week 15 of 2005)}
+}
+\value{
+yearweek value as number ( year of the week * 100 + week number, ex: 200515 is week 15 of 2005)
 }
 \description{
 Compute ISO 8601 Yearweek number (YYYYWW) from dates (Date class)

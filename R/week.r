@@ -7,7 +7,7 @@
 #' Compute ISO 8601 Yearweek number (YYYYWW) from dates (Date class)
 #'
 #' @param dates Date values
-#' @param yearweek value as number ( year of the week * 100 + week number, ex: 200515 is week 15 of 2005)
+#' @return yearweek value as number ( year of the week * 100 + week number, ex: 200515 is week 15 of 2005)
 #' @export
 iso_yearweek <- function(dates) {
   as.integer(format(dates, "%G%V"))

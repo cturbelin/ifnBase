@@ -6,6 +6,11 @@
 \usage{
 merge_by_value(new, old)
 }
+\arguments{
+\item{new}{vector or list of values}
+
+\item{old}{vector or list of values}
+}
 \description{
-Merge two named lists by their values
+Only keep in old values that are not already in new
 }

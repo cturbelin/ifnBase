@@ -6,6 +6,9 @@
 \usage{
 ending_slash(x)
 }
+\arguments{
+\item{x}{string to end by a slash}
+}
 \description{
 Ensure path has an ending /
 }

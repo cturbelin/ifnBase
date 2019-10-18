@@ -13,6 +13,9 @@
 #'  \item{eu:intake}
 #'  \item{eu:weekly}
 #' }
+#'
+#' @param name name of the template to get
+#'
 #' @export
 #' @seealso \code{\link{platform_define_survey}}
 survey_template = function(name) {

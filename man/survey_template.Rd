@@ -6,6 +6,9 @@
 \usage{
 survey_template(name)
 }
+\arguments{
+\item{name}{name of the template to get}
+}
 \description{
 Templates of Surveys
 }

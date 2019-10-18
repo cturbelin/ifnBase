@@ -164,7 +164,6 @@ plot_age_pyramid = function(data, female, prop=T, w=.5, scales=list()) {
 #' @param week number to use if breaks=week
 #' @param complete force the ww data.frame to be complete (recompute wid) from yearweek range
 #' @param n.pretty number ticks to generate (breaks=auto)
-#' @param n.pretty number of pretty values to use
 #' @details
 #' start, year : tick is first week of the year
 #' @export

@@ -129,7 +129,8 @@ get_r_file = function(file, should.exists=FALSE) {
 }
 
 #' Ensure path has an ending /
+#' @param x string to end by a slash
 ending_slash = function(x) {
-  paste0(x,ifelse(grepl("/$", x),"","/"))
+  paste0(x, ifelse(grepl("/$", x), "", "/"))
 }
 
