@@ -9,6 +9,7 @@
 #' @importFrom methods is
 #' @importFrom stats aggregate
 #' @importFrom utils glob2rx str tail
+#' @importFrom swMisc merge_list ending_slash get_r_file
 #' @import ggplot2
 "_PACKAGE"
 
