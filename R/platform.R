@@ -183,7 +183,7 @@ create_survey_definition <- function( mapping, labels=NULL, codes=NULL, recodes=
     recodes = rr
 
     # Merge labels
-    labels = merge.list(labels, template$labels)
+    labels = merge_list(labels, template$labels)
 
   }
 
