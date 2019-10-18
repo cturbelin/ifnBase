@@ -2,7 +2,7 @@
 % Please edit documentation in R/ggplot2.R
 \name{with_ggplot}
 \alias{with_ggplot}
-\title{Init ggplot2 base theme.}
+\title{Init ggplot2 base theme. ggplot2 library should be loaded before !}
 \usage{
 with_ggplot(theme = NULL)
 }

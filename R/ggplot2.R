@@ -2,7 +2,7 @@
 # Graphical related functions
 ##
 
-#' Init ggplot2 base theme.
+#' Init ggplot2 base theme. ggplot2 library should be loaded before !
 #'
 #' Recall it with another theme
 #'
