@@ -64,6 +64,8 @@ monday_of_week <- function(yw) {
 #' Compute a "Week" stamp (like timestamp) : week number from 1970-01-01
 #'
 #' This provide a continuous index for week number which not depend on period bound (unlike make_week_index)
+#' This index is usefull to compute on weekly data (+1 is always the next week) without using date and to plotting
+#' weekly data
 #' It is usefull to plot week based data.
 #' @param yw yearweek value
 #' @export
@@ -75,7 +77,7 @@ week_stamp <- function(yw) {
 }
 
 #' @noRd
-Stamp2Week <- function(stamp) {
+stamp_to_week <- function(stamp) {
   monday = as.Date(stamp * 7L, origin = '1970-01-01')
 }
 
