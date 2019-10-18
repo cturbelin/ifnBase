@@ -1,4 +1,4 @@
-# ifnBase 0.1.4
+# ifnBase 0.2
 * adding swMisc package as Import dependency https://github.com/sentiweb/swMisc
 * Move merge_list(), ending_slash(), get_r_file() and misc functions (not used directly in the package) to swMisc 
 * rename merge.list() to merge_list(), keep.last.survey() to keep_last_survey(), calc.age() to calc_age()
