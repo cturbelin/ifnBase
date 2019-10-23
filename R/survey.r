@@ -75,7 +75,7 @@ survey_load_results = function(survey, cols, geo=NULL, date=NULL, db.table=NULL,
      # All seasons data are in one single table
      # Use "dates" of the season to load data, or use limits from "date" parameter if defined (and requested dates included in the season's ones)
      # end date could be null (during the current season) & is replaced by the current data & time
-     d = lapply(h$dates, function(x) { if(!is.null(x)) { as.POSIXct(x) } else { Sys.time()} })
+     d = lapply(h$dates, function(x) { if(!is.null(x)) { as.POSIXct(x) } else { Sys.time() } })
      if( is.null(date) ) {
        date = list(min=d$start, max=d$end)
      } else {
@@ -106,7 +106,7 @@ survey_load_results = function(survey, cols, geo=NULL, date=NULL, db.table=NULL,
    tb = db.table
  }
  if( !is.null(date) ) {
-   cat("Loading data from ", date$min, "to", date$max,"\n")
+    cat("Loading data from ", format(format="%Y-%m-%d %H:%M:%S", date$min), "to", format(format="%Y-%m-%d %H:%M:%S", date$max),"\n")
  }
  if( length(cols) == 1 && (cols == "*") ) {
     cc = "p.*"
