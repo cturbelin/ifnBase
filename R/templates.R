@@ -294,12 +294,12 @@ survey_templates[["eu:weekly"]] = list(
    # "hospitalization"="Q14",
 
     # visits
-    "visit.no"="Q7_0",
-    "visit.GP"="Q7_1",
-    "visit.plan"="Q7_5",
-    "visit.emergency"="Q7_3",
-    "visit.hospital"="Q7_2",
-    "visit.other"="Q7_4",
+   "visit.no"="Q7_0",
+   "visit.GP"="Q7_1",
+   "visit.hospital"="Q7_2",
+   "visit.emergency"="Q7_3",
+   "visit.other"="Q7_4",
+   "visit.plan"="Q7_5",
 
     # "visit.delay"="Q7b",
 
@@ -318,16 +318,14 @@ survey_templates[["eu:weekly"]] = list(
     "medic.dkn"="Q9_6",
 
     # Antiviral questions
-    "antiviro.med"="Q9c_0",
-
-    "antiviro.home"="Q9c_1",
+    #"antiviro.med"="Q9c_0",
+    #"antiviro.home"="Q9c_1",
 
     "antiviro.when"="Q9b",
 
     # antibio
-    "antibio.med"="Q9d_0",
-    "antibio.home"="Q9d_1",
-
+    #"antibio.med"="Q9d_0",
+    #"antibio.home"="Q9d_1",
     "change.routine"="Q10",
 
     "off.work"="Q10b",
@@ -358,8 +356,8 @@ survey_templates[["eu:weekly"]] = list(
       "visit.hospital",
       "visit.other"
     ),
-    antibio = c("antibio.med", "antibio.home"),
-    antiviro = c("antiviro.med", "antiviro.home"),
+   #  antibio = c("antibio.med", "antibio.home"),
+   # antiviro = c("antiviro.med", "antiviro.home"),
     # Specials labels
     symptoms= c('no.sympt', 'fever', 'chills','rhino', 'sneeze', 'sorethroat', 'cough', 'dyspnea', 'headache', 'pain', 'chestpain', 'asthenia',
                 'anorexia', 'sputum', 'wateryeye', 'nausea', 'vomiting', 'diarrhea', 'abdopain', 'sympt.other')
