@@ -374,9 +374,10 @@ check_list_mapping = function(new, old, raise, only.errors=TRUE) {
 #' @param columns list of column name for each level in the form list([name]=[column_name])
 #' @param hierarchies list of hierarchies list( hierarchy1=c(levels order), hierarchy2=(levels order), ...)
 #' @param default.hierarchy name of the default hierarchy to be used to get upper or lower column
+#' @param country handle country column
 #' @param define if TRUE set the geo.levels during the call, set to FALSE if you dont want to change configuration
 #' @export
-platform_geographic_levels = function(levels,  level.base = NULL, table = 'geo_levels', columns = NULL, hierarchies=NULL, default.hierarchy='default', define=TRUE) {
+platform_geographic_levels = function(levels,  level.base = NULL, table = 'geo_levels', columns = NULL, hierarchies=NULL, default.hierarchy='default', country=FALSE, define=TRUE) {
 
   lev = names(levels)
   if( is.null(lev) ) {
@@ -419,6 +420,7 @@ platform_geographic_levels = function(levels,  level.base = NULL, table = 'geo_l
     table = table,
     hierarchies = hierarchies,
     default.path = default.hierarchy,
+    join.country = country,
     class="geo_levels"
   )
 
