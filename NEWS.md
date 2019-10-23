@@ -1,11 +1,16 @@
 
-# ifnBase 0.2.1
+# ifnBase 0.3
 
+* fix `plot_age_pyramid()` scale
+* add `theme_with()`
+* `syndromes_rs_2018()` now embeds all function related to syndromes definitions for Guerrisi,Euro Surv., 2018 
+* stats function `mulitple_freq()`, `multiple_xfreq()`
 * new function `get_db_handle()` to get the db connexion
 * new function `cut_age()`
 * add country in `platform_geographic_levels()`
 
 # ifnBase 0.2
+
 * adding swMisc package as Import dependency https://github.com/sentiweb/swMisc
 * Move `merge_list()`, `ending_slash()`, `get_r_file()` and misc functions (not used directly in the package) to swMisc 
 * rename merge.list() to `merge_list()`, `keep.last.survey()` to `keep_last_survey()`, `calc.age()` to `calc_age()`
