@@ -2,10 +2,10 @@
 % Please edit documentation in R/survey.r
 \name{get_historical_seasons}
 \alias{get_historical_seasons}
-\title{Get liist of available season names}
+\title{Get list of available season names}
 \usage{
 get_historical_seasons()
 }
 \description{
-Get liist of available season names
+Get list of available season names
 }

@@ -486,7 +486,7 @@ season.def = function(season, silent=F) {
   h
 }
 
-#' Get liist of available season names
+#' Get list of available season names
 #' @export
 get_historical_seasons = function() {
   names(.Share$historical.tables)
