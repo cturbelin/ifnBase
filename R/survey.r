@@ -419,6 +419,26 @@ calc_age = function(ym, time) {
   round(cur - y + (m / 12), 2)
 }
 
+#' Cut age values into categories using breaks and defining pretty levels labels
+#' @param age vector of age values
+#' @param age.categories list of breaks (@seealso cut)
+#' @export
+cut_age <- function(age, age.categories) {
+  age.cat = cut( age, breaks=age.categories, include.lowest=T, right=F, ordered_result=T)
+  # pretty levels for age ranges
+  n = length(age.categories)
+  lev = rep(NA, n - 1)
+  for(i in 1:(n - 1)) {
+    if( (i+1) < n ) {
+      lev[i] = paste( age.categories[i], (age.categories[i + 1] - 1), sep='-')
+    } else {
+      lev[i] = paste(">=", age.categories[i])
+    }
+  }
+  levels(age.cat) <- lev
+  age.cat
+}
+
 #' @noRd
 flip.names <- function(x) {
   n = names(x)
