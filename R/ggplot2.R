@@ -43,6 +43,43 @@ with_ggplot = function(theme=NULL) {
   theme_set(theme)
 }
 
+#' Set axis to vertical
+#' @return theme
+x_axis_vertical = function() {
+  theme(axis.text.x=element_text(angle=-90, vjust=.5))
+}
+
+#' Remove axis from plot
+theme_no_axis = function() {
+  theme(axis.line=element_blank(),
+        axis.text.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks=element_blank(),
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank()
+  )
+}
+
+#' Theme with a list of recipes
+#' @param ... name of recipes to apply
+theme_with = function(...) {
+  recipes = list(...)
+  g = theme()
+  for(recipe in recipes) {
+    r = switch(recipe,
+               "x_vertical"=x_axis_vertical(),
+               "y_strip_horiz"=theme(strip.text.y = element_text(angle = 0)),
+               "legend_top"=theme(legend.position="top"),
+               "no_axis"=theme_no_axis(),
+               stop("Unknown recipe")
+    )
+    if(!is.na(r)) {
+      g = g + r
+    }
+  }
+  g
+}
+
 #' Get default color
 #'
 #' Default color for a given platform can be configured in platform environment, a vector of at least 2 colors are expected
@@ -124,18 +161,25 @@ plot_age_pyramid = function(data, female, prop=T, w=.5, scales=list()) {
   colors = if(is.null(scales$color) ) c(pop='darkgrey', cohort='blue') else scales$color
   alphas = if(is.null(scales$alpha) ) c(pop=.5, cohort=1) else scales$alpha
 
+  ymax = max(abs(data$prop), na.rm=TRUE)
+
   if(prop) {
-    y_scale = seq(-1, 1, .1)
     y_factor = 100
   } else {
-    y_scale = seq(-100, 100, 10)
+    ymax = ceiling(ymax)
     y_factor = 1
   }
-  y_labels = paste(round(y_factor * abs(y_scale)), "%")
 
-  ymax = ceiling(max(abs(data$prop)))
+  y_labels = function(y) {
+    paste(round(y_factor * abs(y)), "%")
+  }
 
   xmax = as.numeric(max(data$age.cat))
+
+  if( is.language(female) ) {
+    requireNamespace("rlang")
+    female = rlang::eval_tidy(female, data=data)
+  }
 
   data$prop[female] = -data$prop[female]
   data$w = ifelse(data$pop == "pop", w * .8, .8)
@@ -146,7 +190,7 @@ plot_age_pyramid = function(data, female, prop=T, w=.5, scales=list()) {
     ggplot2::scale_alpha_manual(values=alphas, labels=labels) +
     ggplot2::geom_text(y=-ymax, x=xmax, label=i18n("female"), hjust="left", show.legend = FALSE) +
     ggplot2::geom_text(y=ymax, x=xmax, label=i18n("male"), hjust="right", show.legend = FALSE) +
-    ggplot2::scale_y_continuous(breaks = y_scale, labels=y_labels, limits=c(-ymax, ymax)) +
+    ggplot2::scale_y_continuous(labels=y_labels, limits=c(-ymax, ymax)) +
     ggplot2::coord_flip()
 
 }
