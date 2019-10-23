@@ -1,7 +1,7 @@
 ## DB Library Wrapper
 
 # Constants in options
-# DB_DRIVER = type of DB driver (RODBC,RMysQL, etc)
+# DB_DRIVER = type of DB driver (RODBC,RPostgreSQL, etc)
 # DB_DSN = How to connect (string or list, depends on driver)
 
 #' Connect or Reconnect to DB
@@ -94,4 +94,10 @@ dbQuery.RODBC <- function(..., show.errors = T, dbHandle=NULL) {
   } else {
     RODBC::sqlGetResults(dbHandle, errors = show.errors)
   }
+}
+
+#' get database connexion handle
+#' @export
+get_db_handle = function() {
+  .Share$dbHandle
 }
