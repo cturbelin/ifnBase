@@ -151,7 +151,6 @@ calc_adjusted_incidence = function(count.week, design, syndroms, output) {
   calc.adj = attr(output.obj, 'calc.adj')
   output = output.obj$types
 
-
   calc_inc_strata = function(count, column.strata, column.prop) {
 
     if(calc.adj && conf.int) {
@@ -196,6 +195,7 @@ calc_adjusted_incidence = function(count.week, design, syndroms, output) {
         inc.crude = cbind(inc.crude, d)
       }
     }
+
     if( calc.adj ) {
 
       inc.crude = cbind(inc.crude, inc.adj)
@@ -215,20 +215,17 @@ calc_adjusted_incidence = function(count.week, design, syndroms, output) {
         N. = 1 - ((1 - conf.level)/2)
 
         for(v in syndroms) {
-          v.w2 = paste(v, '.w2', sep='') # Variance of count
-          v.adj = paste(v, '.adj', sep='')
+          v.w2 = paste0(v, '.w2') # Variance of count
+          v.adj = paste0(v, '.adj')
           x = inc.crude[, v] # Total Counts
-
-          # x.up = inc.crude[, paste(v, '.crude.upper', sep='') ] * inc.crude$active # Upper counts (of crude conf.int)
 
           x.up = 0.5 * qchisq(1 - N., 2 * (x + 1), lower.tail= F)
 
-          inc.crude[, paste(v.adj, '.upper',sep='') ] = inc.crude[, v.adj] + ( sqrt( inc.crude[, v.w2]) / sqrt(x) ) * (x.up - x)
-
-          # x.low = inc.crude[, paste(v, '.crude.lower', sep='') ] * inc.crude$active # Lower counts (of crude conf.int)
+          inc.crude[, paste0(v.adj, '.upper') ] = inc.crude[, v.adj] + ( sqrt( inc.crude[, v.w2]) / sqrt(x) ) * (x.up - x)
 
           x.low = 0.5 * qchisq(N., 2 * x, lower.tail=F)
-          inc.crude[, paste(v.adj, '.lower', sep='') ] = inc.crude[, v.adj] + ( sqrt( inc.crude[, v.w2]) / sqrt(x) ) * (x.low - x)
+
+          inc.crude[, paste0(v.adj, '.lower') ] = inc.crude[, v.adj] + ( sqrt( inc.crude[, v.w2]) / sqrt(x) ) * (x.low - x)
         }
       }
     }
@@ -301,4 +298,3 @@ calc_adjusted_incidence = function(count.week, design, syndroms, output) {
   }
   r
 }
-
