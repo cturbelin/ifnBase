@@ -1,19 +1,22 @@
 Package: ifnBase
 Type: Package
 Title: InfluenzaNet Data Analysis Base
-Version: 0.2
+Version: 0.2.9000
 Imports:
   methods,
   swMisc,
-  ggplot2 (>= 3.0.0)
+  ggplot2 (>= 3.0.0),
+  R6 (>= 2.2)
 Depends: 
   R (>= 3.2.0)
 Suggests: 
   dplyr (>= 0.5.0),
+  rlang (>= 0.3),
   RPostgreSQL, 
   DBI,
   RODBC,
   RColorBrewer,
+  epitools,
   knitr,
   scales
 URL: https://github.com/cturbelin/ifnBase

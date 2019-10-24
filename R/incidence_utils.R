@@ -6,12 +6,13 @@ coalesce <- function(x) {
 }
 
 
-#' Create syndrom columns
+#' Create syndrom columns from factor encoded column
 #'
-#' Transform syndrom name is one column to multiple column (one for each levels of the colum)
+#' Create one boolean column for each level of the given column
 #'
 #' @param weekly weekly data.frame()
 #' @param column column containing syndrom name
+#' @export
 create_syndrom_columns = function(weekly, column) {
   syndroms = levels(weekly[[column]])
   names(syndroms) = syndroms
@@ -25,7 +26,7 @@ create_syndrom_columns = function(weekly, column) {
 }
 
 #' Default set parameters replace default value if exits in params
-#'
+#' @noRd
 #' @param params list of parameters
 #' @param def.params default parameters list
 default.params = function(params, def.params) {
@@ -42,13 +43,17 @@ default.params = function(params, def.params) {
 
 #' Compute delay between 2 surveys for each participant
 #' weekly should be ordered by person_id then timestamp !
-calc.weekly.delay = function(weekly, time.col) {
+#' @param weekly data.frame with at least (person_id, [time.col]) columns
+#' @param time.col column containg time value to compute delay from
+#' @export
+calc_weekly_delay = function(weekly, time.col) {
   unlist(tapply(weekly[, time.col], list(weekly$person_id), function(x) { c(NA, diff(x))} ))
 }
 
 #' Compute order of weekly response
 #' @param weekly weekly data.frame()
-calc.weekly.order = function(weekly) {
+#' @export
+calc_weekly_order = function(weekly) {
   weekly = weekly[ order(weekly$person_id, weekly$timestamp),]
   weekly$order = unlist( lapply(tapply(weekly$person_id, weekly$person_id, length), function(n) { 1:n }))
   weekly
@@ -66,6 +71,10 @@ create_step_tracker = function() {
 
   list(
     add = function(name, n) {
+      if(is.data.frame(n)) {
+        n = nrow(n)
+      }
+
       steps[name] <<- n
     },
     get_steps = function() {
@@ -74,3 +83,24 @@ create_step_tracker = function() {
 
   )
 }
+
+create_profiler = function() {
+  times = data.frame()
+  last.time = Sys.time()
+
+  list(
+    track = function(point, step=NULL) {
+      time = Sys.time() - last.time
+      r = list(time=time, point=point)
+      if(!is.null(step)) {
+        r$step = step
+      }
+      times <<- dplyr::bind_rows(times, r)
+      last.time <<- Sys.time()
+    },
+    get = function() {
+      times
+    }
+  )
+}
+

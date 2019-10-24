@@ -1,5 +1,6 @@
 
 #' Returns list of columns needed to compute incidence
+#' @export
 get_columns_for_incidence = function() {
   c('timestamp', get_symptoms_aliases(), 'fever.sudden','highest.temp','same.episode','sympt.start','fever.start','sympt.sudden')
 }
@@ -17,6 +18,7 @@ get_columns_for_incidence = function() {
 #' @param strata.call a list(func, args) func(pop, geo, [args])
 #' @param geo_column name of the geographic column  (value return by strata.call), geo_level's column name by default
 #' @param geo_area id of geographic area to keep at the geographic level
+#' @export
 design_incidence = function(age.categories, year.pop, geo, geo_column=NULL, geo_area=NULL, ...) {
 
   if( is.null(geo_column) ) {
@@ -80,6 +82,7 @@ design_incidence = function(age.categories, year.pop, geo, geo_column=NULL, geo_
 #' @param conf.int confidence interval computed
 #' @param adjust adjusted measures
 #' @param ... data sets
+#' @export
 output_incidence = function(types, conf.int=T, adjust=T, ...) {
   data = list(types=types)
   l = list(...)
@@ -128,6 +131,7 @@ calc.conf.int = function(inc, v, type='crude', unit=1) {
 #' @param design design structure (defining strata and reference data like population in each strata)
 #' @param syndroms char() list of column names for each syndrom count
 #' @param output char() list of requested output "inc"=global incidence, "zlow"=lower geo level incidence, "age" by age incidence,
+#' @export
 calc_adjusted_incidence = function(count.week, design, syndroms, output) {
 
   if(nrow(count.week) == 0) {
