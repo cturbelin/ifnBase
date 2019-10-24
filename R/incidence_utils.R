@@ -104,3 +104,61 @@ create_profiler = function() {
   )
 }
 
+
+
+#' Verticalize incidence data after computation
+#'
+#' Incidence data are organized horizontally, estimation for each syndroms are in columns (with suffixes .upper, .lower, .w2)
+#' @seealso \code{\link{calc_adjusted_incidence}}
+#'
+verticalize_incidence = function(inc, ids, syndroms) {
+
+  # data data.frame
+  # id.vars id columns
+  # vars list of vars column [var].[mesure]
+  # measures list of measures
+  # v.name : name of column containing variable name in vertical data
+  # var.measure : name of the column containing the value of the column with variable name (without measure)
+  extract_columns = function(data, id.vars, vars, measures, v.name, var.measure=NULL) {
+    dd = lapply(vars, function(variable) {
+      if(length(measures) > 0) {
+        columns = paste(variable, measures, sep='.')
+      } else {
+        columns = c()
+      }
+
+      if(!is.null(var.measure)) {
+        columns = c(columns, variable)
+      }
+
+      n = columns[columns %in% names(data)]
+      d = data[, c(id.vars, n), drop=FALSE]
+
+      nn = names(d)
+      if(!is.null(var.measure)) {
+        nn[ nn == variable ] = var.measure
+      }
+      nn = gsub(paste0("^", variable,"\\."),"", nn)
+      names(d) <- nn
+      d[, v.name] = variable
+      d
+    })
+    dd = dplyr::bind_rows(dd)
+    dd
+  }
+
+  # Verticalize syndroms
+  data = extract_columns(inc, syndroms,id.vars=ids, measures=c('crude','adj', 'crude.lower','crude.upper','adj.upper','adj.lower'), v.name="syndrom", var.measure="count")
+
+  # Verticalize estimation type
+  data = extract_columns(data, id.vars=c(ids, 'syndrom'), c('count','crude','adj'),  c('upper','lower'), v.name="type", var.measure = "value")
+
+  active = extract_columns(inc, id.vars=c(ids), 'active', c(), v.name="syndrom", var.measure = "value")
+
+  active$type = "count"
+  active$upper = NA
+  active$lower = NA
+
+  data = bind_rows(data, active)
+  data
+}

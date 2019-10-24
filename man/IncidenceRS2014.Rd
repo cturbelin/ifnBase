@@ -26,6 +26,14 @@ Parameters:
  \item{active.min.surveys}{min number of surveys for each participant (not active if less)}
 }
 
+Output:
+Incidence estimator can output several kind of datasets
+\describe{
+ \item{inc}{inc=incidence at (national level)}
+ \item{zlow}{"lower geographic level (z)", if estimator is stratified by geographic level}
+ \item{age}{"age" age-specific incidence, age categories should be in "age.cat" column in intake data}
+ \item{count}{raw count of syndroms used for each syndrom by week, before incidence is computed}
+}
 
 Apply the full algorithm for rs2014 incidence computation
 }
@@ -44,9 +52,9 @@ Apply the full algorithm for rs2014 incidence computation
 
 \item{\code{profiler}}{profiler}
 
-\item{\code{design}}{design stratification from \link{\code{design_incidence()}}}
+\item{\code{design}}{design stratification from \code{\link{design_incidence}}}
 
-\item{\code{output}}{vector of character}
+\item{\code{output}}{vector of character (see Details outupus)}
 }}
 
 \keyword{datasets}

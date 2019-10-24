@@ -337,7 +337,7 @@ incidence_rs2014_public = list(
     r
   },
   # Compute incidence
-  compute = function(weeks=NULL, verbose=T, progress=F) {
+  compute = function(weeks=NULL, verbose=T, progress=F, verticalize=FALSE) {
     "Compute incidence"
 
     # Prepare data for all weeks (common part)
@@ -414,6 +414,23 @@ incidence_rs2014_public = list(
       cat("\n")
     }
 
+    if(verticalize) {
+
+      syndroms = self$syndroms
+      if(!is.null(inc)) {
+        inc = verticalize_incidence(inc, ids="yw", syndroms = syndroms )
+      }
+
+      if( !is.null(inc.age) ) {
+        inc.age = verticalize_incidence(inc.age, ids=c("yw",'age.cat'), syndroms = syndroms )
+      }
+
+      if( !is.null(inc.zlow) ) {
+        inc.zlow = verticalize_incidence(inc.zlow, ids=c("yw", self$design$geo_column), syndroms=syndroms)
+      }
+
+    }
+
     structure(
       list(
         inc=inc,
@@ -443,8 +460,8 @@ incidence_rs2014_public = list(
 #' @field params parameters for computation
 #' @field syndroms character vector of column names containing syndroms classification for each weekly
 #' @field profiler profiler
-#' @field design design stratification from \link{\code{design_incidence()}}
-#' @field output vector of character
+#' @field design design stratification from \code{\link{design_incidence}}
+#' @field output vector of character (see Details outupus)
 #'
 #' @details Parameters:
 #' \describe{
@@ -458,6 +475,14 @@ incidence_rs2014_public = list(
 #'  \item{active.min.surveys}{min number of surveys for each participant (not active if less)}
 #' }
 #'
+#' @details Output:
+#' Incidence estimator can output several kind of datasets
+#' \describe{
+#'  \item{inc}{inc=incidence at (national level)}
+#'  \item{zlow}{"lower geographic level (z)", if estimator is stratified by geographic level}
+#'  \item{age}{"age" age-specific incidence, age categories should be in "age.cat" column in intake data}
+#'  \item{count}{raw count of syndroms used for each syndrom by week, before incidence is computed}
+#' }
 #'
 #' Apply the full algorithm for rs2014 incidence computation
 #'
