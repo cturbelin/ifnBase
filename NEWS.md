@@ -1,12 +1,14 @@
 
 # ifnBase 0.3
 
+* `SyndromeProviderRS2019` R6 class compute 2019 revised syndrom definition
+* adding incidence functions as `R6` classes `IncidenceRS2014` and `IncidenceDailyRS2014`
 * fix `plot_age_pyramid()` scale
-* add `theme_with()`
-* `syndromes_rs_2018()` now embeds all function related to syndromes definitions for Guerrisi,Euro Surv., 2018 
-* stats function `mulitple_freq()`, `multiple_xfreq()`
+* add `theme_with()` for ggplot receipes
+* `syndromes_rs_2018()` embeds all function related to syndromes definitions for Guerrisi,Euro Surv., 2018 
+* stats function `multitple_freq()`, `multiple_xfreq()`
 * new function `get_db_handle()` to get the db connexion
-* new function `cut_age()`
+* rename `cut.age()` function `cut_age()`
 * add country in `platform_geographic_levels()`
 
 # ifnBase 0.2
