@@ -108,7 +108,9 @@ syndromes_provider_ili2019 <- list(
 #' \dontrun{
 #'  season = 2017
 #'  weekly = survey_load_results("weekly", get_columns_for_incidence(), season=season)
-#'  intake = survey_load_results("weekly", c('timestamp','date_birth'))
+#'  intake = survey_load_results("weekly", c('timestamp','date.birth'))
+#'  weekly = recode_weekly(weekly)
+#'  intake = recode_intake(intake)
 #'  provider = SyndromeProviderRS2019$new()
 #'  r = provider$compute(weekly, intake)
 #' }
