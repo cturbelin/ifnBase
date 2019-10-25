@@ -2,10 +2,10 @@
 % Please edit documentation in R/incidence_design.R
 \name{get_columns_for_incidence}
 \alias{get_columns_for_incidence}
-\title{Returns list of columns needed to compute incidence}
+\title{Returns list of columns needed of weekly survey to compute incidence}
 \usage{
 get_columns_for_incidence()
 }
 \description{
-Returns list of columns needed to compute incidence
+Returns list of columns needed of weekly survey to compute incidence
 }

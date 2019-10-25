@@ -104,11 +104,13 @@ create_profiler = function() {
   )
 }
 
-
-
 #' Verticalize incidence data after computation
 #'
-#' Incidence data are organized horizontally, estimation for each syndroms are in columns (with suffixes .upper, .lower, .w2)
+#' Incidence data are organized horizontally, estimation for each syndrom are in columns (with suffixes .upper, .lower, .w2)
+#' This function reshape to a vertical storage format
+#' Output will be [syndrome, type, value, upper, lower]
+#'
+#'
 #' @seealso \code{\link{calc_adjusted_incidence}}
 #'
 verticalize_incidence = function(inc, ids, syndroms) {
@@ -159,6 +161,6 @@ verticalize_incidence = function(inc, ids, syndroms) {
   active$upper = NA
   active$lower = NA
 
-  data = bind_rows(data, active)
+  data = dplyr::bind_rows(data, active)
   data
 }

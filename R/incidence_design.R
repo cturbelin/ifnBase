@@ -1,10 +1,31 @@
+# This library aims at providing set of function to compute incidence from InfluenzaNet data
+#
+# Several functions are provided:
+#
+# - IncidenceRS2014
+# - IncidenceDailyRS2014
+#
+# - (weekly, intake, syndroms, params, design, output=NULL, ...) : Estimator Function interface
+# weekly, intake, syndroms, params, design, output=NULL
+# intake = last intake for each participant with necessary columns for stratification
+# syndroms = list of indicators column for each "syndrom" for which estimate an incidence
+# params  = parameters for a given estimator
+# design  = design stratification definition (@see design.incidence)
+# output  = kind of output to get inc=incidence (national level), zlow="lower geographic level (z)", "age" age-specific incidence
+#         age categories should be in "age.cat" column in intake df.
+#         It could be an character vector or a structure with more option returned by output.incidence
+#
+# Helpers:
+#
+# - design_incidence() : define a stratification structre
+# - output_incidence() : define an output type and extra parameters for output results
 
-#' Returns list of columns needed to compute incidence
+
+#' Returns list of columns needed of weekly survey to compute incidence
 #' @export
 get_columns_for_incidence = function() {
   c('timestamp', get_symptoms_aliases(), 'fever.sudden','highest.temp','same.episode','sympt.start','fever.start','sympt.sudden')
 }
-
 
 #' Create a structure usable by incidence computation functions to describe the stratification to use (parameter design)
 #'

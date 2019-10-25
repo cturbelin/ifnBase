@@ -400,7 +400,6 @@ incidence_rs2014_daliy_public = list(
 #'  \item{active.min.surveys}{min number of surveys for each participant (not active if less)}
 #'  \item{active.use.mean}{Use mean number of active participant over the windows [active.day.before, active.day.after]}
 #' }
-
 #' @export
 IncidenceDailyRS2014 = R6Class("IncidenceDailyRS2014", public = incidence_rs2014_daliy_public)
 
