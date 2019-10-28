@@ -36,9 +36,9 @@ get_columns_for_incidence = function() {
 #' @param age.categories list of breaks
 #' @param year.pop year of the population to fetch
 #' @param geo geographic level id (see geography & geo.levels in platform config.). could be character or structure return by geo_level function
-#' @param strata.call a list(func, args) func(pop, geo, [args])
 #' @param geo_column name of the geographic column  (value return by strata.call), geo_level's column name by default
 #' @param geo_area id of geographic area to keep at the geographic level
+#' @param ... other parameters to include in the design
 #' @export
 design_incidence = function(age.categories, year.pop, geo, geo_column=NULL, geo_area=NULL, ...) {
 

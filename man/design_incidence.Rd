@@ -18,7 +18,7 @@ design_incidence(age.categories, year.pop, geo, geo_column = NULL,
 
 \item{geo_area}{id of geographic area to keep at the geographic level}
 
-\item{strata.call}{a list(func, args) func(pop, geo, [args])}
+\item{...}{other parameters to include in the design}
 }
 \description{
 Embed all data & metadata about stratification

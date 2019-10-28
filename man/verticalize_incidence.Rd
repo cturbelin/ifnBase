@@ -6,6 +6,13 @@
 \usage{
 verticalize_incidence(inc, ids, syndroms)
 }
+\arguments{
+\item{inc}{data.frame with horizontal incidence (a set of columns for each syndrom)}
+
+\item{ids}{names of the row indentifiyng column}
+
+\item{syndroms}{list of syndrom names used to produce this dataset}
+}
 \description{
 Incidence data are organized horizontally, estimation for each syndrom are in columns (with suffixes .upper, .lower, .w2)
 This function reshape to a vertical storage format

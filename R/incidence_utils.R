@@ -113,6 +113,10 @@ create_profiler = function() {
 #'
 #' @seealso \code{\link{calc_adjusted_incidence}}
 #'
+#' @param inc data.frame with horizontal incidence (a set of columns for each syndrom)
+#' @param ids names of the row indentifiyng column
+#' @param syndroms list of syndrom names used to produce this dataset
+#'
 verticalize_incidence = function(inc, ids, syndroms) {
 
   # data data.frame
