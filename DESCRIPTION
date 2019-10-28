@@ -1,7 +1,7 @@
 Package: ifnBase
 Type: Package
 Title: InfluenzaNet Data Analysis Base
-Version: 0.2.9000
+Version: 0.3
 Imports:
   methods,
   swMisc,
