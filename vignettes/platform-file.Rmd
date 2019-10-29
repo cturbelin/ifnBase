@@ -28,7 +28,7 @@ The name of this file define the platform id (code of the country for example).
 
 # Contents
 
-## Global parameters
+## Global options : to be defined with `platform_options()` function in the platform file
 
 ### `survey_default_language`
 Define the code of the language to use by default in i18n files.
@@ -39,6 +39,9 @@ boolean. If TRUE by default survey response will be loaded only for empty channe
 ### `first.season.censored` (optional)
 boolean value. if TRUE the first season of each particpant need to be left censored (we dont have data before)
 
+### `get_first_season_country` function(country)
+function with one parameter `country`. Should return the first available season year for the country. This is needed when `first.season.censored` is active (TRUE) to
+ 
 ### `health.status` (optional)
 If the data storage model is using a single table for each survey, you have to describe the table (or view) containing
 health status computed from each weekly survey 
@@ -50,6 +53,17 @@ list(
 )
 ```
 
+### `complete.intake`
+list() of parameters to be used to define the intake completion strategy
+
+## Example
+
+```{r eval=FALSE}
+platform_options(
+  first.season.censored=FALSE
+)
+
+```
 ## Survey description
 
 Each survey has to be described to allow the package to deal with the database and know how to load the survey data.

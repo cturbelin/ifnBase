@@ -29,6 +29,8 @@ load_platform = function() {
   file = get_r_file(paste0(ending_slash(path), platform), should.exists = TRUE)
 
   sys.source(file, envir=.Share)
+
+  validate_platform()
 }
 
 #' Describe a survey of a platform
@@ -548,6 +550,10 @@ platform_options = function(...) {
     .Share$health.status = oo$health.status
   }
 
+  if(!is.null(oo$complete.intake) ) {
+    .Share$complete.intake = oo$complete.intake
+  }
+
 }
 
 #' Get the platform env
@@ -563,4 +569,15 @@ platform_env <- function(name=NULL) {
   } else {
     .Share[[name]]
   }
+}
+
+#' Post loading function to validate platform info
+validate_platform =function() {
+
+  if(isTRUE(.Share$first.season.censored)) {
+    if(is.null(.Share$get_first_season_country)) {
+      stop("get_first_season_country() should be defined with the platform option `first.season.censored`. Please define this function in first.season.censored ")
+    }
+  }
+
 }
