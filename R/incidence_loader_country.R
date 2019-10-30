@@ -2,7 +2,7 @@
 #'
 #' This function standardize the loading of data in order to compute incidence
 #'
-#' @param season season int[1] number to load (first year of the season, ex: 2011 for the season 2011-2012)
+#' @param season season int[1] \code{\link{calc_season}}
 #' @param age.categories int[], breaks to compute age groups
 #' @param geo geographic level name to load
 #' @param syndrome.from list() parameters to create the syndrome columns it will be used to call \code{\link{compute_weekly_syndromes}}
@@ -26,8 +26,6 @@ load_results_for_incidence = function(season, age.categories, syndrome.from=list
 
   syndrome.from = swMisc::merge_list(syndrome.from, list(health.status=TRUE))
 
-  hh = season.def(season)
-
   # Load data for incidences calculation
 
   weekly = survey_load_results("weekly", c(get_columns_for_incidence(), extra$weekly.supp.cols), season=season, country = country)
@@ -39,7 +37,7 @@ load_results_for_incidence = function(season, age.categories, syndrome.from=list
 
   i = is.na(weekly$person_id)
   if( any(i) ) {
-    message("Removing ", sum(i)," weekly with unknown person_id\n")
+    message("Removing ", sum(i)," weekly with unknown person_id")
     weekly = weekly[!i, ]
   }
   rm(i)
@@ -58,7 +56,7 @@ load_results_for_incidence = function(season, age.categories, syndrome.from=list
 
   # Load InfluenzaNet default health status
   if( isTRUE(syndrome.from$health.status) ) {
-    weekly = survey_load_health_status(weekly, health.table=tables$health)
+    weekly = survey_load_health_status(weekly)
   }
 
   # get intake, only keep the last available intake
