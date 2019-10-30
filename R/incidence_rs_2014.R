@@ -1,7 +1,6 @@
 
 # Public structure of incidence rs_2014 class
 #' @noRd
-#' @noMd
 incidence_rs2014_public = list(
   weekly = NULL,
   intake = NULL,
@@ -474,6 +473,9 @@ incidence_rs2014_public = list(
 #'  \item{active.week.after}{Number of week after each computed week to count active participants}
 #'  \item{active.min.surveys}{min number of surveys for each participant (not active if less)}
 #' }
+#'
+#' @details Input:
+#' Input data are expected to have some columns & some fixes. They are loaded and prepared using \code{\link{load_results_for_incidence}}
 #'
 #' @details Output:
 #' Incidence estimator can output several kind of datasets

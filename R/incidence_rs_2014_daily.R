@@ -1,8 +1,7 @@
 
 # Public structure of incidence rs_2014 class
 #' @noRd
-#' @noMd
-incidence_rs2014_daliy_public = list(
+incidence_rs2014_daily_public = list(
     weekly = NULL,
     intake = NULL,
     participant = NULL,
@@ -378,14 +377,17 @@ incidence_rs2014_daliy_public = list(
 
 #' Incidence estimator using rs2014 method implemented using daily agregatation
 #'
-#' @field weekly weekly data
-#' @field intake intake data
+#' @field weekly weekly data (loaded using \code{\link{load_results_for_incidence}})
+#' @field intake intake data (loaded using \code{\link{load_results_for_incidence}})
 #' @field participants data.frame() with all available participants and commputed criterias used during computation
 #' @field params parameters for computation
 #' @field syndroms character vector of column names containing syndroms classification for each weekly
 #' @field verbose logical show verbose message
 #' @field design design stratification from \code{\link{design_incidence}}
 #' @field output vector of character, see \code{\link{IncidenceRS2014}}
+#'
+#' @details Input:
+#' Input data are expected to have some columns & some fixes. They are loaded and prepared using \code{\link{load_results_for_incidence}}
 #'
 #' @details Parameters:
 #'
