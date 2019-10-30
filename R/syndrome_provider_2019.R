@@ -1,6 +1,7 @@
 
 #' @noRd
 syndromes_provider_ili2019 <- list(
+
   pain.age.limit = NULL,
 
   initialize = function(pain.age.limit=5) {
@@ -20,18 +21,12 @@ syndromes_provider_ili2019 <- list(
       stop(paste0("Unknown definition", paste(n, collapse = ",")))
     }
 
-    ages = aggregate(age ~ person_id, data=intake, min) # consider only one age by person (the first given)
-    ages$age[ ages$age < 0 | ages$age > 120] <- NA
-    weekly = merge(weekly, ages, by='person_id', all.x=T)
+    weekly = self$compute_age(weekly, intake)
 
     fever_level_38 = 3
     fever_level_39 = 4
 
     pain.age.limit = self$pain.age.limit
-
-    is_sudden = function(r) {
-      (!is.na(r$sympt.sudden) & r$sympt.sudden) | (!is.na(r$fever.sudden) & r$fever.sudden)
-    }
 
     has_pain = function(r)  {
       ifelse( !is.na(r$age) & r$age <= pain.age.limit, TRUE, r$pain)
@@ -57,7 +52,7 @@ syndromes_provider_ili2019 <- list(
 
     pain = has_pain(r)
     pain_or_headache = pain | r$headache
-    sudden = is_sudden(r)
+    sudden = self$is_sudden(r)
 
     d = list()
 
@@ -103,7 +98,7 @@ syndromes_provider_ili2019 <- list(
 #' Syndrome Provider with 2019 revised ILI & Ari definitions
 #'
 #' To run need weekly with get_columns_for_incidence() column list
-#'
+#' @field pain.age.limit age under which pain will be considered as TRUE
 #' @examples
 #' \dontrun{
 #'  season = 2017
@@ -116,5 +111,5 @@ syndromes_provider_ili2019 <- list(
 #' }
 #'
 #' @export
-SyndromeProviderRS2019 <- R6Class("SyndromeProviderRS2019", public = syndromes_provider_ili2019)
+SyndromeProviderRS2019 <- R6Class("SyndromeProviderRS2019", public = syndromes_provider_ili2019, inherit=SyndromeProvider)
 
