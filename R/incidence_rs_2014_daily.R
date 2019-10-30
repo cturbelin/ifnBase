@@ -403,5 +403,5 @@ incidence_rs2014_daily_public = list(
 #'  \item{active.use.mean}{Use mean number of active participant over the windows [active.day.before, active.day.after]}
 #' }
 #' @export
-IncidenceDailyRS2014 = R6Class("IncidenceDailyRS2014", public = incidence_rs2014_daliy_public)
+IncidenceDailyRS2014 = R6Class("IncidenceDailyRS2014", public = incidence_rs2014_daily_public)
 
