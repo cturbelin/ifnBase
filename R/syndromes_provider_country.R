@@ -36,10 +36,14 @@ syndrome_provider_ili_country = function(country, weekly, intake, season, use.fe
 
   # Count
   at_least = function(d, columns, n=1) {
-    apply(select_df(d, columns), 1, function(r) { sum(r) >= n})
+    apply(d[, columns, drop=FALSE], 1, function(r) { sum(r) >= n})
   }
 
-  sudden = !is.na(weekly$sympt.sudden) & weekly$sympt.sudden
+  is_sudden = function(r) {
+    (!is.na(r$sympt.sudden) & r$sympt.sudden) | (!is.na(r$fever.sudden) & r$fever.sudden)
+  }
+
+  sudden = is_sudden(weekly)
 
   if(use.fever.level) {
     has_fever_38 = weekly$fever & ifelse(is.na(weekly$highest.temp), unknown.has.fever, weekly$highest.temp >= 3)
