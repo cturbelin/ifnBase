@@ -5,7 +5,7 @@
 #' Compute syndromes definitions used in Guerrisi C, Euro Surv. 2018.
 #'
 #' This function embeds in one function to reduce number of available functions since it's provided for archive purpose
-#' This function are deprecated.
+#' This function is deprecated.
 #' @return list() list of functions
 #' @export
 #'
