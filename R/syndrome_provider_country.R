@@ -197,7 +197,7 @@ syndrome_provider_ili_country <- list(
 #' @field use.fever.level Use fever level when definition request a fever level or only the fever=TRUE
 #' @field unknown.has.fever if TRUE consider that unknown fever status is fever=TRUE
 #' @field min.syndrome.count Minimum syndrom count to take into account when definition doesnt say it
-#' @fiekd Age to take into account of pain. Under this age pain=TRUE (disabled if NA)
+#' @field Age to take into account of pain. Under this age pain=TRUE (disabled if NA)
 #'
 #' @export
 SyndromeProviderCountry <- R6Class("SyndromeProviderCountry", public = syndrome_provider_ili_country, inherit=SyndromeProvider)
