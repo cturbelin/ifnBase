@@ -121,7 +121,7 @@ incidence_rs2014_public = list(
     }
 
     # Now aggregate to the week and person
-    weekly = aggregate(as.list(weekly[, syndroms]), list(person_id=weekly$person_id, yw=weekly$yw), sum, na.rm=T)
+    weekly = aggregate(as.list(weekly[, syndroms, drop=FALSE]), list(person_id=weekly$person_id, yw=weekly$yw), sum, na.rm=T)
     track("syndrom-agg")
 
     weekly[, syndroms] = weekly[, syndroms] > 0 # Only one syndrom report by participant by week
@@ -303,7 +303,7 @@ incidence_rs2014_public = list(
     }
 
     # Count number of syndroms by user and by week
-    count = aggregate(as.list(weekly[, syndroms]), list(person_id=weekly$person_id), sum)
+    count = aggregate(as.list(weekly[, syndroms, drop=FALSE]), list(person_id=weekly$person_id), sum)
     track_time("count")
 
     count = merge(count, intake[, c('person_id', strata)], by='person_id', all.x=T) # get the geo code for each user
@@ -315,7 +315,7 @@ incidence_rs2014_public = list(
     count[, syndroms] = as.integer(count[, syndroms] > 0) # syndroms counted only once for each user
 
     # aggregate by strata
-    count.week = aggregate( as.list(count[, syndroms]), count[ , strata, drop=FALSE], sum)
+    count.week = aggregate(count[, syndroms, drop=FALSE], count[ , strata, drop=FALSE], sum)
     track_time("count.week")
 
     # merge with active
