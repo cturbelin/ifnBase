@@ -8,27 +8,29 @@
 #' @param syndrome.from list() parameters to create the syndrome columns it will be used to call \code{\link{compute_weekly_syndromes}}
 #' @param country country to load
 #' @param first.season first season participants handling parameters. could be "previous" (only for the previous season) or TRUE to activate it
-#' @param extra list() extra parameters
+#' @param columns list() extra columns to load in each survey data (see details)
 #'
 #' @details syndrome.from:
 #' syndrome parameter will indicate how to create syndrome columns in weekly. A syndrome column is just a logical value column indicating if a weekly survey match a syndrome definition
 #' This list will be used as arguments to call \code{\link{compute_weekly_syndromes}}
 #'
-#' @details extra:
+#' @details Columns:
 #' Several extra parameters can be provided:
-#' \describe {
-#'  \item{weekly.all.columns}{if TRUE keep all column in weekly data, if FALSE only keep a restricted list}
-#'  \item{weekly.supp.cols}{Supplementary weekly columns to load}
+#' \describe{
+#'  \item{keep.all}{if TRUE keep all column in weekly data, if FALSE only keep a restricted list}
+#'  \item{weekly}{Supplementary weekly columns to load see \code{\link{survey_load_results}}}
+#'  \item{intake}{Supplementary intake columns to load see \code{\link{survey_load_results}}}
 #' }
 #' @export
 #' @return list() with intake, weekly, syndromes (vector of name of syndrome columns)
-load_results_for_incidence = function(season, age.categories, syndrome.from=list(), geo=NULL, country=NULL, first.season=NULL, extra=list()) {
+load_results_for_incidence = function(season, age.categories, syndrome.from=list(), geo=NULL, country=NULL, first.season=NULL, columns=list()) {
 
   syndrome.from = swMisc::merge_list(syndrome.from, list(health.status=TRUE))
 
   # Load data for incidences calculation
 
-  weekly = survey_load_results("weekly", c(get_columns_for_incidence(), extra$weekly.supp.cols), season=season, country = country)
+  weekly.columns = unique(c(get_columns_for_incidence(), columns$weekly))
+  weekly = survey_load_results("weekly", weekly.columns, season=season, country = country)
 
   if(nrow(weekly) == 0) {
     cat("No data for this season\n")
@@ -62,7 +64,7 @@ load_results_for_incidence = function(season, age.categories, syndrome.from=list
   # get intake, only keep the last available intake
   # We should probably take the last intake available for each week
   intake.def = survey_definition("intake")
-  intake.columns = c('timestamp', 'date.birth',  intake.def$geo.column)
+  intake.columns = unique(c('timestamp', 'date.birth',  intake.def$geo.column, columns$intake))
   intake = survey_load_results("intake", intake.columns , geo=geo, season=season, country=country)
 
   i = is.na(intake$person_id)
@@ -73,7 +75,7 @@ load_results_for_incidence = function(season, age.categories, syndrome.from=list
   rm(i)
 
   # Complete intake for users that are not in the intake of the current season
-  intake = complete_intake_strategy(weekly, intake)
+  intake = complete_intake_strategy(weekly, intake, intake.columns=intake.columns)
 
   # Current strategy keeps the last available survey data for each user
   # One participant will have one age and one location during all the season
@@ -129,7 +131,7 @@ load_results_for_incidence = function(season, age.categories, syndrome.from=list
   # Columns to keep in weekly
   keep.cols = c('person_id','timestamp', 'date', 'order', 'same.episode','sympt.start','fever.start')
 
-  # Compute syndrome columns in weekly using syndrome.from parameter
+  # Compute syndromes columns in weekly using syndrome.from parameters as arguments
   syndrome.from$intake = intake
   syndrome.from$weekly = weekly
   weekly = do.call(compute_weekly_syndromes, syndrome.from)
@@ -137,7 +139,7 @@ load_results_for_incidence = function(season, age.categories, syndrome.from=list
   # Get back list of syndrome columns
   syndromes = attr(weekly, "syndromes")
 
-  if(!isTRUE(extra$weekly.all.columns)) {
+  if(!isTRUE(columns$keep.all)) {
     weekly = weekly[, c(keep.cols, syndromes)]
   }
 
@@ -164,6 +166,7 @@ load_results_for_incidence = function(season, age.categories, syndrome.from=list
 compute_weekly_syndromes <- function(intake, weekly, health.status=TRUE, keep.status=FALSE, regroup.syndromes=TRUE, provider=NULL) {
 
   # Use InfluenzaNet base health status
+  syndromes = c()
   if(health.status) {
     if(regroup.syndrome) {
       if(keep.status) {
