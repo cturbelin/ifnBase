@@ -12,6 +12,9 @@ IncidenceDailyRS2014
 Incidence estimator using rs2014 method implemented using daily agregatation
 }
 \details{
+Input:
+Input data are expected to have some columns & some fixes. They are loaded and prepared using \code{\link{load_results_for_incidence}}
+
 Parameters:
 
 \describe{
@@ -29,9 +32,9 @@ Parameters:
 \section{Fields}{
 
 \describe{
-\item{\code{weekly}}{weekly data}
+\item{\code{weekly}}{weekly data (loaded using \code{\link{load_results_for_incidence}})}
 
-\item{\code{intake}}{intake data}
+\item{\code{intake}}{intake data (loaded using \code{\link{load_results_for_incidence}})}
 
 \item{\code{participants}}{data.frame() with all available participants and commputed criterias used during computation}
 

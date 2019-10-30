@@ -26,6 +26,9 @@ Parameters:
  \item{active.min.surveys}{min number of surveys for each participant (not active if less)}
 }
 
+Input:
+Input data are expected to have some columns & some fixes. They are loaded and prepared using \code{\link{load_results_for_incidence}}
+
 Output:
 Incidence estimator can output several kind of datasets
 \describe{
