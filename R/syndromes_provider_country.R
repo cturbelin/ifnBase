@@ -26,8 +26,8 @@
 #' Compute country specific classifier for ILI syndrome.
 #' @param country country code
 #' @param weekly weekly survey data
-#' @param intake
-#' @param season
+#' @param intake intake survey data
+#' @param season season number see \code{\link{calc_season}}
 #' @param use.fever.level if TRUE take into account of the reported fever level
 #' @param unknown.has.fever = if TRUE consider that unknown fever level has fever at the right level
 #' @param min.syndrome.count in case of imprecise definition about number of symptom, use this number as mininum to consider the syndrom
