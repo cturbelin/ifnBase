@@ -1,6 +1,7 @@
 
 # ifnBase 0.3
-
+* add `load_results_for_incidence` to load & prepare data in order to compute incidence
+* add `SyndromeProviderCountry` R6 class to compute by country definition (draft)
 * `SyndromeProviderRS2019` R6 class compute 2019 revised syndrom definition
 * adding incidence functions as `R6` classes `IncidenceRS2014` and `IncidenceDailyRS2014`
 * fix `plot_age_pyramid()` scale
