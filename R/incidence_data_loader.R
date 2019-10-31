@@ -223,6 +223,7 @@ complete_intake_strategy = function(data, intake, ...) {
 #' @param intake data.frame() intake survey data loaded on the same period as data
 #' @param intake.columns columns to load with intake
 #' @param geo geo levels to load with intake
+#' @param max.year maximum number of year to get data from
 #' @return intake with extra intake loaded from previous season
 #' @export
 complete_intake = function(data, intake, intake.columns, geo=NULL, max.year=NA) {
@@ -232,9 +233,9 @@ complete_intake = function(data, intake, intake.columns, geo=NULL, max.year=NA) 
   if(length(p) > 0) {
     message(paste("Completing intake from previous data for ", length(p)," participants"))
     dates = list()
-    dates$max = min(intake$timestamp) # Before the first survey
+    dates$max = as.Date(min(intake$timestamp)) # Before the first survey
     if( !is.na(max.year) ) {
-      dates$min = dates$max - max.year
+      dates$min = dates$max - (max.year * 365)
     }
     ii = survey_load_results("intake", intake.columns, survey.users=p, geo=geo, debug=F, date=dates)
     if( nrow(ii) > 0) {
