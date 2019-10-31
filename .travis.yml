@@ -1,0 +1,15 @@
+# Header
+language: r
+sudo: false
+dist: trusty
+cache: packages
+latex: false
+
+repos:
+ sw: https://cran.sentiweb.fr
+
+#env
+env:
+  global:
+  - _R_CHECK_FORCE_SUGGESTS_=false
+  - MAKEFLAGS="-j 2"
