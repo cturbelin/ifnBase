@@ -4,7 +4,7 @@ author: "Clément Turbelin"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{infBase Geographic levels}
+  %\VignetteIndexEntry{Platform definition File}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
