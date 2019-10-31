@@ -168,7 +168,7 @@ compute_weekly_syndromes <- function(intake, weekly, health.status=TRUE, keep.st
   # Use InfluenzaNet base health status
   syndromes = c()
   if(health.status) {
-    if(regroup.syndrome) {
+    if(regroup.syndromes) {
       if(keep.status) {
         weekly$status.old = weekly$status
       }
@@ -190,7 +190,11 @@ compute_weekly_syndromes <- function(intake, weekly, health.status=TRUE, keep.st
 
   # Use an external syndromes provider to compute other definitions
   if( !is.null(provider) ) {
-    r = provider(weekly, intake)
+    if(is_syndrome_provider(provider)) {
+      r = provider$compute(weekly, intake)
+    } else {
+      r = provider(weekly, intake)
+    }
     n = names(r)
     n = n[ n != 'id'] # remove id column, as it is not a syndrome name
     weekly = merge(weekly, r, by='id', all.x=T)
