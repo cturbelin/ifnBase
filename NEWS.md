@@ -1,7 +1,12 @@
 
-# ifnBase 0.3
+# ifnBase 0.3.1
+* add `compute_weekly_syndromes` to create syndrome columns in weekly using several kind of strategies
+* add `complete_intake_strategy()` and `complete_intake()` for intake survey completion accross seasons
 * add `load_results_for_incidence` to load & prepare data in order to compute incidence
 * add `SyndromeProviderCountry` R6 class to compute by country definition (draft)
+* add `SyndromeProviderClass` as base R6 class for syndrome provider classes
+
+# ifnBase 0.3
 * `SyndromeProviderRS2019` R6 class compute 2019 revised syndrom definition
 * adding incidence functions as `R6` classes `IncidenceRS2014` and `IncidenceDailyRS2014`
 * fix `plot_age_pyramid()` scale
