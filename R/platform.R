@@ -492,8 +492,14 @@ platform_geographic_tables = function(def=NULL, default.title = "title", define=
 #' platfrom_season_history('2012', dates=list(start="2012-11-15", end="2013-04-20"))
 #'
 #' # Multiple table model
-#' platfrom_season_history('2011', dates=list(start="2011-11-15", end="2012-04-15"), weekly="pollster_results_weekly_2011")
-#' platfrom_season_history('2012', dates=list(start="2012-11-15", end="2013-04-20"), weekly="pollster_results_weekly_2012")
+#' platfrom_season_history('2011',
+#'      dates=list(start="2011-11-15", end="2012-04-15"),
+#'      weekly="pollster_results_weekly_2011"
+#' )
+#' platfrom_season_history('2012',
+#'      dates=list(start="2012-11-15", end="2013-04-20"),
+#'      weekly="pollster_results_weekly_2012"
+#')
 #' }
 #' @export
 platform_season_history <- function(season, dates, ...) {

@@ -208,7 +208,9 @@ compute_weekly_syndromes <- function(intake, weekly, health.status=TRUE, keep.st
 
 #' Complete intake according to platform's strategy
 #' @export
-#' @rdname complete_intake
+#' @param data data.frame() survey data with all participants (typically weekly), see \code{\link{complete_intake}}
+#' @param intake data.frame() intake data loaded on same period as data
+#' @param ... other parameters to pass to \code{\link{complete_intake}}
 complete_intake_strategy = function(data, intake, ...) {
   strategy = platform_env("complete.intake")
   # No strategy defined : do not complete
