@@ -620,10 +620,10 @@ survey_load_participations = function(ids, years=NULL) {
 
     ii = ii %>%
           dplyr::group_by(global_id) %>%
-          dplyr::summarise(intake=n())
+          dplyr::summarise(intake=dplyr::n())
     ww = ww %>%
             dplyr::group_by(global_id) %>%
-            dplyr::summarise(weekly=n())
+            dplyr::summarise(weekly=dplyr::n())
 
         ii = merge(ii, ww, by="global_id", all=TRUE)
 

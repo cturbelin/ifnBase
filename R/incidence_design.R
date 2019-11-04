@@ -240,11 +240,11 @@ calc_adjusted_incidence = function(count.week, design, syndroms, output) {
           v.adj = paste0(v, '.adj')
           x = inc.crude[, v] # Total Counts
 
-          x.up = 0.5 * qchisq(1 - N., 2 * (x + 1), lower.tail= F)
+          x.up = 0.5 * stats::qchisq(1 - N., 2 * (x + 1), lower.tail= F)
 
           inc.crude[, paste0(v.adj, '.upper') ] = inc.crude[, v.adj] + ( sqrt( inc.crude[, v.w2]) / sqrt(x) ) * (x.up - x)
 
-          x.low = 0.5 * qchisq(N., 2 * x, lower.tail=F)
+          x.low = 0.5 * stats::qchisq(N., 2 * x, lower.tail=F)
 
           inc.crude[, paste0(v.adj, '.lower') ] = inc.crude[, v.adj] + ( sqrt( inc.crude[, v.w2]) / sqrt(x) ) * (x.low - x)
         }
@@ -301,7 +301,7 @@ calc_adjusted_incidence = function(count.week, design, syndroms, output) {
 
   if( any( c('zlow','age') %in% output ) ) {
     # population in each geographic area (at lower level)
-    pop.zlow = aggregate(as.formula(paste("population ~ ", design$geo_column)), data=population, sum)
+    pop.zlow = aggregate(stats::as.formula(paste("population ~ ", design$geo_column)), data=population, sum)
     names(pop.zlow) <- c(design$geo_column, 'pop.zlow')
     count.week = merge(count.week, pop.zlow, by=design$geo_column, all.x=T)
   }
