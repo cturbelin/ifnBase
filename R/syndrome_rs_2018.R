@@ -126,25 +126,49 @@ syndromes_rs_2018 = function() {
     weekly = merge(weekly, ages, by='person_id', all.x=T)
 
     r = list()
+
     r$id = weekly$id # As the weekly has been merged, rows are not in the same order.
+
     r$ili.gp = weekly$ili & weekly$visit.GP
+
     r$ili.rs.strict = symptoms.ili.rs(weekly)
+
+    # 'ILI' in C Guerrisi paper
     r$ili.rs.pain = symptoms.ili.rs(weekly, pain.age.limit=5)
+
+    # 'ILIf' in paper
     r$ili.rs.wide = symptoms.ili.rs(weekly, infer.fever.level="high", pain.age.limit=5)
+
     r$ili.rs.wide.gp = symptoms.ili.rs(weekly, infer.fever.level="high", pain.age.limit=5)
     r$ili.rs.wide.gp = r$ili.rs.wide.gp & weekly$visit.GP
+
+    # 'ILI-f' in paper
     r$ili.fever = symptoms.ili.fever(weekly, level=F)
+
     r$ili.fever.gp = r$ili.fever & weekly$visit.GP
+
+    # 'ILI-' in paper
     r$ili.fever.level = symptoms.ili.fever(weekly, level=T)
+
     r$ili.fever.level.gp = r$ili.fever.level & weekly$visit.GP
+
+    # 'ARI' in paper
     r$ira = symptoms.ira(weekly, wide.respiratory=F)
+
     r$ira.gp = r$ira & weekly$visit.GP
+
     r$grog = symptoms.grog(weekly)
+
+    # 'ARI+' in paper
     r$ira.wide = symptoms.ira(weekly, wide.respiratory=T) # ARI with wider respiratory syndrome
+
     r$ira.wide.gp = r$ira.wide & weekly$visit.GP
+
     r$ili.ecdc = symptoms.ecdc(weekly)
+
     r$gastro.rs = symptoms.gastro.rs(weekly)
     r$gastro.all = symptoms.gastro(weekly)
+
     as.data.frame(r)
   }
 
