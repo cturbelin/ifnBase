@@ -1,3 +1,7 @@
+# ifnBase 0.3.2
+
+* Fix namespace imports
+* Fix function name
 
 # ifnBase 0.3.1
 * add `compute_weekly_syndromes` to create syndrome columns in weekly using several kind of strategies
