@@ -216,7 +216,7 @@ scale_x_wid = function(ww, week.sep="s", breaks="auto", col.yw="yw", label="yw",
   if(complete) {
     ww = range(ww[, col.yw])
     ww = monday_of_week(ww)
-    ww = iso_year_week(seq(ww[1], ww[2], by=7))
+    ww = iso_yearweek(seq(ww[1], ww[2], by=7))
     ww = data.frame(yw=ww, wid=week_stamp(ww))
     col.yw = "yw"
   }
