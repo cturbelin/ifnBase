@@ -4,14 +4,16 @@
 \alias{verticalize_incidence}
 \title{Verticalize incidence data after computation}
 \usage{
-verticalize_incidence(inc, ids, syndroms)
+verticalize_incidence(inc, ids, syndromes, syndrome.column = "syndrome")
 }
 \arguments{
 \item{inc}{data.frame with horizontal incidence (a set of columns for each syndrom)}
 
 \item{ids}{names of the row indentifiyng column}
 
-\item{syndroms}{list of syndrom names used to produce this dataset}
+\item{syndromes}{list of syndrome names used to produce this dataset}
+
+\item{syndrome.column}{name of the column that will contain syndromic name}
 }
 \description{
 Incidence data are organized horizontally, estimation for each syndrom are in columns (with suffixes .upper, .lower, .w2)

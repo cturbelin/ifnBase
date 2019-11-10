@@ -2,22 +2,44 @@
 # Public structure of incidence rs_2014 class
 #' @noRd
 incidence_rs2014_public = list(
+  # Weekly data
   weekly = NULL,
+
+  # Intake data, used to build strata
   intake = NULL,
+
+  # Participant based data, used to determine which participant is active each week
   participant = NULL,
+
+  # Estimator parameters
   params = NULL,
-  syndroms = NULL,
+
+  # List of column names containins syndromic classification of each weekly survey
+  syndromes = NULL,
+
+  # Internal profiler
   profiler = NULL,
+
+  # Should produce verbose output
   verbose = FALSE,
+
+  # Design stucture
   design = NULL,
+
+  # Output structure
   output = NULL,
 
   # @param weekly data
   # @param intake intake data
-  # @param syndroms syndroms column names in weekly
+  # @param syndromes syndromes column names in weekly
   # @param design design_incidence
   # @param output list of output types to compute
-  initialize = function(weekly, intake, params, syndroms, design, output=c('inc','zlow','age')) {
+  # @params syndroms compatibility
+  initialize = function(weekly, intake, params, syndromes, design, output=c('inc','zlow','age'), syndroms=NULL) {
+
+    if(is.null(syndromes) && !is.null(syndroms)) {
+      syndromes = syndroms
+    }
 
     if(!requireNamespace("dplyr")) {
       stop("dplyr package needed")
@@ -29,7 +51,7 @@ incidence_rs2014_public = list(
 
     # params default values
     def = list(
-      ignore.first.delay = NA, # Number of days form his first survey befotre to include a participant (not compatible with ignore.first)
+      ignore.first.delay = NA, # Number of days from his first survey before to include a participant (not compatible with ignore.first)
       ignore.first = F,  # Remove all first surveys (regardless history, @deprecated)
       ignore.first.only.new = F, # Ignore first rule only for new participant (uses intake$first.season column @see load_results_for_incidence)
       exclude.same = F, # should exclude syndrom if same episode is on (partcipant still active)
@@ -42,11 +64,11 @@ incidence_rs2014_public = list(
 
     params = default.params(params, def)
 
-    syndroms = as.vector(syndroms)
-    names(syndroms) = NULL # Be sure no names is defined
+    syndromes = as.vector(syndromes)
+    names(syndromes) = NULL # Be sure no names is defined
 
     self$params = params
-    self$syndroms = syndroms
+    self$syndromes = syndromes
     self$design = design
     self$output = output
     self$weekly = weekly
@@ -64,7 +86,7 @@ incidence_rs2014_public = list(
   prepare = function() {
 
     weekly = self$weekly
-    syndroms = self$syndroms
+    syndromes = self$syndromes
     ignore.first.delay = self$params$ignore.first.delay
     ignore.first.only.new = self$params$ignore.first.only.new
 
@@ -90,7 +112,7 @@ incidence_rs2014_public = list(
       weekly$delay.date = calc_weekly_delay(weekly, "date")
       # same.episode using recoded value (see recode_weekly())
       same = !is.na(weekly$same.episode) & weekly$same.episode == "Yes"  & (is.na(weekly$delay.date) | weekly$delay.date <= exlude.same.delay)
-      for(ss in syndroms) {
+      for(ss in syndromes) {
         # Cancel a syndrom report if flagged as same episode as previous
         i = !is.na(weekly[, ss]) & weekly[, ss] > 0
         weekly[ same & i, ss ] = 0
@@ -121,10 +143,10 @@ incidence_rs2014_public = list(
     }
 
     # Now aggregate to the week and person
-    weekly = aggregate(as.list(weekly[, syndroms, drop=FALSE]), list(person_id=weekly$person_id, yw=weekly$yw), sum, na.rm=T)
+    weekly = aggregate(as.list(weekly[, syndromes, drop=FALSE]), list(person_id=weekly$person_id, yw=weekly$yw), sum, na.rm=T)
     track("syndrom-agg")
 
-    weekly[, syndroms] = weekly[, syndroms] > 0 # Only one syndrom report by participant by week
+    weekly[, syndromes] = weekly[, syndromes] > 0 # Only one syndrom report by participant by week
     track("syndrom")
 
     weekly = weekly[ order(weekly$person_id, weekly$yw), ]
@@ -173,7 +195,7 @@ incidence_rs2014_public = list(
     weekly = self$weekly
     intake = self$intake
     participant = self$participant
-    syndroms = self$syndroms
+    syndromes = self$syndromes
 
     active.week.before = self$params$active.week.before
     active.week.after = self$params$active.week.after
@@ -302,20 +324,20 @@ incidence_rs2014_public = list(
       return(r)
     }
 
-    # Count number of syndroms by user and by week
-    count = aggregate(as.list(weekly[, syndroms, drop=FALSE]), list(person_id=weekly$person_id), sum)
+    # Count number of syndromes by user and by week
+    count = aggregate(as.list(weekly[, syndromes, drop=FALSE]), list(person_id=weekly$person_id), sum)
     track_time("count")
 
     count = merge(count, intake[, c('person_id', strata)], by='person_id', all.x=T) # get the geo code for each user
     track_time("count.intake")
 
-    # make syndroms exclusive in a week ?
+    # make syndromes exclusive in a week ?
     # nop now
 
-    count[, syndroms] = as.integer(count[, syndroms] > 0) # syndroms counted only once for each user
+    count[, syndromes] = as.integer(count[, syndromes] > 0) # syndromes counted only once for each user
 
     # aggregate by strata
-    count.week = aggregate(count[, syndroms, drop=FALSE], count[ , strata, drop=FALSE], sum)
+    count.week = aggregate(count[, syndromes, drop=FALSE], count[ , strata, drop=FALSE], sum)
     track_time("count.week")
 
     # merge with active
@@ -324,7 +346,7 @@ incidence_rs2014_public = list(
 
     if( !(length(self$output) == 1 && is.na(self$output) )) {
       # Compute incidence from count data
-      r = calc_adjusted_incidence(count.week, design=self$design, syndroms=syndroms, output=self$output)
+      r = calc_adjusted_incidence(count.week, design=self$design, syndromes=syndromes, output=self$output)
       track_time("calc.incidence")
 
     } else {
@@ -413,19 +435,30 @@ incidence_rs2014_public = list(
       cat("\n")
     }
 
-    if(verticalize) {
+    if(isTRUE(verticalize) || is.list(verticalize)) {
+      if( is.list(verticalize) ) {
+        syndrome.column = verticalize$syndrome.column
+      } else {
+        syndrome.column = NULL # Default column name
+      }
 
-      syndroms = self$syndroms
+      syndromes = self$syndromes
+
+      verticalize = function(data, ids) {
+        verticalize_incidence(data,ids=ids, syndromes = syndromes, syndrome.column = syndrome.column)
+      }
+
+
       if(!is.null(inc)) {
-        inc = verticalize_incidence(inc, ids="yw", syndroms = syndroms )
+        inc = verticalize(inc, ids="yw" )
       }
 
       if( !is.null(inc.age) ) {
-        inc.age = verticalize_incidence(inc.age, ids=c("yw",'age.cat'), syndroms = syndroms )
+        inc.age = verticalize(inc.age, ids=c("yw",'age.cat') )
       }
 
       if( !is.null(inc.zlow) ) {
-        inc.zlow = verticalize_incidence(inc.zlow, ids=c("yw", self$design$geo_column), syndroms=syndroms)
+        inc.zlow = verticalize(inc.zlow, ids=c("yw", self$design$geo_column))
       }
 
     }
@@ -438,7 +471,7 @@ incidence_rs2014_public = list(
         count=count,
         selection=selection
       ),
-      syndroms = self$syndroms,
+      syndromes = self$syndromes,
       design=self$design,
       params=self$params,
       method="rs2014"
@@ -457,7 +490,7 @@ incidence_rs2014_public = list(
 #' @field intake intake data
 #' @field participants data.frame() with all available participants and commputed criterias used during computation
 #' @field params parameters for computation
-#' @field syndroms character vector of column names containing syndroms classification for each weekly
+#' @field syndromes character vector of column names containing syndromes classification for each weekly
 #' @field profiler profiler
 #' @field design design stratification from \code{\link{design_incidence}}
 #' @field output vector of character (see Details outupus)
@@ -483,7 +516,7 @@ incidence_rs2014_public = list(
 #'  \item{inc}{inc=incidence at (national level)}
 #'  \item{zlow}{"lower geographic level (z)", if estimator is stratified by geographic level}
 #'  \item{age}{"age" age-specific incidence, age categories should be in "age.cat" column in intake data}
-#'  \item{count}{raw count of syndroms used for each syndrom by week, before incidence is computed}
+#'  \item{count}{raw count of syndromes used for each syndrom by week, before incidence is computed}
 #' }
 #'
 #' Apply the full algorithm for rs2014 incidence computation

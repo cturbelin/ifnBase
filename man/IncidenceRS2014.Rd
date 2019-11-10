@@ -35,7 +35,7 @@ Incidence estimator can output several kind of datasets
  \item{inc}{inc=incidence at (national level)}
  \item{zlow}{"lower geographic level (z)", if estimator is stratified by geographic level}
  \item{age}{"age" age-specific incidence, age categories should be in "age.cat" column in intake data}
- \item{count}{raw count of syndroms used for each syndrom by week, before incidence is computed}
+ \item{count}{raw count of syndromes used for each syndrom by week, before incidence is computed}
 }
 
 Apply the full algorithm for rs2014 incidence computation
@@ -51,7 +51,7 @@ Apply the full algorithm for rs2014 incidence computation
 
 \item{\code{params}}{parameters for computation}
 
-\item{\code{syndroms}}{character vector of column names containing syndroms classification for each weekly}
+\item{\code{syndromes}}{character vector of column names containing syndromes classification for each weekly}
 
 \item{\code{profiler}}{profiler}
 

@@ -13,15 +13,15 @@ coalesce <- function(x) {
 #' @param weekly weekly data.frame()
 #' @param column column containing syndrom name
 #' @export
-create_syndrom_columns = function(weekly, column) {
-  syndroms = levels(weekly[[column]])
-  names(syndroms) = syndroms
+create_syndrome_columns = function(weekly, column) {
+  syndromes = levels(weekly[[column]])
+  names(syndromes) = syndromes
 
-  for(i in 1:length(syndroms)) {
-    n = names(syndroms)[i]
-    weekly[, syndroms[i] ] = ifelse( weekly[[column]] == n, TRUE, FALSE)
+  for(i in 1:length(syndromes)) {
+    n = names(syndromes)[i]
+    weekly[, syndromes[i] ] = ifelse( weekly[[column]] == n, TRUE, FALSE)
   }
-  attr(weekly, "syndroms") <- syndroms
+  attr(weekly, "syndromes") <- syndromes
   weekly
 }
 
@@ -115,9 +115,13 @@ create_profiler = function() {
 #'
 #' @param inc data.frame with horizontal incidence (a set of columns for each syndrom)
 #' @param ids names of the row indentifiyng column
-#' @param syndroms list of syndrom names used to produce this dataset
-#'
-verticalize_incidence = function(inc, ids, syndroms) {
+#' @param syndromes list of syndrome names used to produce this dataset
+#' @param syndrome.column name of the column that will contain syndromic name
+verticalize_incidence = function(inc, ids, syndromes, syndrome.column='syndrome') {
+
+  if(is.null(syndrome.column)) {
+    syndrome.column = formals()$syndrome.column
+  }
 
   # data data.frame
   # id.vars id columns
@@ -153,13 +157,13 @@ verticalize_incidence = function(inc, ids, syndroms) {
     dd
   }
 
-  # Verticalize syndroms
-  data = extract_columns(inc, syndroms,id.vars=ids, measures=c('crude','adj', 'crude.lower','crude.upper','adj.upper','adj.lower'), v.name="syndrom", var.measure="count")
+  # Verticalize syndromes
+  data = extract_columns(inc, syndromes,id.vars=ids, measures=c('crude','adj', 'crude.lower','crude.upper','adj.upper','adj.lower'), v.name=syndrome.column, var.measure="count")
 
   # Verticalize estimation type
-  data = extract_columns(data, id.vars=c(ids, 'syndrom'), c('count','crude','adj'),  c('upper','lower'), v.name="type", var.measure = "value")
+  data = extract_columns(data, id.vars=c(ids, syndrome.column), c('count','crude','adj'),  c('upper','lower'), v.name="type", var.measure = "value")
 
-  active = extract_columns(inc, id.vars=c(ids), 'active', c(), v.name="syndrom", var.measure = "value")
+  active = extract_columns(inc, id.vars=c(ids), 'active', c(), v.name=syndrome.column, var.measure = "value")
 
   active$type = "count"
   active$upper = NA

@@ -10,7 +10,7 @@ calc.conf.int(inc, v, type = "crude", unit = 1)
 \arguments{
 \item{inc}{data.frame from incidence estimator}
 
-\item{v}{column name containing syndrom count}
+\item{v}{column name containing syndrome count}
 
 \item{type}{crude to create rate column name}
 

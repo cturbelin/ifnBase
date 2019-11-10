@@ -5,10 +5,10 @@
 # - IncidenceRS2014
 # - IncidenceDailyRS2014
 #
-# - (weekly, intake, syndroms, params, design, output=NULL, ...) : Estimator Function interface
-# weekly, intake, syndroms, params, design, output=NULL
+# - (weekly, intake, syndromes, params, design, output=NULL, ...) : Estimator Function interface
+# weekly, intake, syndromes, params, design, output=NULL
 # intake = last intake for each participant with necessary columns for stratification
-# syndroms = list of indicators column for each "syndrom" for which estimate an incidence
+# syndromes = list of indicators column for each "syndrome" for which estimate an incidence
 # params  = parameters for a given estimator
 # design  = design stratification definition (@see design.incidence)
 # output  = kind of output to get inc=incidence (national level), zlow="lower geographic level (z)", "age" age-specific incidence
@@ -123,7 +123,7 @@ output_incidence = function(types, conf.int=T, adjust=T, ...) {
 #' Compute confidence interval for rate
 #' using poisson distribution law
 #' @param inc data.frame from incidence estimator
-#' @param v column name containing syndrom count
+#' @param v column name containing syndrome count
 #' @param type crude to create rate column name
 #' @param unit if rate need to be rescale
 calc.conf.int = function(inc, v, type='crude', unit=1) {
@@ -138,22 +138,22 @@ calc.conf.int = function(inc, v, type='crude', unit=1) {
 
 
 #' Compute crude & adjusted incidence from a count data.frame
-#' This function is shared by all incidence computation methods, once active participants & syndrom counts are provided
+#' This function is shared by all incidence computation methods, once active participants & syndrome counts are provided
 #'
-#' Ouput columns are ([syndrom] is the column with logical value for presence of one syndrom in the weekly data, for example "ili"):
+#' Ouput columns are ([syndrome] is the column with logical value for presence of one syndrome in the weekly data, for example "ili"):
 #'  - active : count of active participants
-#'  - [syndrom] : count for this syndrom (or variable)
-#'  - [syndrom].crude : crude incidence (without adjustment, count/active participant ratio)
-#'  - [syndrom].adj : Adjusted incidence (taking into account of stratification design)
-#'  - [syndrom].crude.(upper|lower) : upper & lower bound of CI95 for crude incidence (Exact poisson CI)
-#'  - [syndrom].adj.(upper|lower) : upper & lower boud of CI95 for ajusted incidence (DKES method)
+#'  - [syndrome] : count for this syndrome (or variable)
+#'  - [syndrome].crude : crude incidence (without adjustment, count/active participant ratio)
+#'  - [syndrome].adj : Adjusted incidence (taking into account of stratification design)
+#'  - [syndrome].crude.(upper|lower) : upper & lower bound of CI95 for crude incidence (Exact poisson CI)
+#'  - [syndrome].adj.(upper|lower) : upper & lower boud of CI95 for ajusted incidence (DKES method)
 #'
 #' @param count.week data.frame(), count for a week. Count of active participants is in "active" column
 #' @param design design structure (defining strata and reference data like population in each strata)
-#' @param syndroms char() list of column names for each syndrom count
+#' @param syndromes char() list of column names for each syndrome count
 #' @param output char() list of requested output "inc"=global incidence, "zlow"=lower geo level incidence, "age" by age incidence,
 #' @export
-calc_adjusted_incidence = function(count.week, design, syndroms, output) {
+calc_adjusted_incidence = function(count.week, design, syndromes, output) {
 
   if(nrow(count.week) == 0) {
     return(list())
@@ -187,7 +187,7 @@ calc_adjusted_incidence = function(count.week, design, syndroms, output) {
 
     if( calc.adj ) {
 
-      for(v in syndroms) {
+      for(v in syndromes) {
         v.adj = paste0(v,'.adj')
         count[, v.adj ] = count[, column.prop] * as.vector(count[, v]) / count$active
         if(conf.int) {
@@ -198,20 +198,20 @@ calc_adjusted_incidence = function(count.week, design, syndroms, output) {
         }
       }
 
-      v = paste0(syndroms,'.adj')
+      v = paste0(syndromes,'.adj')
       if(conf.int) {
-        v.w2 = paste0(syndroms,'.w2')
+        v.w2 = paste0(syndromes,'.w2')
       } else {
         v.w2 = c()
       }
 
       inc.adj = aggregate(as.list(count[, c(v, v.w2)]), g, sum, na.rm=T)
     }
-    inc.crude = aggregate(as.list(count[, c(syndroms, 'active' )]), g, sum, na.rm=T)
-    inc.crude[ paste0(syndroms,'.crude') ] = inc.crude[syndroms] / inc.crude$active
+    inc.crude = aggregate(as.list(count[, c(syndromes, 'active' )]), g, sum, na.rm=T)
+    inc.crude[ paste0(syndromes,'.crude') ] = inc.crude[syndromes] / inc.crude$active
 
     if(conf.int) {
-      for(v in syndroms) {
+      for(v in syndromes) {
         d = calc.conf.int(inc.crude, v, unit=1, type="crude")
         inc.crude = cbind(inc.crude, d)
       }
@@ -235,7 +235,7 @@ calc_adjusted_incidence = function(count.week, design, syndroms, output) {
         conf.level = .95
         N. = 1 - ((1 - conf.level)/2)
 
-        for(v in syndroms) {
+        for(v in syndromes) {
           v.w2 = paste0(v, '.w2') # Variance of count
           v.adj = paste0(v, '.adj')
           x = inc.crude[, v] # Total Counts
@@ -262,7 +262,7 @@ calc_adjusted_incidence = function(count.week, design, syndroms, output) {
     if( any(output != "inc") ) {
       warning("design is NULL, cannot compute output type other than overall incidence")
     }
-    for(v in syndroms) {
+    for(v in syndromes) {
       count.week[, paste0(v, '.crude') ] = count.week[, v ] / count.week$active
       if(conf.int) {
         d = calc.conf.int(count.week, v, unit=1, type="crude")
@@ -286,7 +286,7 @@ calc_adjusted_incidence = function(count.week, design, syndroms, output) {
   count.week = merge(count.week, population[, c(strata,'prop.pop.all', 'population')], by=strata, all=T)
 
   # Incidence calculation by strata with adjustment
-  # count = count data.frame (syndrom + active), column.strata = strata column, column.prop= column with adjustment factor
+  # count = count data.frame (syndrome + active), column.strata = strata column, column.prop= column with adjustment factor
   if( !is.null(count.week$yw ) ) {
     group = "yw"
   } else {

@@ -40,7 +40,7 @@ Parameters:
 
 \item{\code{params}}{parameters for computation}
 
-\item{\code{syndroms}}{character vector of column names containing syndroms classification for each weekly}
+\item{\code{syndromes}}{character vector of column names containing syndromes classification for each weekly}
 
 \item{\code{verbose}}{logical show verbose message}
 

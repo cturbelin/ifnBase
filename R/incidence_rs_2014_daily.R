@@ -6,13 +6,13 @@ incidence_rs2014_daily_public = list(
     intake = NULL,
     participant = NULL,
     params = NULL,
-    syndroms = NULL,
+    syndromes = NULL,
     profiler = NULL,
     verbose = FALSE,
     design = NULL,
     output = NULL,
 
-    initialize = function(weekly, intake, syndroms, params, design, output=c('inc')) {
+    initialize = function(weekly, intake, syndromes, params, design, output=c('inc')) {
 
       requireNamespace("dplyr", quietly = FALSE)
       requireNamespace("epitools", quietly = FALSE)
@@ -41,14 +41,14 @@ incidence_rs2014_daily_public = list(
       self$weekly = weekly
       self$intake = intake
       self$design = design
-      self$syndroms = syndroms
+      self$syndromes = syndromes
     },
 
 
     prepare = function() {
 
       weekly = self$weekly
-      syndroms = self$syndroms
+      syndromes = self$syndromes
 
       ignore.first.delay = self$params$ignore.first.delay
       ignore.first.only.new = self$params$ignore.first.only.new
@@ -65,7 +65,7 @@ incidence_rs2014_daily_public = list(
         weekly = weekly[ order(weekly$person_id, weekly$timestamp), ]
         weekly$delay.date = calc_weekly_delay(weekly, "date")
         same = !is.na(weekly$same.episode) & weekly$same.episode == "Yes"  & (is.na(weekly$delay.date) | weekly$delay.date <= exlude.same.delay) # recoded value !
-        for(ss in syndroms) {
+        for(ss in syndromes) {
           # Cancel a syndrom report if flagged as same episode as previous
           i = !is.na(weekly[, ss]) & weekly[, ss] > 0
           weekly[ same & i, ss ] = 0
@@ -85,8 +85,8 @@ incidence_rs2014_daily_public = list(
       # Depending on params the participant will be counted as active or not
 
       # Now aggregate to the week and person
-      weekly = aggregate(as.list(weekly[, syndroms]), list(person_id=weekly$person_id, onset=weekly$onset), sum, na.rm=T)
-      weekly[, syndroms] = weekly[, syndroms] > 0 # Only one syndrom report by participant by day
+      weekly = aggregate(as.list(weekly[, syndromes]), list(person_id=weekly$person_id, onset=weekly$onset), sum, na.rm=T)
+      weekly[, syndromes] = weekly[, syndromes] > 0 # Only one syndrom report by participant by day
 
       weekly = weekly[ order(weekly$person_id, weekly$onset), ]
 
@@ -143,7 +143,7 @@ incidence_rs2014_daily_public = list(
 
     participant = self$participant
     weekly = self$weekly
-    syndroms = self$syndroms
+    syndromes = self$syndromes
 
     ###
     # Active participants
@@ -250,21 +250,21 @@ incidence_rs2014_daily_public = list(
     }
 
     # Count number of syndrom by user and by week
-    count = aggregate(as.list(weekly[, syndroms]), list(person_id=weekly$person_id), sum)
+    count = aggregate(as.list(weekly[, syndromes]), list(person_id=weekly$person_id), sum)
 
     count = merge(count, self$intake[ , c('person_id', strata)], by='person_id', all.x=T) # get the geo code for each user
 
     # make syndrom exclusive in a date ?
     # nop now
 
-    count[, syndroms] = as.integer(count[, syndroms] > 0) # syndrom counted only once for each user
+    count[, syndromes] = as.integer(count[, syndromes] > 0) # syndrom counted only once for each user
 
     # aggregate by strata
-    count.strata = aggregate( count[, syndroms, drop=F], count[, strata, drop=F], sum, na.rm=T)
+    count.strata = aggregate( count[, syndromes, drop=F], count[, strata, drop=F], sum, na.rm=T)
 
     if( nrow(count.strata) == 0 ) {
       count.strata = active
-      count.strata[, syndroms] = as.numeric(NA)
+      count.strata[, syndromes] = as.numeric(NA)
     } else {
       # merge with active
       count.strata = merge(active, count.strata, by=strata, all.x=T)
@@ -272,7 +272,7 @@ incidence_rs2014_daily_public = list(
 
     if( !is.na(self$output) ) {
       # Compute incidence from count data
-      r = calc_adjusted_incidence(count.strata, design=self$design, syndroms=self$syndroms, output=self$output)
+      r = calc_adjusted_incidence(count.strata, design=self$design, syndromes=self$syndromes, output=self$output)
     } else {
       r = list(count = count.strata)
     }
@@ -367,7 +367,7 @@ incidence_rs2014_daily_public = list(
         inc.age=inc.age,
         count=count
       ),
-      syndroms = self$syndroms,
+      syndromes = self$syndromes,
       design=self$design,
       params=self$params,
       method="rs2014"
@@ -381,7 +381,7 @@ incidence_rs2014_daily_public = list(
 #' @field intake intake data (loaded using \code{\link{load_results_for_incidence}})
 #' @field participants data.frame() with all available participants and commputed criterias used during computation
 #' @field params parameters for computation
-#' @field syndroms character vector of column names containing syndroms classification for each weekly
+#' @field syndromes character vector of column names containing syndromes classification for each weekly
 #' @field verbose logical show verbose message
 #' @field design design stratification from \code{\link{design_incidence}}
 #' @field output vector of character, see \code{\link{IncidenceRS2014}}
