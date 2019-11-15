@@ -5,7 +5,7 @@
 \title{Complete intake for a survey using intake from the past seasons}
 \usage{
 complete_intake(data, intake, intake.columns, geo = NULL,
-  max.year = NA)
+  max.year = NA, fix.timestamp = TRUE)
 }
 \arguments{
 \item{data}{data.frame() survey data with all participants should have at least (timestamp, person_id) columns. For example weekly survey data}

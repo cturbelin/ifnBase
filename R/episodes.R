@@ -1,47 +1,42 @@
 #'
 #' Episode computation functions
-
+#'
 
 #' Create a design definition for episodes computation
+#'
+#' This function create a structure embedding parameters to compute episodes datasets
+#'
 #' @param delay_episode int maximum delay to consider two sequential responses are in the same episode
 #' @param participants list() list of rules to apply for participants selection
-#' @param delay_symptome integer max delay to use `fever.start` or `sympt.start` instead of survey date
-#' @param onset quoted expression to compute onset
+#' @param onset onset design expression or false, design parameter passed to \code{\link{compute_onset}}
 #' @param strategies not implemented yet
 #' @return episodes design data structure
-episode_design = function(delay_episode=15, participants=list(), delay_symptome=15, method="ariza", onset=NULL, strategies=NULL ) {
+#' @export
+episode_design = function(delay_episode=15, participants=list(),  method="ariza", onset=NULL, strategies=NULL ) {
 
-  require(dplyr)
-  require(rlang)
-
-  check_int = function(value) {
-    name = deparse(substitute(value))
-    if(!is.numeric(value)) {
-      stop(paste(name, "should be a numeric"))
-    }
-
-    value = as.integer(value)
-
-    if(value <= 0) {
-      stop(paste(name,"should be a positive number"))
-    }
-    value
-  }
+  requireNamespace("dplyr")
+  requireNamespace("rlang")
 
   if(!is.list(participants)) {
     stop("participants should be a list")
   }
 
+  if(is.null(onset)) {
+    onset = episode_onset_design()
+  }
+
   match.arg(method, choices=c('ariza','ecollan','souty'))
 
-  structure(list(
-    delay_episode_max = check_int(delay_episode),
-    delay_symptome_max = check_int(delay_symptome),
-    method = method,
-    participants = participants,
-    onset=onset,
-    strategies = strategies
-  ), class="episode_design")
+  structure(
+    list(
+      delay_episode_max = check_int(delay_episode),
+      method = method,
+      participants = participants,
+      onset=onset,
+      strategies = strategies
+    ),
+    class="episode_design"
+  )
 
 }
 
@@ -77,12 +72,12 @@ episode_design = function(delay_episode=15, participants=list(), delay_symptome=
 #' "has.intake",
 #' "has.weekly",
 #' "min.survey"=3,
-#' "has_before="2019-01-01",
+#' "has_before"="2019-01-01",
 #' "has_between"=list(start="2019-01-02",end="2019-03-01")
 #' )
 #'
 #'
-#'
+#' @export
 episode_select_participants = function(weekly, intake, rules) {
 
   participants = data.frame(person_id=unique(c(weekly$person_id, intake$person_id)))
@@ -114,7 +109,7 @@ episode_select_participants = function(weekly, intake, rules) {
     nn = make.unique(c(nn, rule_name))
     rule_id = nn[length(nn)]
 
-    cat("Selecting ", rule_id, " (",rule_name,")", if(!is.null(rule_param)) deparse(rule_param), ": ")
+    message("Selecting ", rule_id, " (",rule_name,")", if(!is.null(rule_param)) deparse(rule_param), ": ")
 
     if(rule_name == "has.intake") {
       participants[[rule_id]] = participants$person_id %in% intake$person_id
@@ -130,8 +125,8 @@ episode_select_participants = function(weekly, intake, rules) {
       }
       rule_param = as.integer(rule_param)
       p_name = paste0(rule_id,"_param")
-      p = weekly %>% group_by(person_id) %>% summarize(!!p_name:=n())
-      participants = left_join(participants, p, by="person_id")
+      p = weekly %>% dplyr::group_by(person_id) %>% dplyr::summarize(!!p_name:=n())
+      participants = dplyr::left_join(participants, p, by="person_id")
       participants[[rule_id]] = !is.na(participants[[p_name]]) & participants[[p_name]] >= rule_param
     }
 
@@ -177,7 +172,7 @@ episode_select_participants = function(weekly, intake, rules) {
     participants$keep = participants$keep & participants[[rule_id]]
     selections[[rule_id]] = sum(participants$keep)
 
-    cat(" for this rule", sum(participants[[rule_id]]) , " participants left: ", selections[[rule_id]],"\n")
+    message(" for this rule", sum(participants[[rule_id]]) , " participants left: ", selections[[rule_id]])
   }
 
   attr(participants, "selections") <- selections
@@ -189,7 +184,7 @@ episode_select_participants = function(weekly, intake, rules) {
 #' @param design episode design data structure (result of \code{episode_design()})
 #' @param intake data.frame intake data
 #' @param weekly data.frame weekly data
-#' @return environment Environment containing selected data (weekly, intake, participants, selections)
+#' @return environment environment containing selected data (weekly, intake, participants, selections)
 #'
 #' @details
 #' The environment contains several data.frames()
@@ -197,55 +192,35 @@ episode_select_participants = function(weekly, intake, rules) {
 #' - selections : count of selected participants at each step (after applying each rule)
 #' - intake : the intakes for selected participants
 #' - weekly ! the weekly for selected participants
-#'
 episode_prepare_data = function(design, intake, weekly) {
 
-  delay_symptome_max = design$delay_symptome_max
-
   ### Cleanup data
-
-  if(!is(weekly$sympt.start,"Date")) {
-    weekly$sympt.start = as.Date(as.character(weekly$sympt.start))
+  if(!isTRUE(attr(weekly, "recode_weekly_date"))) {
+    weekly = recode_weekly_date(weekly)
+    weekly$date = as.Date(trunc(weekly$timestamp, "day")) # Recompute date to be sure its computed properly
   }
 
-  if(!is(weekly$fever.start,"Date")) {
-    weekly$fever.start = as.Date(as.character(weekly$fever.start))
-  }
-
-  # Set date in the future to NA (not possible cases)
-  weekly$sympt.start[ !is.na(weekly$sympt.start) & weekly$sympt.start > weekly$date ] <- NA
-  weekly$fever.start[ !is.na(weekly$fever.start) & weekly$fever.start > weekly$date ] <- NA
-
-  #weekly$date = as.Date(weekly$timestamp) # date
-
-  # Number of the weekly by participant
-  # time_zone = weekly$timestamp[1]
-  # weekly$date = as.Date(weekly$timestamp, tz=format(format="%Z",time_zone))
-
-  # compute onset expression
-  compute_onset = quo(
-    if_else(!is.na(fever.start) & (date - fever.start) < delay_symptome_max, fever.start,
-            if_else(!is.na(sympt.start) & (date- sympt.start) < delay_symptome_max, sympt.start,
-                    date)
-    )
-  )
-
-  weekly = weekly %>% mutate(onset=!!compute_onset)
+  weekly = compute_onset(weekly, design$onset)
 
   # Keep only 1 survey by date
-  weekly = arrange(weekly, person_id, timestamp)
+  weekly = dplyr::arrange(weekly, person_id, timestamp)
   weekly = weekly[!duplicated(weekly[, c("person_id","date")], fromLast=TRUE), ] # vecteur de la position des non-doublons
 
   participants = episode_select_participants(weekly = weekly, intake=intake, rules=design$participants)
 
   ids = participants$person_id[participants$keep]
 
-  weekly = weekly[ weekly$person_id %in% ids, ]
-  intake = intake[ intake$person_id %in% ids, ]
+  weekly = weekly %>% dplyr::filter(person_id %in% ids)
+  intake = intake %>% dplyr::filter(person_id %in% ids)
 
-  as.environment(list(weekly=weekly, intake=intake, participants=participants))
+  as.environment(
+    list(
+      weekly=weekly,
+      intake=intake,
+      participants=participants
+    )
+  )
 }
-
 
 ##
 # Algorithme Ariza:
@@ -273,11 +248,11 @@ episode_prepare_data = function(design, intake, weekly) {
 #' @param .progress progress_estimated style progress bar, nothing if NULL
 episode_compute_ariza = function(weekly, syndrome.column, params, .progress=NULL) {
 
-  weekly = arrange(weekly, person_id, date)
+  weekly = dplyr::arrange(weekly, person_id, date)
 
   delay_episode_max = params$delay_episode_max
 
-  use.rank = if(is.null(design$ariza.rank) ) TRUE  else design$ariza.rank
+  use.rank = if(is.null(params$ariza.rank) ) TRUE  else params$ariza.rank
 
   if(!is.logical(weekly[[syndrome.column]])) {
     stop(paste0("weekly column ", syndrome.column," should be a logical"))
@@ -328,17 +303,8 @@ episode_compute_ariza = function(weekly, syndrome.column, params, .progress=NULL
 
     data.frame(id=ww$id, episode=onset)
   }
-  weekly %>% group_by(person_id) %>% group_modify(find_episodes)
-}
 
-#' Select and recode episodes to have continuous episode number
-#' @param weekly data.frame
-#' @param syndrome syndrome column name (logical!)
-#' @param name name for the new column
-#' @return data.frame
-recode.episode = function(weekly, syndrome,  name) {
-  episode = sym(paste0("episode.", rlang::as_string(syndrome)))
-  weekly %>% filter(!!sym(syndrome)) %>% group_by(person_id) %>% mutate(!!name:=dense_rank(!!episode))
+  weekly %>% dplyr::group_by(person_id) %>% dplyr::group_modify(find_episodes)
 }
 
 #' Compute Episodes using Marie Ecollan's strategy
@@ -349,9 +315,9 @@ recode.episode = function(weekly, syndrome,  name) {
 episode_compute_ecollan <- function(weekly, syndrome.column, params, .progress=NULL) {
 
   weekly = weekly %>%
-    arrange(person_id, date) %>%
-    group_by(person_id) %>%
-    mutate(date_previous=lag(date), delay_previous=as.integer(date - date_previous))
+    dplyr::arrange(person_id, date) %>%
+    dplyr::group_by(person_id) %>%
+    dplyr::mutate(date_previous=lag(date), delay_previous=as.integer(date - date_previous))
 
   delay_episode_max = params$delay_episode_max
 
@@ -405,7 +371,7 @@ episode_compute_ecollan <- function(weekly, syndrome.column, params, .progress=N
 
   } # find ecollan
 
-  weekly %>% group_by(person_id) %>% group_modify(find_episodes_ecollan)
+  weekly %>% dplyr::group_by(person_id) %>% dplyr::group_modify(find_episodes_ecollan)
 }
 
 #' Compute Episodes using Cecile Souty's strategy
@@ -416,7 +382,7 @@ episode_compute_ecollan <- function(weekly, syndrome.column, params, .progress=N
 episode_compute_souty <- function(weekly, syndrome.column, params, .progress=NULL) {
 
   weekly = weekly %>%
-    arrange(person_id, date)
+    dplyr::arrange(person_id, date)
 
   delay_episode_max = params$delay_episode_max
 
@@ -462,7 +428,7 @@ episode_compute_souty <- function(weekly, syndrome.column, params, .progress=NUL
 
   } # find souty
 
-  weekly %>% group_by(person_id) %>% group_modify(find_episodes_souty)
+  weekly %>% dplyr::group_by(person_id) %>% dplyr::group_modify(find_episodes_souty)
 }
 
 
@@ -479,7 +445,7 @@ episode_compute = function(.env, syndrome.column, design, .progress=TRUE, local=
   }
 
   if( isTRUE(.progress) ) {
-    .progress = progress_estimated(length(unique(.env$weekly$person_id)), min_time = 2)
+    .progress = dplyr::progress_estimated(length(unique(.env$weekly$person_id)), min_time = 2)
   }
 
   if(design$method == "ecollan") {
@@ -493,7 +459,7 @@ episode_compute = function(.env, syndrome.column, design, .progress=TRUE, local=
   }
 
   if(!local) {
-    .env$weekly = left_join(.env$weekly, ep[,c('id','episode')], by="id")
+    .env$weekly = dplyr::left_join(.env$weekly, ep[,c('id','episode')], by="id")
   }
   invisible(ep)
 }
