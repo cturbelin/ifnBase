@@ -1,3 +1,14 @@
+# ifnBase 0.4.0
+
+* introduce episodes computation functions
+* extract onset computation from incidence `IncidenceRS2014` & `IncidenceDailyRS2014` now done in `load_incidence_results`, remove `onset.columns` parameter, date recoding are extracted (done in `recode_weekly`).
+* onset is computed using a quosure by `compute_onset()`
+* add `episode_onset_design()` returning expression to compute onset date used for episodes
+* add `base_onset_design()`  returning expression to compute onset date used for incidence
+* `load_incidence_results()` get a parameter 'onset' to get the onset expression, returns now a class "incidence_loader"
+* date recoding are in `recode_weekly_date`
+* `recode_weekly()` now recodes dates using `recode_weekly_date` adds an attribute "recode_weekly" to flag the weekly as recoded 
+
 # ifnBase 0.3.2
 
 * Fix namespace imports
