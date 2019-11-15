@@ -116,21 +116,47 @@ recode_weekly <- function(weekly, health.status=T) {
 
   weekly$highest.temp[ weekly$highest.temp == 6] <- NA
 
-  weekly$moderate.fever = !is.na(weekly$highest.temp) & weekly$highest.temp ==3 # fever >= 38 & < 39
+  weekly$moderate.fever = !is.na(weekly$highest.temp) & weekly$highest.temp == 3 # fever >= 38 & < 39
   weekly$high.fever = !is.na(weekly$highest.temp) & weekly$highest.temp > 3 # fever over 39deg
 
-  # sympt.aliases @see share/lib/survey.r
-  n = survey_labels('weekly','symptoms')
+  # Ensure symptomes are encoded as boolean
+  n = get_symptoms_aliases()
   weekly[, n] = weekly[, n] > 0
 
   if(health.status) {
     weekly = survey_load_health_status(weekly)
   }
+
   weekly$date = as.Date(trunc(weekly$timestamp, "day")) # date
   weekly$yw = iso_yearweek(weekly$date)
+
+  weekly = recode_weekly_date(weekly)
+
+  attr(weekly, "recode_weekly") <- TRUE
+
   weekly
 }
 
+#' Recode weekly dates
+#'
+recode_weekly_date = function(weekly) {
+
+  if(!is(weekly$sympt.start,"Date")) {
+    weekly$sympt.start = as.Date(as.character(weekly$sympt.start))
+  }
+
+  if(!is(weekly$fever.start,"Date")) {
+    weekly$fever.start = as.Date(as.character(weekly$fever.start))
+  }
+
+  # Set date in the future to NA (not possible cases)
+  weekly$sympt.start[ !is.na(weekly$sympt.start) & weekly$sympt.start > weekly$date ] <- NA
+  weekly$fever.start[ !is.na(weekly$fever.start) & weekly$fever.start > weekly$date ] <- NA
+
+  attr(weekly, "recode_weekly_date") <- TRUE
+
+  weekly
+}
 
 #' Age of participants from a Year-month birth date
 #' @param ym year-month vector
