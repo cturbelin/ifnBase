@@ -6,7 +6,7 @@
 \usage{
 load_results_for_incidence(season, age.categories,
   syndrome.from = list(), geo = NULL, country = NULL,
-  first.season = NULL, columns = list())
+  first.season = NULL, columns = list(), onset = NULL)
 }
 \arguments{
 \item{season}{season int[1] \code{\link{calc_season}}}
@@ -22,6 +22,8 @@ load_results_for_incidence(season, age.categories,
 \item{first.season}{first season participants handling parameters. could be "previous" (only for the previous season) or TRUE to activate it}
 
 \item{columns}{list() extra columns to load in each survey data (see details)}
+
+\item{onset}{onset_design an onset structure from \code{\link{onset_design}} to define how onset date is computed}
 }
 \value{
 list() with intake, weekly, syndromes (vector of name of syndrome columns)
@@ -40,5 +42,6 @@ Several extra parameters can be provided:
  \item{keep.all}{if TRUE keep all column in weekly data, if FALSE only keep a restricted list}
  \item{weekly}{Supplementary weekly columns to load see \code{\link{survey_load_results}}}
  \item{intake}{Supplementary intake columns to load see \code{\link{survey_load_results}}}
+ \item{params}{list of parameters used as arguments but sometimes completed to an actual version, like onset if null is provided}
 }
 }
