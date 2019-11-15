@@ -9,7 +9,7 @@
 #' @param country country to load
 #' @param first.season first season participants handling parameters. could be "previous" (only for the previous season) or TRUE to activate it
 #' @param columns list() extra columns to load in each survey data (see details)
-#'
+#' @param onset onset_design an onset structure from \code{\link{onset_design}} to define how onset date is computed
 #' @details syndrome.from:
 #' syndrome parameter will indicate how to create syndrome columns in weekly. A syndrome column is just a logical value column indicating if a weekly survey match a syndrome definition
 #' This list will be used as arguments to call \code{\link{compute_weekly_syndromes}}
@@ -20,20 +20,37 @@
 #'  \item{keep.all}{if TRUE keep all column in weekly data, if FALSE only keep a restricted list}
 #'  \item{weekly}{Supplementary weekly columns to load see \code{\link{survey_load_results}}}
 #'  \item{intake}{Supplementary intake columns to load see \code{\link{survey_load_results}}}
+#'  \item{params}{list of parameters used as arguments but sometimes completed to an actual version, like onset if null is provided}
 #' }
 #' @export
 #' @return list() with intake, weekly, syndromes (vector of name of syndrome columns)
-load_results_for_incidence = function(season, age.categories, syndrome.from=list(), geo=NULL, country=NULL, first.season=NULL, columns=list()) {
+load_results_for_incidence = function(season, age.categories, syndrome.from=list(), geo=NULL, country=NULL, first.season=NULL, columns=list(), onset=NULL) {
+
+  # We will need this packages
+  requireNamespace("dplyr")
+  requireNamespace("rlang")
 
   syndrome.from = swMisc::merge_list(syndrome.from, list(health.status=TRUE))
+
+  # Output params list
+  params = list(
+    first.season = first.season,
+    age.categories = age.categories,
+    geo = geo,
+    season = season,
+    country = country,
+    columns = columns
+  )
 
   # Load data for incidences calculation
 
   weekly.columns = unique(c(get_columns_for_incidence(), columns$weekly))
   weekly = survey_load_results("weekly", weekly.columns, season=season, country = country)
 
+  params$weekly.columns = weekly.columns
+
   if(nrow(weekly) == 0) {
-    cat("No data for this season\n")
+    message("No data for this season\n")
     return(NULL)
   }
 
@@ -45,13 +62,6 @@ load_results_for_incidence = function(season, age.categories, syndrome.from=list
   rm(i)
 
   weekly = recode_weekly(weekly, health.status=F)
-
-  weekly$sympt.start = as.Date(as.character(weekly$sympt.start))
-  weekly$fever.start = as.Date(as.character(weekly$fever.start))
-
-  # Set date in the future to NA (not possible cases)
-  weekly$sympt.start[ !is.na(weekly$sympt.start) & weekly$sympt.start > weekly$date ] <- NA
-  weekly$fever.start[ !is.na(weekly$fever.start) & weekly$fever.start > weekly$date ] <- NA
 
   # Number of the weekly by participant
   weekly = calc_weekly_order(weekly)
@@ -66,6 +76,8 @@ load_results_for_incidence = function(season, age.categories, syndrome.from=list
   intake.def = survey_definition("intake")
   intake.columns = unique(c('timestamp', 'date.birth',  intake.def$geo.column, columns$intake))
   intake = survey_load_results("intake", intake.columns , geo=geo, season=season, country=country)
+
+  params$intake.columns = intake.columns
 
   i = is.na(intake$person_id)
   if( any(i) ) {
@@ -88,6 +100,8 @@ load_results_for_incidence = function(season, age.categories, syndrome.from=list
   if( !is.null(age.categories) ) {
     intake$age.cat = cut_age(intake$age, age.categories)
   }
+
+  params$censor.season = NA
 
   # Compute first season column for each participant
   # In some country it cannot be assessed because data are not available
@@ -122,7 +136,7 @@ load_results_for_incidence = function(season, age.categories, syndrome.from=list
       previous = survey_participant_previous_season(season, ids=intake$person_id, seasons=ss)
       intake$first.season = !intake$person_id %in% previous # first is not in previous season
     }
-
+    params$censor.season = censor.season
   }
 
   # check for some conditions
@@ -143,11 +157,21 @@ load_results_for_incidence = function(season, age.categories, syndrome.from=list
     weekly = weekly[, c(keep.cols, syndromes)]
   }
 
+  if(is.null(onset)) {
+    onset = base_onset_design()
+  }
+
+  # Compute onset column given the strategy
+  weekly = compute_onset(weekly, onset)
+
+  params$onset = onset
+
   structure(
     list(
       intake=intake,
       weekly=weekly,
-      syndromes=syndromes
+      syndromes=syndromes,
+      params=params
     ),
     class="incidence_loader"
   )

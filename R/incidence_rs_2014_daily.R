@@ -57,7 +57,6 @@ incidence_rs2014_daily_public = list(
       exlude.same.delay = self$params$exclude.same.delay
       active.max.freq = self$params$active.max.freq
       active.min.surveys = self$params$active.min.surveys
-      onset.columns = self$params$onset.columns
 
       weekly$date = as.Date(trunc(weekly$timestamp, "day"))
 
@@ -72,13 +71,9 @@ incidence_rs2014_daily_public = list(
         }
       }
 
-      if( is.null(onset.columns) ) {
-        # Default behaviour
-        # onset = first available date from symptom start, fever.start and survey date
-        onset.columns = c('fever.start', 'sympt.start', 'date')
+      if(!hasName(weekly, "onset")) {
+        stop("Weekly data should have onset column defined")
       }
-
-      weekly$onset = as.Date(apply(weekly[, onset.columns ], 1, coalesce))
 
       # @TODO
       # Actual strategy will remove aberrant data (if fever.start or sympt.start are too far)

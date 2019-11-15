@@ -94,7 +94,6 @@ incidence_rs2014_public = list(
     exlude.same.delay = self$params$exclude.same.delay
     active.max.freq = self$params$active.max.freq
     active.min.surveys = self$params$active.min.surveys
-    onset.columns = self$params$onset.columns
 
     if(is.null(self$profiler)) {
       track <- function(...) {} # do nothing
@@ -104,8 +103,10 @@ incidence_rs2014_public = list(
       }
     }
 
-    weekly$date = as.Date(trunc(weekly$timestamp, "day"))
-    track("date")
+    if( isTRUE(attr(weekly, "recode_weekly") ) ) {
+      weekly$date = as.Date(trunc(weekly$timestamp, "day"))
+      track("date")
+    }
 
     if(exclude.same) {
       weekly = weekly[ order(weekly$person_id, weekly$timestamp), ]
@@ -120,18 +121,9 @@ incidence_rs2014_public = list(
       track("exclude-same")
     }
 
-    if( is.null(onset.columns) ) {
-      # Default behaviour
-      # onset = first available date from symptom start, fever.start and survey date
-      onset.columns = c('fever.start', 'sympt.start', 'date')
+    if(!hasName(weekly, "onset")) {
+      stop("Weekly data should have onset column defined")
     }
-
-    weekly$onset = as.Date(apply(weekly[, onset.columns ], 1, coalesce))
-    track("onset")
-
-    # @TODO
-    # Actual strategy will remove aberrant data (if fever.start or sympt.start are too far)
-    # Depending on params the participant will be counted as active or not
 
     weekly$yw = iso_yearweek(weekly$onset)
     track("yw")
