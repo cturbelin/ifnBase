@@ -143,12 +143,14 @@ load_results_for_incidence = function(season, age.categories, syndrome.from=list
     weekly = weekly[, c(keep.cols, syndromes)]
   }
 
-  list(
-    intake=intake,
-    weekly=weekly,
-    syndromes=syndromes
+  structure(
+    list(
+      intake=intake,
+      weekly=weekly,
+      syndromes=syndromes
+    ),
+    class="incidence_loader"
   )
-
 }
 
 #' Create syndrome columns in the weekly data
@@ -228,20 +230,27 @@ complete_intake_strategy = function(data, intake, ...) {
 #' @param max.year maximum number of year to get data from
 #' @return intake with extra intake loaded from previous season
 #' @export
-complete_intake = function(data, intake, intake.columns, geo=NULL, max.year=NA) {
+complete_intake = function(data, intake, intake.columns, geo=NULL, max.year=NA, fix.timestamp=TRUE) {
   # Complete intake for users that are not in the intake of the current season
 
   p = unique(data$person_id[!data$person_id %in% intake$person_id])
   if(length(p) > 0) {
     message(paste("Completing intake from previous data for ", length(p)," participants"))
     dates = list()
-    dates$max = as.Date(min(intake$timestamp)) # Before the first survey
+    min_time = min(intake$timestamp)
+    dates$max = as.Date(min_time) # Before the first survey
     if( !is.na(max.year) ) {
       dates$min = dates$max - (max.year * 365)
     }
     ii = survey_load_results("intake", intake.columns, survey.users=p, geo=geo, debug=F, date=dates)
     if( nrow(ii) > 0) {
       ii = keep_last_survey(ii)
+      intake$complete = FALSE
+      ii$complete = TRUE
+      if(fix.timestamp) {
+        ii$timestamp.org = ii$timestamp
+        ii$timestamp = min_time
+      }
       intake = dplyr::bind_rows(intake, ii)
     }
   } else {
