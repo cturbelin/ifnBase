@@ -1,10 +1,3 @@
-#' return first argument which is not NA
-#' @param x vector of values
-#' @export
-coalesce <- function(x) {
-  x[ min(which(!is.na(x))) ]
-}
-
 
 #' Create syndrom columns from factor encoded column
 #'
