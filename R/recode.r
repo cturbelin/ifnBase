@@ -3,7 +3,7 @@
 ###
 
 # Yes, No, DontKnown levels
-YES_NO_DNK = c('Yes','No','DNK')
+YES_NO_DNK = c('Yes', 'No', 'DNK')
 
 #' recode Y/N/DNK where Y=0 to boolean (wow!)
 #' Used to recode some InfluenzaNet variables to more error-proof coding
@@ -11,7 +11,7 @@ YES_NO_DNK = c('Yes','No','DNK')
 #' @param x value to recode
 #' @export
 recode_ynp = function(x) {
-  ifelse(is.na(x), NA, ifelse(x == 0, T, ifelse(x == 1, F, NA)))
+  ifelse(is.na(x), NA, ifelse(x == 0, TRUE, ifelse(x == 1, FALSE, NA)))
 }
 
 #' Recode Intake variables to more error proof labels
@@ -20,7 +20,7 @@ recode_ynp = function(x) {
 #' @param translate translate levels
 #' @param remove bool unused
 #' @export
-recode_intake = function(intake, translate=T, remove=T) {
+recode_intake = function(intake, translate=TRUE, remove=TRUE) {
 
   trans <- function(x) {
     if(translate) {
@@ -95,7 +95,7 @@ survey_load_health_status = function(weekly, health.table=NULL) {
   }
   cat("loading health status using table", health.table,"\n")
   health.status = dbQuery(paste('SELECT "',id,'" as id, status FROM ', health.table, sep=''))
-  weekly = merge(weekly, health.status, by='id', all.x=T)
+  weekly = merge(weekly, health.status, by='id', all.x=TRUE)
   weekly$status = factor(weekly$status)
   weekly
 }
@@ -105,7 +105,7 @@ survey_load_health_status = function(weekly, health.table=NULL) {
 #' @param health.status if TRUE try to get the health status for each row as stored in the db.
 #' @seealso survey_load_health_status
 #' @export
-recode_weekly <- function(weekly, health.status=T) {
+recode_weekly <- function(weekly, health.status=TRUE) {
 
   weekly$sympt.sudden = recode_ynp(weekly$sympt.sudden)
   weekly$same.episode[weekly$same.episode == 3] <- NA
@@ -163,11 +163,11 @@ recode_weekly_date = function(weekly) {
 #' @param time reference time
 #' @export
 calc_age = function(ym, time) {
-  y = as.numeric(as.character(substr(ym,1,4)))
-  m = as.numeric(as.character(substr(ym,6, 7)))
+  y = as.numeric(as.character(substr(ym, 1,4)))
+  m = as.numeric(as.character(substr(ym, 6, 7)))
   year = as.numeric(format(time, format="%Y"))
   month = as.numeric(format(time, format="%m"))
-  cur = (year + (month/12) )
+  cur = (year + (month / 12) )
   round(cur - y + (m / 12), 2)
 }
 
@@ -176,7 +176,7 @@ calc_age = function(ym, time) {
 #' @param age.categories list of breaks (@seealso cut)
 #' @export
 cut_age <- function(age, age.categories) {
-  age.cat = cut( age, breaks=age.categories, include.lowest=T, right=F, ordered_result=T)
+  age.cat = cut( age, breaks=age.categories, include.lowest=TRUE, right=FALSE, ordered_result=TRUE)
   # pretty levels for age ranges
   n = length(age.categories)
   lev = rep(NA, n - 1)
