@@ -1,6 +1,7 @@
-#'
-#' Episode computation functions
-#'
+# Episode computation functions
+#
+# "Episode" is a set of successives surveys who are imputed to describe the same disease episode
+# We provide several algorithms to compute this on InfluenzaNet surveys
 
 #' Create a design definition for episodes computation
 #'
@@ -25,7 +26,7 @@ episode_design = function(delay_episode=15, participants=list(),  method="ariza"
     onset = episode_onset_design()
   }
 
-  match.arg(method, choices=c('ariza','ecollan','souty'))
+  match.arg(method, choices=c('ariza', 'ecollan', 'souty'))
 
   structure(
     list(
@@ -223,8 +224,8 @@ episode_prepare_data = function(design, intake, weekly) {
 }
 
 ##
-# Algorithme Ariza:
-#   - Reduction d'un questionnaire par jour pour chaque participant
+# Ariza's Algorithm:
+# - Reduction d'un questionnaire par jour pour chaque participant
 # - Pour chaque participants, questionnaires triés par date
 # Pour chaque questionnaire i
 # - On considere la date de début du syndrome (onset)
