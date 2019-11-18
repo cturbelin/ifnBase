@@ -22,6 +22,15 @@
 #'  \item{intake}{Supplementary intake columns to load see \code{\link{survey_load_results}}}
 #'  \item{params}{list of parameters used as arguments but sometimes completed to an actual version, like onset if null is provided}
 #' }
+#'
+#' @details First season computing:
+#'
+#' This feature compute a flag for each participant in the loaded intake indicating if the loaded season is the first participating season of the participant.
+#'
+#' In european database all seasons are not available for all countries. In this case a censoring can be applied (considering all participants are not in their first season).
+#' A function named `get_season_censoring(country)` should be available in the platform definition returing for a given country the season until wich data should
+#' be censored (if the loaded i season is before or equal to this returned season year, the data will be censored for all participants)
+#'
 #' @export
 #' @return list() with intake, weekly, syndromes (vector of name of syndrome columns)
 load_results_for_incidence = function(season, age.categories, syndrome.from=list(), geo=NULL, country=NULL, first.season=NULL, columns=list(), onset=NULL) {
@@ -111,14 +120,17 @@ load_results_for_incidence = function(season, age.categories, syndrome.from=list
 
     if( isTRUE(platform_env("first.season.censored") ) ) {
       # Do we need to censor this season
-      get_first_season_country = platform_env("get_first_season_country")
+      get_season_censoring = platform_env("get_season_censoring")
 
-      if(is.null(get_first_season_country) ) {
-        stop("`get_first_season_country` is not defined for this platform")
+      if(is.null(get_season_censoring) ) {
+        stop("`get_season_censoring` is not defined for this platform")
       }
 
-      # Apply censorship only if season is before this season for the country
-      censor.season = season <= get_first_season_country(country)
+      ss = get_season_censoring(country)
+      if(!is.na(ss)) {
+        # Apply censorship when the season is before or equal to the censored season
+        censor.season = season <= ss
+      }
     }
 
     if(censor.season) {

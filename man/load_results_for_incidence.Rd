@@ -44,4 +44,12 @@ Several extra parameters can be provided:
  \item{intake}{Supplementary intake columns to load see \code{\link{survey_load_results}}}
  \item{params}{list of parameters used as arguments but sometimes completed to an actual version, like onset if null is provided}
 }
+
+First season computing:
+
+This feature compute a flag for each participant in the loaded intake indicating if the loaded season is the first participating season of the participant.
+
+In european database all seasons are not available for all countries. In this case a censoring can be applied (considering all participants are not in their first season).
+A function named `get_season_censoring(country)` should be available in the platform definition returing for a given country the season until wich data should
+be censored (if the loaded i season is before or equal to this returned season year, the data will be censored for all participants)
 }
