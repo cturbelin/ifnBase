@@ -5,7 +5,7 @@
 \title{Recode Intake variables to more error proof labels
 by default translate labels used to recode variables}
 \usage{
-recode_intake(intake, translate = T, remove = T)
+recode_intake(intake, translate = TRUE, remove = TRUE)
 }
 \arguments{
 \item{intake}{data.frame() raw intake data}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/episodes.R
 \name{episode_design}
 \alias{episode_design}
-\title{Episode computation functions}
+\title{Create a design definition for episodes computation}
 \usage{
 episode_design(delay_episode = 15, participants = list(),
   method = "ariza", onset = NULL, strategies = NULL)
@@ -20,8 +20,5 @@ episode_design(delay_episode = 15, participants = list(),
 episodes design data structure
 }
 \description{
-Create a design definition for episodes computation
-}
-\details{
 This function create a structure embedding parameters to compute episodes datasets
 }

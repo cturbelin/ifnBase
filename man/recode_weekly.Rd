@@ -4,7 +4,7 @@
 \alias{recode_weekly}
 \title{Apply common recoding for weekly data}
 \usage{
-recode_weekly(weekly, health.status = T)
+recode_weekly(weekly, health.status = TRUE)
 }
 \arguments{
 \item{weekly}{data.frame weekly data (return by survey_load_results)}
