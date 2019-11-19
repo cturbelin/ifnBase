@@ -120,6 +120,7 @@ load_results_for_incidence = function(season, age.categories, syndrome.from=list
 
     if( isTRUE(platform_env("first.season.censored") ) ) {
       # Do we need to censor this season
+      message("Looking for first season censoring")
       get_season_censoring = platform_env("get_season_censoring")
 
       if(is.null(get_season_censoring) ) {
@@ -140,6 +141,7 @@ load_results_for_incidence = function(season, age.categories, syndrome.from=list
       message("First season is censored all participant are not in first season")
       intake$first.season = FALSE
     } else {
+      message("First season is not censored, fetching participants data")
       ss = NULL
       if( identical(first.season, "previous") ) {
         ss = -1
