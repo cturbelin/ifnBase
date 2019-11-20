@@ -83,7 +83,7 @@ load_results_for_incidence = function(season, age.categories, syndrome.from=list
   # get intake, only keep the last available intake
   # We should probably take the last intake available for each week
   intake.def = survey_definition("intake")
-  intake.columns = unique(c('timestamp', 'date.birth',  intake.def$geo.column, columns$intake))
+  intake.columns = unique(c('id','timestamp', 'date.birth',  intake.def$geo.column, columns$intake))
   intake = survey_load_results("intake", intake.columns , geo=geo, season=season, country=country)
 
   params$intake.columns = intake.columns
@@ -157,7 +157,7 @@ load_results_for_incidence = function(season, age.categories, syndrome.from=list
   stopifnot(all(table(weekly$id) == 1))
 
   # Columns to keep in weekly
-  keep.cols = c('person_id','timestamp', 'date', 'order', 'same.episode','sympt.start','fever.start')
+  keep.cols = c('id','person_id','timestamp', 'date', 'order', 'same.episode','sympt.start','fever.start')
 
   # Compute syndromes columns in weekly using syndrome.from parameters as arguments
   syndrome.from$intake = intake
