@@ -5,10 +5,10 @@
 
 #' Create a design definition for episodes computation
 #'
-#' This function create a structure embedding parameters to compute episodes datasets
+#' A "design" is a set of information about a process, it's a structure embedding parameters to compute the episodes
 #'
 #' @param delay_episode int maximum delay to consider two sequential responses are in the same episode
-#' @param participants list() list of rules to apply for participants selection
+#' @param participants list of rules to apply for participants selection will be passed to \code{\link{episode_select_participants}} as `rules` arguments
 #' @param onset onset design expression or false, design parameter passed to \code{\link{compute_onset}}
 #' @param strategies not implemented yet
 #' @return episodes design data structure
@@ -112,11 +112,11 @@ episode_select_participants = function(weekly, intake, rules) {
 
     message("Selecting ", rule_id, " (",rule_name,")", if(!is.null(rule_param)) deparse(rule_param), ": ")
 
-    if(rule_name == "has.intake") {
+    if(rule_name %in% c("has.intake", "has_intake")) {
       participants[[rule_id]] = participants$person_id %in% intake$person_id
     }
 
-    if(rule_name == "has.weekly") {
+    if(rule_name %in% c("has.weekly", "has_weekly")) {
       participants[[rule_id]] = participants$person_id %in% weekly$person_id
     }
 
@@ -182,17 +182,26 @@ episode_select_participants = function(weekly, intake, rules) {
 }
 
 #' Prepare data and select participants using given rules
-#' @param design episode design data structure (result of \code{episode_design()})
+#'
+#' `episode_prepare_data` makes some checks in data, and apply selection rules by callng \code{\link{episode_select_participants}}.
+#'
+#' To compute episode in a simple setting \code{link{episode_build}} would be more convinient to use (it will call this function)
+#'
+#' @param design episode design data structure (result of \code{\link{episode_design}})
 #' @param intake data.frame intake data
 #' @param weekly data.frame weekly data
 #' @return environment environment containing selected data (weekly, intake, participants, selections)
 #'
 #' @details
-#' The environment contains several data.frames()
-#' - participants : one row for each participants and rule results (TRUE/FALSE) for each participants, column "keep" indicate final state of participant
-#' - selections : count of selected participants at each step (after applying each rule)
-#' - intake : the intakes for selected participants
-#' - weekly ! the weekly for selected participants
+#' The environment contains several data.frame()
+#' \describe{
+#'  \item{participants}{one row for each participants and rule results (TRUE/FALSE) for each participants, column "keep" indicate final state of participant}
+#'  \item{selections}{count of selected participants at each step (after applying each rule)}
+#'  \item{intake}{the intakes for selected participants}
+#'  \item{weekly}{the weekly for selected participants}
+#' }
+#'
+#' @export
 episode_prepare_data = function(design, intake, weekly) {
 
   ### Cleanup data
@@ -214,11 +223,14 @@ episode_prepare_data = function(design, intake, weekly) {
   weekly = weekly %>% dplyr::filter(person_id %in% ids)
   intake = intake %>% dplyr::filter(person_id %in% ids)
 
+  selections <- attr(participants, "selections")
+
   as.environment(
     list(
       weekly=weekly,
       intake=intake,
-      participants=participants
+      participants=participants,
+      selections=selections
     )
   )
 }
@@ -243,6 +255,9 @@ episode_prepare_data = function(design, intake, weekly) {
 
 
 #' Compute episodes using M Ariza's algorithm
+#' The onset date is used as the episode identifier, the algorithm iteratively replace onset date to the first date for all survey considered
+#' to belong to the same disease episode.
+#'
 #' @param weekly data.frame of weekly data
 #' @param syndrome.column name of the syndrome column to use
 #' @param params episode_design
@@ -433,12 +448,18 @@ episode_compute_souty <- function(weekly, syndrome.column, params, .progress=NUL
 }
 
 
-#' Compute Episodes
-#' @param .env environment result of episode_prepare_data()
+#' Compute episodes in weekly data
+#'
+#' This function use environment returned by \code{\link{episode_prepare_data}}
+#'
+#' It is an intermediate function, in a simple setting \code{\link{episode_build}} can be more convenient to use
+#'
+#' @param .env environment result of \code{\link{episode_prepare_data}}
 #' @param syndrome.column name of the column containing episode data
-#' @param design study params (episode_design)
-#' @param .progress optional progress bar structure
+#' @param design study params, structure returned by \code{\link{episode_design}}
+#' @param .progress optional progress bar structure, if not NULL must use dplyr::progress_estimated api
 #' @param local if TRUE do not modify .env, only returns episodes
+#' @export
 #' @return data.frame (episodes)
 episode_compute = function(.env, syndrome.column, design, .progress=TRUE, local=FALSE) {
   if(!is.logical(.env$weekly[[syndrome.column]])) {
@@ -460,7 +481,21 @@ episode_compute = function(.env, syndrome.column, design, .progress=TRUE, local=
   }
 
   if(!local) {
-    .env$weekly = dplyr::left_join(.env$weekly, ep[,c('id','episode')], by="id")
+    .env$weekly = dplyr::left_join(.env$weekly, ep[, c('id','episode')], by="id")
   }
   invisible(ep)
 }
+
+#' Build Episodes data from survey data
+#' @param design a design structure holding computation parameters, \code{\link{episode_design}}
+#' @param intake intake data
+#' @param weekly weekly data
+#' @param syndrome.column name of the boolean column indicating if each weekly fit the syndrome definition or not (TRUE is yes)
+#' @return environment containing intake, weekly, participants
+#' @export
+episode_build = function(design, intake, weekly, syndrome.column) {
+  env = episode_prepare_data(design, intake = intake, weekly=weekly)
+  episode_compute(env, syndrome.column = syndrome.column, design = design)
+  env
+}
+

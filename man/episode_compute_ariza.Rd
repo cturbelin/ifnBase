@@ -2,7 +2,9 @@
 % Please edit documentation in R/episodes.R
 \name{episode_compute_ariza}
 \alias{episode_compute_ariza}
-\title{Compute episodes using M Ariza's algorithm}
+\title{Compute episodes using M Ariza's algorithm
+The onset date is used as the episode identifier, the algorithm iteratively replace onset date to the first date for all survey considered
+to belong to the same disease episode.}
 \usage{
 episode_compute_ariza(weekly, syndrome.column, params, .progress = NULL)
 }
@@ -19,4 +21,6 @@ Returns a data.frame() with weekly row id (column "id") & episode number}
 }
 \description{
 Compute episodes using M Ariza's algorithm
+The onset date is used as the episode identifier, the algorithm iteratively replace onset date to the first date for all survey considered
+to belong to the same disease episode.
 }

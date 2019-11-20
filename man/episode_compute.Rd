@@ -2,19 +2,19 @@
 % Please edit documentation in R/episodes.R
 \name{episode_compute}
 \alias{episode_compute}
-\title{Compute Episodes}
+\title{Compute episodes in weekly data}
 \usage{
 episode_compute(.env, syndrome.column, design, .progress = TRUE,
   local = FALSE)
 }
 \arguments{
-\item{.env}{environment result of episode_prepare_data()}
+\item{.env}{environment result of \code{\link{episode_prepare_data}}}
 
 \item{syndrome.column}{name of the column containing episode data}
 
-\item{design}{study params (episode_design)}
+\item{design}{study params, structure returned by \code{\link{episode_design}}}
 
-\item{.progress}{optional progress bar structure}
+\item{.progress}{optional progress bar structure, if not NULL must use dplyr::progress_estimated api}
 
 \item{local}{if TRUE do not modify .env, only returns episodes}
 }
@@ -22,5 +22,8 @@ episode_compute(.env, syndrome.column, design, .progress = TRUE,
 data.frame (episodes)
 }
 \description{
-Compute Episodes
+This function use environment returned by \code{\link{episode_prepare_data}}
+}
+\details{
+It is an intermediate function, in a simple setting \code{\link{episode_build}} can be more convenient to use
 }

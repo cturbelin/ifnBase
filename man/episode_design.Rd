@@ -10,7 +10,7 @@ episode_design(delay_episode = 15, participants = list(),
 \arguments{
 \item{delay_episode}{int maximum delay to consider two sequential responses are in the same episode}
 
-\item{participants}{list() list of rules to apply for participants selection}
+\item{participants}{list of rules to apply for participants selection will be passed to \code{\link{episode_select_participants}} as `rules` arguments}
 
 \item{onset}{onset design expression or false, design parameter passed to \code{\link{compute_onset}}}
 
@@ -20,5 +20,5 @@ episode_design(delay_episode = 15, participants = list(),
 episodes design data structure
 }
 \description{
-This function create a structure embedding parameters to compute episodes datasets
+A "design" is a set of information about a process, it's a structure embedding parameters to compute the episodes
 }

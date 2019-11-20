@@ -7,7 +7,7 @@
 episode_prepare_data(design, intake, weekly)
 }
 \arguments{
-\item{design}{episode design data structure (result of \code{episode_design()})}
+\item{design}{episode design data structure (result of \code{\link{episode_design}})}
 
 \item{intake}{data.frame intake data}
 
@@ -17,12 +17,17 @@ episode_prepare_data(design, intake, weekly)
 environment environment containing selected data (weekly, intake, participants, selections)
 }
 \description{
-Prepare data and select participants using given rules
+`episode_prepare_data` makes some checks in data, and apply selection rules by callng \code{\link{episode_select_participants}}.
 }
 \details{
-The environment contains several data.frames()
-- participants : one row for each participants and rule results (TRUE/FALSE) for each participants, column "keep" indicate final state of participant
-- selections : count of selected participants at each step (after applying each rule)
-- intake : the intakes for selected participants
-- weekly ! the weekly for selected participants
+To compute episode in a simple setting \code{link{episode_build}} would be more convinient to use (it will call this function)
+
+
+The environment contains several data.frame()
+\describe{
+ \item{participants}{one row for each participants and rule results (TRUE/FALSE) for each participants, column "keep" indicate final state of participant}
+ \item{selections}{count of selected participants at each step (after applying each rule)}
+ \item{intake}{the intakes for selected participants}
+ \item{weekly}{the weekly for selected participants}
+}
 }
