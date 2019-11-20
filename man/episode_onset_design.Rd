@@ -2,13 +2,19 @@
 % Please edit documentation in R/onset.R
 \name{episode_onset_design}
 \alias{episode_onset_design}
-\title{Create an expression to compute onset design for episodes}
+\title{Onset definition used for episodes}
 \usage{
 episode_onset_design(delay_symptome_max = 15)
 }
 \arguments{
 \item{delay_symptome_max}{integer max delay to use `fever.start` or `sympt.start` instead of survey date}
 }
+\value{
+quosure
+}
 \description{
 Create an expression to compute onset design for episodes
+}
+\details{
+See \code{\link{compute_onset}}
 }

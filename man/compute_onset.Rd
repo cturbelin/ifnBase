@@ -15,10 +15,12 @@ compute_onset(weekly, design)
 weekly
 }
 \description{
-Evaluate the `design` expression to compute the onset column.
-The expression is evaluated using weekly data and quosure environment;
+Onset is the date on which a survey is considered as incident in incidence and episode computation (when the disease started)
 }
 \details{
+Evaluate the `design` expression to compute the onset column.
+The expression is evaluated using weekly data and quosure environment;
+
 if design is FALSE, does nothing, return the weekly. This can be used if the `onset` column is already available in
 the provided weekly data.frame.
 }

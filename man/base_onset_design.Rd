@@ -6,6 +6,9 @@
 \usage{
 base_onset_design()
 }
+\value{
+quosude expression used to compute onssed
+}
 \description{
-Base onset design, used for incidence computation
+See \code{\link{compute_onset}}
 }
