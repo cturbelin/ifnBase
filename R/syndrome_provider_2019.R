@@ -51,6 +51,7 @@ syndromes_provider_ili2019 <- list(
     respi_short =any_of(r, c('sorethroat','cough','dyspnea'))
 
     pain = has_pain(r)
+    # Always TRUE if child < pain.age.limit
     pain_or_headache = pain | r$headache
     sudden = self$is_sudden(r)
 
@@ -78,7 +79,9 @@ syndromes_provider_ili2019 <- list(
       d$ili.who = sudden & fever_with_level(r, fever_level_38) & pain_or_headache & (r$cough | r$sorethroat)
     }
 
-    general_ari = r$fever | r$chills | r$asthenia | r$headache | pain
+    # Pain or Headache considered as false if age under pain.age.limit
+    # So pain and Headache are not evaluated if age under pain.age.limit
+    general_ari = r$fever | r$chills | r$asthenia | ifelse( !is.na(r$age) & r$age <= pain.age.limit, FALSE, r$pain | r$headache)
 
     if('ari.ecdc' %in% definitions) {
       d$ari.ecdc = sudden & general_ari & respi_short
