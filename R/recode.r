@@ -30,29 +30,56 @@ recode_intake = function(intake, translate=TRUE, remove=TRUE) {
     }
   }
 
+  need_recode <- function(name) {
+    if(!hasName(intake, name)) {
+      return(FALSE)
+    }
+    if(is.factor(intake[[name]])) {
+      warning(paste0("column '", name,"' already in factor, not recoded"))
+      return(FALSE)
+    }
+    TRUE
+  }
+
+  recoded = c()
+
   # recode some variables
-  if( !is.null(intake$date.birth) ) {
-    intake$age = calc_age(intake$date.birth, intake$timestamp) # @see share/lib/survey
+  if( hasName(intake, "date.birth") ) {
+    if( hasName(intake, "age") ) {
+        warning("")
+    }
+    intake$age = calc_age(intake$date.birth, intake$timestamp)
     if(remove) {
       intake = subset(intake, select=-date.birth) # remove uneeded variables
     }
-  }
-  if( !is.null(intake$gender) ) {
-    intake$gender = factor(intake$gender, c(0,1), trans(c('male','female')))
-  }
-  if( !is.null(intake$vacc.curseason) ) {
-    # error proof recoding (0 is yes in data)
-    intake$vacc.curseason = factor(intake$vacc.curseason, 0:2, trans(YES_NO_DNK))
-  }
-  if( !is.null(intake$vacc.lastseason) ) {
-    # error proof recoding (0 is yes in data)
-    intake$vacc.lastseason = factor(intake$vacc.lastseason, 0:2, trans(YES_NO_DNK))
+    recoded <- c(recoded, "age")
   }
 
-  if( !is.null(intake$pregnant) ) {
-    # error proof recoding (0 is yes in data)
-    intake$pregnant= factor(intake$pregnant, 0:2, trans(YES_NO_DNK))
+  if( need_recode("gender") ) {
+    intake$gender = factor(intake$gender, c(0,1), trans(c('male','female')))
+    recoded <- c(recoded, "gender")
   }
+
+  if( need_recode("vacc.curseason") ) {
+    # error proof recoding (0 is yes in data)
+    intake$vacc.curseason = factor(intake$vacc.curseason, 0:2, trans(YES_NO_DNK))
+    recoded <- c(recoded, "vacc.curseason")
+  }
+
+  if( need_recode("vacc.lastseason") ) {
+    # error proof recoding (0 is yes in data)
+    intake$vacc.lastseason = factor(intake$vacc.lastseason, 0:2, trans(YES_NO_DNK))
+    recoded <- c(recoded, "vacc.lastseason")
+  }
+
+  if( need_recode("pregnant") ) {
+    # error proof recoding (0 is yes in data)
+    intake$pregnant = factor(intake$pregnant, 0:2, trans(YES_NO_DNK))
+    recoded <- c(recoded, "pregnant")
+  }
+
+  attr(intake, "recode_intake") <- TRUE
+  attr(intake, "recode_intake.columns") <- recoded
 
   intake
 }
@@ -107,12 +134,31 @@ survey_load_health_status = function(weekly, health.table=NULL) {
 #' @export
 recode_weekly <- function(weekly, health.status=TRUE) {
 
-  weekly$sympt.sudden = recode_ynp(weekly$sympt.sudden)
-  weekly$same.episode[weekly$same.episode == 3] <- NA
+  need_recode <- function(name) {
+    if(!hasName(weekly, name)) {
+      return(FALSE)
+    }
+    if(is.factor(weekly[[name]])) {
+      warning(paste0("column '", name,"' already in factor, not recoded"))
+      return(FALSE)
+    }
+    TRUE
+  }
 
-  # Same episode is coded with 0 as Yes level, recoding it to human readable levels
-  weekly$same.episode = factor(weekly$same.episode, 0:2, YES_NO_DNK)
-  weekly$fever.sudden = recode_ynp(weekly$fever.sudden)
+  if(need_recode("sympt.sudden")) {
+    weekly$sympt.sudden = recode_ynp(weekly$sympt.sudden)
+  }
+
+  if(need_recode("same.episode")) {
+    weekly$same.episode[weekly$same.episode == 3] <- NA
+
+    # Same episode is coded with 0 as Yes level, recoding it to human readable levels
+    weekly$same.episode = factor(weekly$same.episode, 0:2, YES_NO_DNK)
+  }
+
+  if(need_recode("fever.sudden")) {
+    weekly$fever.sudden = recode_ynp(weekly$fever.sudden)
+  }
 
   weekly$highest.temp[ weekly$highest.temp == 6] <- NA
 
@@ -120,7 +166,7 @@ recode_weekly <- function(weekly, health.status=TRUE) {
   weekly$high.fever = !is.na(weekly$highest.temp) & weekly$highest.temp > 3 # fever over 39deg
 
   # Ensure symptomes are encoded as boolean
-  n = get_symptoms_aliases()
+  n = Filter(function(x) !is.logical(weekly[[x]]), get_symptoms_aliases())
   weekly[, n] = weekly[, n] > 0
 
   if(health.status) {
