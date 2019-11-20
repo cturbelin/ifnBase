@@ -2,7 +2,12 @@
 #
 
 
+#' Onset definition used for episodes
+#'
 #' Create an expression to compute onset design for episodes
+#'
+#' See \code{\link{compute_onset}}
+#' @return quosure
 #' @param delay_symptome_max integer max delay to use `fever.start` or `sympt.start` instead of survey date
 #' @export
 episode_onset_design = function(delay_symptome_max=15) {
@@ -16,6 +21,11 @@ episode_onset_design = function(delay_symptome_max=15) {
 }
 
 #' Base onset design, used for incidence computation
+#'
+#' See \code{\link{compute_onset}}
+#'
+#' @return quosude expression used to compute onssed
+#'
 #' @export
 base_onset_design = function() {
   quo(
@@ -24,6 +34,8 @@ base_onset_design = function() {
 }
 
 #' Compute the onset date from a design object
+#'
+#' Onset is the date on which a survey is considered as incident in incidence and episode computation (when the disease started)
 #'
 #' Evaluate the `design` expression to compute the onset column.
 #' The expression is evaluated using weekly data and quosure environment;
