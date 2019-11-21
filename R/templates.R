@@ -402,7 +402,7 @@ survey_templates[["eu:weekly"]] = list(
     sympt.when = c('Yes' = 0, 'DNK' = 1),
 
     # Q4
-    sympt.when.end = c('Yes' = 0, 'DNK' = 1),
+    sympt.when.end = c('Yes' = 0, 'DNK' = 1, 'Still'=2),
 
     sympt.sudden = c(
       'Yes' = 0,

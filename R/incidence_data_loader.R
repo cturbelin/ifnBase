@@ -7,12 +7,21 @@
 #' @param geo geographic level name to load
 #' @param syndrome.from list() parameters to create the syndrome columns it will be used to call \code{\link{compute_weekly_syndromes}}
 #' @param country country to load
-#' @param first.season first season participants handling parameters. could be "previous" (only for the previous season) or TRUE to activate it
+#' @param first.season list of first season participants handling parameters (see details)
 #' @param columns list() extra columns to load in each survey data (see details)
 #' @param onset onset_design an onset structure from \code{\link{onset_design}} to define how onset date is computed
 #' @details syndrome.from:
 #' syndrome parameter will indicate how to create syndrome columns in weekly. A syndrome column is just a logical value column indicating if a weekly survey match a syndrome definition
 #' This list will be used as arguments to call \code{\link{compute_weekly_syndromes}}
+#'
+#' @details first seasons:
+#' By default nothing is done on first season.
+#' if first season is TRUE, then use the default of all following parameters
+#' Otherwise provide a list with these parameters
+#' \describe{
+#'  \item{censored_value}{value to put to all participant when season is censored for first participation, default is FALSE}
+#'  \item{from}{From which seasons consider the participation ("previous" or "all"), default is "all" }
+#' }
 #'
 #' @details Columns:
 #' Several extra parameters can be provided:
@@ -83,7 +92,7 @@ load_results_for_incidence = function(season, age.categories, syndrome.from=list
   # get intake, only keep the last available intake
   # We should probably take the last intake available for each week
   intake.def = survey_definition("intake")
-  intake.columns = unique(c('id','timestamp', 'date.birth',  intake.def$geo.column, columns$intake))
+  intake.columns = unique(c('timestamp', 'date.birth',  intake.def$geo.column, columns$intake))
   intake = survey_load_results("intake", intake.columns , geo=geo, season=season, country=country)
 
   params$intake.columns = intake.columns
@@ -118,6 +127,24 @@ load_results_for_incidence = function(season, age.categories, syndrome.from=list
   if( !is.null(first.season) ) {
     censor.season = FALSE
 
+    if( isTRUE(first.season) ) {
+      first.season = list() # Use default parameters
+    }
+
+    if(!is.list(first.season)) {
+      stop("first season should be either a list or TRUE")
+    }
+
+    first.season = swMisc::merge_list(first.season, list(censored_value=FALSE, from='all'))
+
+    if(!is.logical(first.season$censored_value)) {
+      stop("first.season$censored_value should be logical")
+    }
+
+    if(!first.season$from %in% c('all','previous')) {
+      stop("first.season$from should 'all' or 'previous'")
+    }
+
     if( isTRUE(platform_env("first.season.censored") ) ) {
       # Do we need to censor this season
       message("Looking for first season censoring")
@@ -135,15 +162,16 @@ load_results_for_incidence = function(season, age.categories, syndrome.from=list
     }
 
     if(censor.season) {
+
       # Cannot known if the participant are in first season for the given season
       # So assume that it is not the first season for all participants
       # This will deactivate the criteria based on the first survey's delay (ignore.first.delay)
       message("First season is censored all participant are not in first season")
-      intake$first.season = FALSE
+      intake$first.season = first.season$censored_value
     } else {
       message("First season is not censored, fetching participants data")
       ss = NULL
-      if( identical(first.season, "previous") ) {
+      if( identical(first.season$from, "previous") ) {
         ss = -1
       }
       # Get list of previous seasons participants
