@@ -292,8 +292,9 @@ complete_intake_strategy = function(data, intake, ...) {
 #' @param data data.frame() survey data with all participants should have at least (timestamp, person_id) columns. For example weekly survey data
 #' @param intake data.frame() intake survey data loaded on the same period as data
 #' @param intake.columns columns to load with intake
-#' @param geo geo levels to load with intake
-#' @param max.year maximum number of year to get data from
+#' @param geo geo levels to load with intake, list of names of levels to load see \code{\link{geo_level}}
+#' @param max.year maximum number of year to get data before the minimal intake date
+#' @param fix.timestamp logical. if TRUE, imported intake will have timestamp set to minimal date of \code{intake} parameter
 #' @return intake with extra intake loaded from previous season
 #' @export
 complete_intake = function(data, intake, intake.columns, geo=NULL, max.year=NA, fix.timestamp=TRUE) {
