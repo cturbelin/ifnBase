@@ -4,13 +4,20 @@
 \alias{episode_design}
 \title{Create a design definition for episodes computation}
 \usage{
-episode_design(delay_episode = 15, participants = list(),
+episode_design(delay_episode = 15, max_episode_duration = 11,
+  median_episode_duration = 7, participants = list(),
   method = "ariza", onset = NULL, strategies = NULL)
 }
 \arguments{
 \item{delay_episode}{int maximum delay to consider two sequential responses are in the same episode}
 
+\item{max_episode_duration}{int maximum duration for episode (used to find ending date)}
+
+\item{median_episode_duration}{int median duration of an episode when ending date is not known}
+
 \item{participants}{list of rules to apply for participants selection will be passed to \code{\link{episode_select_participants}} as `rules` arguments}
+
+\item{method}{method name to use choices are 'ariza','ecollan' and 'souty'}
 
 \item{onset}{onset design expression or false, design parameter passed to \code{\link{compute_onset}}}
 
