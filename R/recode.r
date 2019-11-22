@@ -160,6 +160,10 @@ recode_weekly <- function(weekly, health.status=TRUE) {
     weekly$fever.sudden = recode_ynp(weekly$fever.sudden)
   }
 
+  if(need_recode("sympt.when.end")) {
+    weekly$sympt.when.end = survey_recode(weekly$sympt.when.end, question = "sympt.when.end", survey="weekly")
+  }
+
   weekly$highest.temp[ weekly$highest.temp == 6] <- NA
 
   weekly$moderate.fever = !is.na(weekly$highest.temp) & weekly$highest.temp == 3 # fever >= 38 & < 39
