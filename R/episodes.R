@@ -307,7 +307,7 @@ episode_compute_ariza = function(weekly, syndrome.column, params, .progress=NULL
         if(w[[syndrome.column]]) {
           p1_delay = as.integer(w$onset - onset[i - 1]) # Recompute delay for previous
           p1_syndrome =  ww[i - 1, syndrome.column] # Previous weekly has syndrome
-          same_episode = is.na(w$same.episode) | w$same.episode != "No" # Is same episode or unknown
+          same_episode = is.na(w$same.episode) | w$same.episode != NO # Is same episode or unknown
 
           if(i == 2) {
             if(  same_episode & p1_delay < delay_episode_max & p1_syndrome ) {
@@ -373,8 +373,8 @@ episode_compute_ecollan <- function(weekly, syndrome.column, params, .progress=N
 
         if (previous_syndrome) {
           # Si le weekly précédent était un syndrome
-          if (!is.na(x$same.episode) & x$same.episode != "DNK" ) {
-            if (x$same.episode == "No") {
+          if (!is.na(x$same.episode) & x$same.episode != DONTKNOW ) {
+            if (x$same.episode == NO) {
               is.new = TRUE
             } else {
               is.new = FALSE
@@ -433,7 +433,7 @@ episode_compute_souty <- function(weekly, syndrome.column, params, .progress=NUL
     episode_onset = NA
     for (j in 1:nrow(ww)) {
       x = ww[j, ]
-      same_episode = is.na(x$same.episode) | x$same.episode != "No" # Is same episode or unknown
+      same_episode = is.na(x$same.episode) | x$same.episode != NO # Is same episode or unknown
       if(x[[syndrome.column]]) {
 
         if(is.na(episode_onset)) {
