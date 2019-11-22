@@ -9,7 +9,7 @@
 #' @param country country to load
 #' @param first.season list of first season participants handling parameters (see details)
 #' @param columns list() extra columns to load in each survey data (see details)
-#' @param onset onset_design an onset structure from \code{\link{onset_design}} to define how onset date is computed
+#' @param onset onset_design quosure expression used to compute onset date, see \code{\link{compute_onset}}, by default use \code{\link{base_onset_design}}
 #' @details syndrome.from:
 #' syndrome parameter will indicate how to create syndrome columns in weekly. A syndrome column is just a logical value column indicating if a weekly survey match a syndrome definition
 #' This list will be used as arguments to call \code{\link{compute_weekly_syndromes}}
