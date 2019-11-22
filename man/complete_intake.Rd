@@ -14,9 +14,11 @@ complete_intake(data, intake, intake.columns, geo = NULL,
 
 \item{intake.columns}{columns to load with intake}
 
-\item{geo}{geo levels to load with intake}
+\item{geo}{geo levels to load with intake, list of names of levels to load see \code{\link{geo_level}}}
 
-\item{max.year}{maximum number of year to get data from}
+\item{max.year}{maximum number of year to get data before the minimal intake date}
+
+\item{fix.timestamp}{logical. if TRUE, imported intake will have timestamp set to minimal date of \code{intake} parameter}
 }
 \value{
 intake with extra intake loaded from previous season

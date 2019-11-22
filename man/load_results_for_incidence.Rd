@@ -19,11 +19,11 @@ load_results_for_incidence(season, age.categories,
 
 \item{country}{country to load}
 
-\item{first.season}{first season participants handling parameters. could be "previous" (only for the previous season) or TRUE to activate it}
+\item{first.season}{list of first season participants handling parameters (see details)}
 
 \item{columns}{list() extra columns to load in each survey data (see details)}
 
-\item{onset}{onset_design an onset structure from \code{\link{onset_design}} to define how onset date is computed}
+\item{onset}{onset_design quosure expression used to compute onset date, see \code{\link{compute_onset}}, by default use \code{\link{base_onset_design}}}
 }
 \value{
 list() with intake, weekly, syndromes (vector of name of syndrome columns)
@@ -35,6 +35,15 @@ This function standardize the loading of data in order to compute incidence
 syndrome.from:
 syndrome parameter will indicate how to create syndrome columns in weekly. A syndrome column is just a logical value column indicating if a weekly survey match a syndrome definition
 This list will be used as arguments to call \code{\link{compute_weekly_syndromes}}
+
+first seasons:
+By default nothing is done on first season.
+if first season is TRUE, then use the default of all following parameters
+Otherwise provide a list with these parameters
+\describe{
+ \item{censored_value}{value to put to all participant when season is censored for first participation, default is FALSE}
+ \item{from}{From which seasons consider the participation ("previous" or "all"), default is "all" }
+}
 
 Columns:
 Several extra parameters can be provided:
