@@ -2,10 +2,15 @@
 % Please edit documentation in R/recode.r
 \name{recode_weekly_date}
 \alias{recode_weekly_date}
-\title{Recode weekly dates}
+\title{Recode weekly dates
+Recode weekly dates}
 \usage{
 recode_weekly_date(weekly)
 }
+\arguments{
+\item{weekly}{weekly data}
+}
 \description{
+Recode weekly dates
 Recode weekly dates
 }

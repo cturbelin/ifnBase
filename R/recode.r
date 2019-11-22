@@ -2,8 +2,38 @@
 # Survey recoding utilities
 ###
 
-# Yes, No, DontKnown levels
-YES_NO_DNK = c('Yes', 'No', 'DNK')
+# Export some constants values
+# Uppercases are intentional here
+
+#' Constants values
+#'
+#' Some constants are provided to limit error by using some common values in programs
+#' They are defined using UPPERCASE names to be recoginizable as constants
+#'
+#' Beware to never redefine these objects in your code, or use ifnBase:: prefix to be sure of the value used.
+#'
+#' \describe{
+#' \item{YES}{is 'Yes' level used to recode many variables}
+#' \item{NO}{is 'No' level}
+#' \item{DONTKNOW}{'DNK' Dont know level}
+#' }
+#' @name constants
+
+#' @rdname constants
+#' @export
+YES = 'Yes'
+
+#' @rdname constants
+#' @export
+NO = 'No'
+
+#' @rdname constants
+#' @export
+DONTKNOW = 'DNK'
+
+#' @rdname constants
+#' @export
+YES_NO_DNK = c(YES, NO, DONTKNOW)
 
 #' recode Y/N/DNK where Y=0 to boolean (wow!)
 #' Used to recode some InfluenzaNet variables to more error-proof coding
@@ -188,7 +218,8 @@ recode_weekly <- function(weekly, health.status=TRUE) {
 }
 
 #' Recode weekly dates
-#'
+#' Recode weekly dates
+#' @param weekly weekly data
 recode_weekly_date = function(weekly) {
 
   if(!is(weekly$sympt.start,"Date")) {
@@ -197,6 +228,15 @@ recode_weekly_date = function(weekly) {
 
   if(!is(weekly$fever.start,"Date")) {
     weekly$fever.start = as.Date(as.character(weekly$fever.start))
+  }
+
+  if(hasName(weekly, "sympt.end")) {
+    if( !is(weekly$sympt.end, "Date") ) {
+      weekly$sympt.end = as.Date(as.character(weekly$sympt.end))
+    }
+
+    weekly$sympt.end[ !is.na(weekly$sympt.end) & weekly$sympt.end > weekly$date ] <- NA
+
   }
 
   # Set date in the future to NA (not possible cases)

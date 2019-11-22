@@ -1,6 +1,6 @@
 
 # Public structure of incidence rs_2014 class
-#' @noRd
+#'@noRd
 incidence_rs2014_public = list(
   # Weekly data
   weekly = NULL,
@@ -112,7 +112,7 @@ incidence_rs2014_public = list(
       weekly = weekly[ order(weekly$person_id, weekly$timestamp), ]
       weekly$delay.date = calc_weekly_delay(weekly, "date")
       # same.episode using recoded value (see recode_weekly())
-      same = !is.na(weekly$same.episode) & weekly$same.episode == "Yes"  & (is.na(weekly$delay.date) | weekly$delay.date <= exlude.same.delay)
+      same = !is.na(weekly$same.episode) & weekly$same.episode == YES  & (is.na(weekly$delay.date) | weekly$delay.date <= exlude.same.delay)
       for(ss in syndromes) {
         # Cancel a syndrom report if flagged as same episode as previous
         i = !is.na(weekly[, ss]) & weekly[, ss] > 0
@@ -179,9 +179,9 @@ incidence_rs2014_public = list(
     self$participant = participant
   },
 
-  #' Internal function
-  #' Estimate incidence with rs2014 method for a given week
-  #' @param yw yearweek number to compute
+  # Internal function
+  # Estimate incidence with rs2014 method for a given week
+  # @param yw yearweek number to compute
   compute_week = function(yw)
   {
     weekly = self$weekly

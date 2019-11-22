@@ -63,7 +63,7 @@ incidence_rs2014_daily_public = list(
       if(exclude.same) {
         weekly = weekly[ order(weekly$person_id, weekly$timestamp), ]
         weekly$delay.date = calc_weekly_delay(weekly, "date")
-        same = !is.na(weekly$same.episode) & weekly$same.episode == "Yes"  & (is.na(weekly$delay.date) | weekly$delay.date <= exlude.same.delay) # recoded value !
+        same = !is.na(weekly$same.episode) & weekly$same.episode == YES  & (is.na(weekly$delay.date) | weekly$delay.date <= exlude.same.delay) # recoded value !
         for(ss in syndromes) {
           # Cancel a syndrom report if flagged as same episode as previous
           i = !is.na(weekly[, ss]) & weekly[, ss] > 0
@@ -120,8 +120,8 @@ incidence_rs2014_daily_public = list(
   },
 
 
-  #' Internal function
-  #' Estimate incidence with rs2014 method for a given date
+  # Internal function
+  # Estimate incidence with rs2014 method for a given date
   compute_date = function(date)
   {
 
@@ -277,9 +277,9 @@ incidence_rs2014_daily_public = list(
     r
   },
 
-  #' Compute weekly incidence for all requested weeks
-  #' Apply the full algorithm for rs2014 incidence computation
-  #' prepare data and then compute for each week by calling estimate_incidence_rs2014_week
+  # Compute weekly incidence for all requested weeks
+  # Apply the full algorithm for rs2014 incidence computation
+  # prepare data and then compute for each week by calling estimate_incidence_rs2014_week
   compute = function(dates=NULL, verbose=T, progress=T) {
 
     # Prepare data for all weeks (common part)
