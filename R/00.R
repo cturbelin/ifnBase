@@ -8,7 +8,7 @@
 #' @importFrom graphics axTicks axis polygon rect segments points
 #' @importFrom methods is
 #' @importFrom stats aggregate
-#' @importFrom utils glob2rx str tail
+#' @importFrom utils glob2rx str tail hasName
 #' @importFrom swMisc merge_list ending_slash get_r_file
 #' @importFrom R6 R6Class
 #' @import ggplot2
