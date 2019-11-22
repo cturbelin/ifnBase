@@ -1,5 +1,7 @@
 # Utility functions (not exported)
 
+#' Flip names and values in a vector
+#'
 #' @noRd
 flip.names <- function(x) {
   n = names(x)
@@ -7,10 +9,10 @@ flip.names <- function(x) {
   n
 }
 
-#' @noRd
 #' Check if a value is integer value (by default positive)
 #' @param value value to test
 #' @param min minimal value
+#' @noRd
 check_int = function(value, min=1) {
   name = deparse(substitute(value))
   if(!is.numeric(value)) {
