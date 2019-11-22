@@ -85,6 +85,45 @@ Of course in this case, "zip" level should be a curated list of zip code, as a z
 
 platform_geographic_tables(NULL)
 
+## Manipulate geographic levels
+
+Several function are available to manipulate geographic levels
+
+*geo_level(level)* :Just returns a geographic level, but can embed extra information about it (in which hierarchy consider this level)
+
+*geo_level_nav(level, side)* 
+Allow to navigate accross a geographic level hierarchy to ask for the upper, or lower level
+
+```{r eval=FALSE}
+  geo_level_nav('nuts3', "upper") # Upper level of nuts3 => nuts2
+  geo_level_nav('nuts2', "lower") # Lower level of nuts2
+  geo_level_nav('nuts2', "-1") # Lower level of nuts2
+```
+
+*geo_column(level)*
+Get the name of the column in the database containing the level information in geographic tables
+
+*geo_hierachy(hierarchy)*
+Get the list of levels in the hierarchical order for the given hierarchy name
+
+*geo_definition()*
+Get the structure describing the organization of geographic levels (created by *platform_geographic_levels()*)
+
+### Get Data about levels in the database (requires connexion)
+
+*load_geo_zones(level)*
+Get the areas in the given level (from the database)
+```{r eval=FALSE}
+ load_geo_zone("nuts2") # Load all areas known in nuts2 level
+````
+
+*load_population(level, year)*
+Get the population at the given geographic level and the year
+
+*load_population_age(level, year, age.breaks)*
+Get the population by age group & sexe for a given level and year
+If age.breaks are provided population will be aggregated on this groups (must be 5-years multiple)
+
 ## Population tables
 
 ### Global population
