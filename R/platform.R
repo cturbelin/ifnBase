@@ -91,10 +91,8 @@ platform_define_survey <- function(name, survey_id, table, mapping, labels=NULL,
 
   errors = Filter(function(x) x$type == "error", r$checks)
   if( length(errors) > 0 ) {
-    cond = simpleError("Survey error importing templates")
-    attr(cond, "errors") <- r$checks
-    stop(cond)
-  }
+    rlang::abort("Survey error importing templates", survey_errors=r$checks)
+   }
 
   if( !is.null(template) ) {
     def$template_name = template
