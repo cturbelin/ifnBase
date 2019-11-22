@@ -8,12 +8,15 @@
 #' A "design" is a set of information about a process, it's a structure embedding parameters to compute the episodes
 #'
 #' @param delay_episode int maximum delay to consider two sequential responses are in the same episode
+#' @param max_episode_duration int maximum duration for episode (used to find ending date)
+#' @param median_episode_duration int median duration of an episode when ending date is not known
 #' @param participants list of rules to apply for participants selection will be passed to \code{\link{episode_select_participants}} as `rules` arguments
+#' @param method method name to use choices are 'ariza','ecollan' and 'souty'
 #' @param onset onset design expression or false, design parameter passed to \code{\link{compute_onset}}
 #' @param strategies not implemented yet
 #' @return episodes design data structure
 #' @export
-episode_design = function(delay_episode=15, participants=list(),  method="ariza", onset=NULL, strategies=NULL ) {
+episode_design = function(delay_episode=15, max_episode_duration=11, median_episode_duration=7, participants=list(),  method="ariza", onset=NULL, strategies=NULL ) {
 
   requireNamespace("dplyr")
   requireNamespace("rlang")
@@ -30,6 +33,8 @@ episode_design = function(delay_episode=15, participants=list(),  method="ariza"
 
   structure(
     list(
+      max_episode_duration=check_int(max_episode_duration),
+      median_episode_duration=check_int(median_episode_duration),
       delay_episode_max = check_int(delay_episode),
       method = method,
       participants = participants,
@@ -173,7 +178,7 @@ episode_select_participants = function(weekly, intake, rules) {
     participants$keep = participants$keep & participants[[rule_id]]
     selections[[rule_id]] = sum(participants$keep)
 
-    message(" for this rule", sum(participants[[rule_id]]) , " participants left: ", selections[[rule_id]])
+    message(paste0(" for this rule", sum(participants[[rule_id]]) , " participants left: ", selections[[rule_id]]))
   }
 
   attr(participants, "selections") <- selections
@@ -208,6 +213,23 @@ episode_prepare_data = function(design, intake, weekly) {
   if(!isTRUE(attr(weekly, "recode_weekly_date"))) {
     weekly = recode_weekly_date(weekly)
     weekly$date = as.Date(trunc(weekly$timestamp, "day")) # Recompute date to be sure its computed properly
+  }
+
+  required.columns = c('id','date','person_id','same.episode')
+  n = sapply(required.columns, function(col) hasName(weekly, col))
+  if(!all(n)) {
+    n = n[!n]
+    stop(paste("Some required columns in weekly are not found", paste(names(n), collapse = ",")))
+  }
+
+  if(hasName(weekly, "sympt.when.end")) {
+    if(!is.factor(weekly$sympt.when.end)) {
+      stop("'sympt.when.end' in weekly should be a factor")
+    }
+  }
+
+  if(hasName(weekly, "sympt.end") && !is(weekly$sympt.end, "Date")) {
+    stop("sympt.end must be encoded as a Date")
   }
 
   weekly = compute_onset(weekly, design$onset)
