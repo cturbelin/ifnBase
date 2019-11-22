@@ -10,15 +10,16 @@ Imports:
 Depends: 
   R (>= 3.2.0)
 Suggests: 
-  dplyr (>= 0.8.1),
-  rlang (>= 0.3),
-  RPostgreSQL, 
-  DBI,
-  RODBC,
-  RColorBrewer,
-  epitools,
-  knitr,
-  scales
+    dplyr (>= 0.8.1),
+    rlang (>= 0.3),
+    RPostgreSQL,
+    DBI,
+    RODBC,
+    RColorBrewer,
+    epitools,
+    knitr,
+    scales,
+    testthat
 URL: https://github.com/cturbelin/ifnBase
 Additional_repositories: https://cran.sentiweb.fr/
 BugReports: https://github.com/cturbelin/ifnBase/issues
