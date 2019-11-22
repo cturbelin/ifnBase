@@ -116,8 +116,27 @@ geo_level_nav <- function(geo, side, hierarchy=NULL) {
     }
   }
   h = geo_hierarchy(hierarchy)
-  side = switch(side, "upper"=1, "lower"=-1, side)
-  i = match(geo, h) + side
+  if(is.character(side)) {
+    if(!side %in% c("upper","lower")) {
+      stop("unknown side value")
+    }
+    if(side == "upper") {
+      side = 1L
+    }
+    if(side == "lower") {
+      side = -1L
+    }
+  } else {
+    side = as.integer(side)
+  }
+  if(!is.integer(side)) {
+    rlang::abort("wrong side value, should be integer")
+  }
+  i = match(geo, h)
+  if( is.na(i) ) {
+    rlang::abort(paste0("Unknown level '",geo,"'"))
+  }
+  i = i + side
   if(i <= 0 || i > length(h)) {
     return(NA)
   }
