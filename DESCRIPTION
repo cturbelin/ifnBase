@@ -6,12 +6,12 @@ Imports:
   methods,
   swMisc,
   ggplot2 (>= 3.0.0),
+  rlang (>= 0.3),
   R6 (>= 2.2)
 Depends: 
   R (>= 3.2.0)
 Suggests: 
     dplyr (>= 0.8.1),
-    rlang (>= 0.3),
     RPostgreSQL,
     DBI,
     RODBC,
