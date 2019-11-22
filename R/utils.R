@@ -16,13 +16,13 @@ flip.names <- function(x) {
 check_int = function(value, min=1) {
   name = deparse(substitute(value))
   if(!is.numeric(value)) {
-    stop(paste(name, "should be a numeric"))
+    rlang::abort(paste(name, "should be a numeric"))
   }
 
   value = as.integer(value)
   if(!is.na(min)) {
     if(value <= min) {
-      stop(paste(name,"should be number over min"))
+      rlang::abort(paste(name,"should be number over min"))
     }
   }
   value

@@ -24,7 +24,7 @@ geo_level = function(level, hierarchy = NULL, ...) {
   if(!is.null(hierarchy)) {
     h = geo_hierarchy(hierarchy)
     if(!level %in% h) {
-      stop(paste0("level '", level,"' is not in hierarchy ", hierarchy))
+      rlang::abort(paste0("level '", level,"' is not in hierarchy ", hierarchy), params=list(level=level, hierarchy=hierarchy))
     }
   }
   structure(level, class="geo.level", hierarchy=hierarchy, ...)
@@ -37,7 +37,7 @@ geo_column <- function(geo) {
   columns = geo_definition("columns")
   def = columns[[geo]]
   if( is.null(def) ) {
-    stop("Unknown geograpic level, update 'geo.levels' columns attribute list to define them")
+    rlang::abort(paste0("Unknown geograpic level '", geo,"'"))
   }
   unlist(def)
 }
@@ -118,7 +118,7 @@ geo_level_nav <- function(geo, side, hierarchy=NULL) {
   h = geo_hierarchy(hierarchy)
   if(is.character(side)) {
     if(!side %in% c("upper","lower")) {
-      stop("unknown side value")
+      rlang::abort(paste0("unknown side value '", side,"'"))
     }
     if(side == "upper") {
       side = 1L

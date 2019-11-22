@@ -19,11 +19,11 @@ load_platform = function() {
   platform = get_option('platform')
 
   if(is.null(path) ) {
-    stop("Platform path should be defined with share.option()")
+    rlang::abort("Platform path should be defined with share.option()")
   }
 
   if(is.null(platform) ) {
-    stop("platform id should be defined with share.option()")
+    rlang::abort("platform id should be defined with share.option()")
   }
 
   file = get_r_file(paste0(ending_slash(path), platform), should.exists = TRUE)
@@ -134,16 +134,16 @@ create_survey_definition <- function( mapping, labels=NULL, codes=NULL, recodes=
   if( !is.null(codes) ) {
     lapply(names(codes), function(name) {
       if(name %in% names(recodes)) {
-        stop(paste0("'",name,"' is already defined in recodes, duplicate in codes. Remove it"))
+        rlang::abort(paste0("'",name,"' is already defined in recodes, duplicate in codes. Remove it"))
       }
 
       lab = labels[[name]]
       if( is.null(lab) ) {
-        stop(paste0("Missing labels with codes for '",name,"'"))
+        rlang::abort(paste0("Missing labels with codes for '",name,"'"))
       }
       recode = codes[[name]]
       if(length(lab) != length(recode) ) {
-        stop(paste0("Labels for '",name,"' have not the same length of codes "))
+        rlang::abort(paste0("Labels for '",name,"' have not the same length of codes "))
       }
       names(recode) <- lab
       recodes[[name]] <<- recode
@@ -152,7 +152,7 @@ create_survey_definition <- function( mapping, labels=NULL, codes=NULL, recodes=
     # Import recodes labels to labels
     lapply(names(recodes), function(name) {
       if(name %in% names(labels)) {
-        stop(paste0(" recoding '",name,'" is already defined in labels'))
+        rlang::abort(paste0(" recoding '",name,'" is already defined in labels'))
       }
       labels[[name]] <<- recodes[[name]]
     })
@@ -162,7 +162,7 @@ create_survey_definition <- function( mapping, labels=NULL, codes=NULL, recodes=
 
   if( !is.null(template) ) {
     if( is.null(survey_templates[[template]]) ) {
-      stop(paste0("Unknown template '", template,'"'))
+      rlang::abort(paste0("Unknown template '", template,'"'))
     }
 
     template = survey_templates[[template]]
@@ -178,7 +178,7 @@ create_survey_definition <- function( mapping, labels=NULL, codes=NULL, recodes=
     for(name in nn) {
       rr[[name]] = merge_by_value(recodes[[name]], template$recodes[[name]])
       if( !check_unique(rr[name]) ) {
-        stop(paste0("Values are not unique for recode ", name))
+        rlang::abort(paste0("Values are not unique for recode ", name))
       }
     }
     recodes = rr
@@ -191,7 +191,7 @@ create_survey_definition <- function( mapping, labels=NULL, codes=NULL, recodes=
   # Check if any mapping to protected names
   n = names(mapping)
   if(any(n %in% PROTECTED_QUESTIONS)) {
-    stop(paste0("Cannot define mapping to protected names : ", paste(n[n %in% PROTECTED_QUESTIONS ], collapse = ",")))
+    rlang::abort(paste0("Cannot define mapping to protected names : ", paste(n[n %in% PROTECTED_QUESTIONS ], collapse = ",")))
   }
 
   list(
@@ -388,7 +388,7 @@ platform_geographic_levels = function(levels,  level.base = NULL, table = 'geo_l
     level.base = lev[1]
   } else {
     if(!level.base %in% lev) {
-      stop("Base level is not in levels list")
+      rlang::abort("Base level is not in levels list")
     }
   }
 
@@ -398,7 +398,7 @@ platform_geographic_levels = function(levels,  level.base = NULL, table = 'geo_l
   } else {
     nn = names(columns)
     if( !all( nn %in% lev) ) {
-      stop(paste("Some levels are not mapped to a column name : ", paste(nn[!nn %in% lev]), collapse = ','))
+      rlang::abort(paste("Some levels are not mapped to a column name : ", paste(nn[!nn %in% lev]), collapse = ','))
     }
   }
 
@@ -408,7 +408,7 @@ platform_geographic_levels = function(levels,  level.base = NULL, table = 'geo_l
   } else {
     Map(function(name, hh) {
       if(!all(hh %in% lev) ) {
-        stop(paste(" hierachy ",name," some levels are not in defined levels ", paste(hh[!hh %in% lev], collapse = ',')))
+        rlang::abort(paste(" hierachy ",name," some levels are not in defined levels ", paste(hh[!hh %in% lev], collapse = ',')))
       }
     }, names(hierarchies), hierarchies)
   }
@@ -461,7 +461,7 @@ platform_geographic_tables = function(def=NULL, default.title = "title", define=
     levels = geo_definition()
     if( !all(levels %in% nn) ) {
       m = levels[!levels %in% nn]
-      stop(paste("Some levels are not described in a geographic table", paste(m, collapse = ",")))
+      rlang::abort(paste("Some levels are not described in a geographic table", paste(m, collapse = ",")))
     }
   }
   geo = structure(tables, class="geo_tables")
@@ -513,12 +513,12 @@ platform_season_history <- function(season, dates, ...) {
     }
     d = as.Date(v)
     if(is.na(d)) {
-      stop(paste0(deparse(substitute(v)), "Unable to parse date '", v,"'"))
+      rlang::abort(paste0(deparse(substitute(v)), "Unable to parse date '", v,"'"))
     }
     if(!is.null(after) ) {
       after = as.Date(after)
       if(d < after) {
-        stop(paste(deparse(substitute(v)), "should be after", after))
+        rlang::abort(paste(deparse(substitute(v)), "should be after", after))
       }
     }
   }
@@ -543,7 +543,7 @@ platform_options = function(...) {
 
   if(!is.null(oo$first.season.censored)) {
     if( !is.logical(oo$first.season.censored) ) {
-      stop("'first.season.censored' should be logical value")
+      rlang::abort("'first.season.censored' should be logical value")
     }
     .Share$first.season.censored = oo$first.season.censored[1]
   }
@@ -580,7 +580,7 @@ validate_platform =function() {
 
   if(isTRUE(.Share$first.season.censored)) {
     if(is.null(.Share$get_first_season_country)) {
-      stop("get_first_season_country() should be defined with the platform option `first.season.censored`. Please define this function in first.season.censored ")
+      rlang::abort("get_first_season_country() should be defined with the platform option `first.season.censored`. Please define this function in first.season.censored ")
     }
   }
 

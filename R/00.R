@@ -10,6 +10,7 @@
 #' @importFrom stats aggregate
 #' @importFrom utils glob2rx str tail hasName
 #' @importFrom swMisc merge_list ending_slash get_r_file
+#' @importFrom rlang abort
 #' @importFrom R6 R6Class
 #' @import ggplot2
 "_PACKAGE"
