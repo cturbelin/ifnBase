@@ -132,17 +132,17 @@ load_results_for_incidence = function(season, age.categories, syndrome.from=list
     }
 
     if(!is.list(first.season)) {
-      stop("first season should be either a list or TRUE")
+      rlang::abort("first season should be either a list or TRUE")
     }
 
     first.season = swMisc::merge_list(first.season, list(censored_value=FALSE, from='all'))
 
     if(!is.logical(first.season$censored_value)) {
-      stop("first.season$censored_value should be logical")
+      rlang::abort("first.season$censored_value should be logical")
     }
 
     if(!first.season$from %in% c('all','previous')) {
-      stop("first.season$from should 'all' or 'previous'")
+      rlang::abort("first.season$from should 'all' or 'previous'")
     }
 
     if( isTRUE(platform_env("first.season.censored") ) ) {
@@ -151,7 +151,7 @@ load_results_for_incidence = function(season, age.categories, syndrome.from=list
       get_season_censoring = platform_env("get_season_censoring")
 
       if(is.null(get_season_censoring) ) {
-        stop("`get_season_censoring` is not defined for this platform")
+        rlang::abort("`get_season_censoring` is not defined for this platform")
       }
 
       ss = get_season_censoring(country)
