@@ -4,7 +4,8 @@
 \alias{episode_build}
 \title{Build Episodes data from survey data}
 \usage{
-episode_build(design, intake, weekly, syndrome.column)
+episode_build(design, intake = NULL, weekly = NULL, syndrome.column,
+  env = NULL)
 }
 \arguments{
 \item{design}{a design structure holding computation parameters, \code{\link{episode_design}}}
@@ -14,10 +15,19 @@ episode_build(design, intake, weekly, syndrome.column)
 \item{weekly}{weekly data}
 
 \item{syndrome.column}{name of the boolean column indicating if each weekly fit the syndrome definition or not (TRUE is yes)}
+
+\item{env}{environment}
 }
 \value{
 environment containing intake, weekly, participants
 }
 \description{
 Build Episodes data from survey data
+}
+\examples{
+\dontrun{
+ episode_build(design, weekly, intake)
+}
+
+
 }

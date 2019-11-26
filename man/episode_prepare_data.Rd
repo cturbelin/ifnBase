@@ -4,7 +4,8 @@
 \alias{episode_prepare_data}
 \title{Prepare data and select participants using given rules}
 \usage{
-episode_prepare_data(design, intake, weekly)
+episode_prepare_data(design, intake = NULL, weekly = NULL,
+  env = NULL)
 }
 \arguments{
 \item{design}{episode design data structure (result of \code{\link{episode_design}})}

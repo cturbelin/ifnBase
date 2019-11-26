@@ -79,15 +79,11 @@ load_results_for_incidence = function(season, age.categories, syndrome.from=list
   }
   rm(i)
 
-  weekly = recode_weekly(weekly, health.status=F)
+  # Load InfluenzaNet default health status
+  weekly = recode_weekly(weekly, health.status=isTRUE(syndrome.from$health.status))
 
   # Number of the weekly by participant
   weekly = calc_weekly_order(weekly)
-
-  # Load InfluenzaNet default health status
-  if( isTRUE(syndrome.from$health.status) ) {
-    weekly = survey_load_health_status(weekly)
-  }
 
   # get intake, only keep the last available intake
   # We should probably take the last intake available for each week

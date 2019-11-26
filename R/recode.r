@@ -151,7 +151,7 @@ survey_load_health_status = function(weekly, health.table=NULL) {
     }
   }
   cat("loading health status using table", health.table,"\n")
-  health.status = dbQuery(paste('SELECT "',id,'" as id, status FROM ', health.table, sep=''))
+  health.status = dbQuery(paste0('SELECT "',id,'" as id, status FROM ', health.table))
   weekly = merge(weekly, health.status, by='id', all.x=TRUE)
   weekly$status = factor(weekly$status)
   weekly
