@@ -207,7 +207,28 @@ episode_select_participants = function(weekly, intake, rules) {
 #' }
 #'
 #' @export
-episode_prepare_data = function(design, intake, weekly) {
+episode_prepare_data = function(design, intake=NULL, weekly=NULL, env=NULL) {
+
+  if( !is.null(env) ) {
+    if(!is.null(intake) ) {
+      rlang::abort("intake should not be provided if env is provided")
+    }
+    if(!is.null(weekly) ) {
+      rlang::abort("weekly should not be provided if env is provided")
+    }
+
+    weekly = env$weekly
+    intake = env$intake
+  } else {
+    env = rlang::new_environment()
+  }
+
+  if(is.null(intake) ) {
+    rlang::abort("intake should be provided either as argument or in env")
+  }
+  if(!is.null(weekly) ) {
+    rlang::abort("weekly should be provided either as argument or in env")
+  }
 
   ### Cleanup data
   if(!isTRUE(attr(weekly, "recode_weekly_date"))) {
@@ -247,14 +268,12 @@ episode_prepare_data = function(design, intake, weekly) {
 
   selections <- attr(participants, "selections")
 
-  as.environment(
-    list(
-      weekly=weekly,
-      intake=intake,
-      participants=participants,
-      selections=selections
-    )
-  )
+  env$weekly = weekly
+  env$intake = intake
+  env$participants = participants
+  env$selections = selections
+
+  env
 }
 
 ##
@@ -513,11 +532,22 @@ episode_compute = function(.env, syndrome.column, design, .progress=TRUE, local=
 #' @param intake intake data
 #' @param weekly weekly data
 #' @param syndrome.column name of the boolean column indicating if each weekly fit the syndrome definition or not (TRUE is yes)
+#' @param env environment
 #' @return environment containing intake, weekly, participants
+#'
+#' @examples
+#' \dontrun{
+#'  episode_build(design, weekly, intake)
+#' }
+#'
+#'
 #' @export
-episode_build = function(design, intake, weekly, syndrome.column) {
-  env = episode_prepare_data(design, intake = intake, weekly=weekly)
+episode_build = function(design, intake=NULL, weekly=NULL, syndrome.column, env=NULL) {
+  env = episode_prepare_data(design, intake = intake, weekly=weekly, env=env)
   episode_compute(env, syndrome.column = syndrome.column, design = design)
+  if( !is.null(design$strategy) ) {
+    episode
+  }
   env
 }
 
