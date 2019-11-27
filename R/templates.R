@@ -30,23 +30,6 @@ survey_template = function(name) {
 #' @noRd
 survey_templates = list()
 
-#' create a recoding alias
-#'
-#' The recoding will be proceeded using the name provided
-#' @param name name of recode to use
-#' @export
-recode_alias = function(name) {
-  structure(name, class="recode_alias")
-}
-
-#' Allow override of mapping or recoding from template
-#' @param data value to flag as overrided
-#' @export
-override = function(data) {
-  attr(data, "allow_override") <- TRUE
-  data
-}
-
 survey_templates[["eu:intake"]] = list(
   geo.column="Q3",
 
