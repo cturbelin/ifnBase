@@ -4,23 +4,26 @@
 # an influenzaNet DB, following the plateform's definition
 # Each platform has a platform file, places in share/platform containing all platform specific variable definition and functions
 
-# sympt.aliases =
 #' aliases for symptom columns
+#'
 #' Aliases are meaningfull names for each columns of the survey data. InfluenzaNet surveys data are named using simple names (Q + number)
 #' but these names are not errorproof and are hard to memorize.
 #' epiwork.tables list defined in platform config file should describe the mapping between column names in the DB (Qxxx) and the column
 #' names used in R.
+#'
+#' These aliases are defined in the weekly survey definition in the platform file using
+#' @seealso \code{\link{platform_define_survey}}
 #' They should not vary from one season to another (another column means another name)
+#' @return character vector for variable names
 #' @export
 get_symptoms_aliases <- function() {
   def = survey_definition("weekly")
   def$labels$symptoms
 }
 
-#' Convert column name (InfluenzaNet column names) from (revert=F) and to aliases (revert=T)
+#' Convert column name (InfluenzaNet column names in the db) from (revert=F) and to variable aliases (revert=T)
 #'
-#' Description of mapping is set in the config variable epiwork.tables defined
-#' in the platform configuration files
+#' Description of mapping are defined in the survey  by \code{\link{platform_define_survey}} in the platform file
 #' @param cols names of columns to rename
 #' @param def list of aliases
 #' @param revert if TRUE, aliases to Db names, if false (default) DB names to aliases
@@ -49,8 +52,12 @@ survey_default_language = function() {
 #'
 #' If it is a multichoice question, it will return the names of columns containing all the responses choices for this question
 #' If it is a single choice question, it will return a list of language independent labels (but human meaningful)
+#'
+#' These labels are defined in the survey  by \code{\link{platform_define_survey}} in the platform file
+#'
 #' @param survey name of the survey
 #' @param question name of the question, or if multichoice name of the question group (sometimes a more generic name)
+#' @return character vector of names
 #' @export
 survey_labels <- function(survey, question) {
 	def = survey_definition(survey)
@@ -63,58 +70,81 @@ survey_labels <- function(survey, question) {
 	labels
 }
 
-#' Returns list of question aliases matching the given pattern (glob style)
+#' Get list of question aliases matching the given pattern (glob style)
+#'
+#' These labels are defined in the survey  by \code{\link{platform_define_survey}} in the platform file
+#'
 #' @param survey survey name
 #' @param pattern glob style pattern (ex "visit.*")
+#' @return character vector of questions
 #' @export
 #' @importFrom utils glob2rx
+#'
+#' @examples
+#' \dontRun{
+#'  survey_questions_like("weekly", "visit.*") # All variables starting with visit.*
+#' }
+#'
 survey_questions_like <- function(survey, pattern) {
   p = glob2rx(pattern)
   def = survey_definition(survey)
   n = names(def$aliases)
-  n[grep(pattern, n)]
+  n[grep(p, n)]
 }
 
 #' Recode data from the DB storage code to the R labels (or to its translaction into default language)
 #'
-#' This function recode the code used in the DB and replace each values by a label more meaningful (like the column name but applied
-#' on response values of a question). Mapping between DB codes and labels are described in the survey's section of epiwork.tables
-#' (defined in platform file):
-#' \describe{
-#'  \item{codes}{section are the list of the DB codes}
-#'  \item{labels}{section are the labels corresponding to each code (in the same order)}
-#' }
+#' This function recode from database values to labels (more meaningful). The recoding mapping for each variable is
+#' defined \code{\link{platform_define_survey}} usually in the platform file
 #'
 #' @param x values to recodes
 #' @param question name of the question (alias here)
 #' @param survey name of the survey
 #' @param translate if TRUE, try to translate the labels (using i18n function @seealso i18n)
+#' @return vector of recoded value in factor
 #' @export
 survey_recode <- function(x, question, survey, translate=F) {
-  def = survey_definition(survey)
 
-  recodes = def$recodes[[ question ]]
-
-  if(is.null(recodes)) {
-    stop(sprintf("Unknown codes for question %s", question))
+  if(is.factor(x)) {
+    rlang::abort("Cannot recode a factor, already recoded ?")
   }
+
+  recodes = survey_question_recoding(survey = survey, question=question, must.exists = TRUE)
 
   codes = as.vector(recodes)
   labels = names(recodes)
 
   if(is.null(labels)) {
-    stop(sprintf("Unknown labels for question %s", question))
+    rlang::abort(sprintf("Unknown labels for question %s", question))
   }
 
   if(length(codes) != length(labels)) {
-    stop(sprintf("invalid number of labels or codes for question %s", question))
+    rlang::abort(sprintf("invalid number of labels or codes for question %s", question))
   }
 
   if(translate) {
     labels = i18n(labels)
   }
-  x = factor(x, codes, labels)
+
+  factor(x, codes, labels)
 }
+
+#' Get the recoding mapping of a survey
+#'
+#' @param survey character survey name
+#' @param question
+#'
+#' @return vector with label as name, database value as value
+#'
+survey_question_recoding <- function(survey, question, must.exists=TRUE) {
+  def = survey_definition(survey)
+  recodes = def$recodes[[ question ]]
+  if(is.null(recodes) && must.exists) {
+    rlang::abort(sprintf("Unknown codes for question %s", question))
+  }
+  recodes
+}
+
 
 #' Returns TRUE if the survey's data are store using a single table model
 #' @param survey survey name
@@ -125,8 +155,11 @@ survey_single_table <- function(survey) {
 }
 
 #' Get survey definition
-#' Survey definition is a list
+#' Survey definition is a data structure of entries defining variable mapping (db name to variable name, recoding, variable sets)
+#' They are defined by \code{\link{platform_define_survey}} usually in the platform file
 #' @param survey survey name
+#' @return list parameters describing a survey
+#'
 #' @export
 survey_definition = function(survey) {
   def = .Share$epiwork.tables[[ survey ]]
@@ -135,7 +168,6 @@ survey_definition = function(survey) {
   }
   def
 }
-
 
 #' Keep the last survey for each participant
 #'
@@ -155,7 +187,7 @@ keep_last_survey = function(data) {
 
 #' Get historical season definition
 #'
-#' Each season should be described in the platform in historical.tables variables
+#' Each season should be described in the platform using \code{\link{platform_season_history}}
 #' historical.tables is a list with an entry for each season (season = year number of the first september in the season)
 #' \describe{
 #'  \item{intake}{table containing the intake survey data for the season}
@@ -164,7 +196,7 @@ keep_last_survey = function(data) {
 #'  \item{year.pop}{population year to use}
 #'  \item{dates}{list(start, end), starting and ending date of the season}
 #' }
-#'
+#' This entries are defined
 #' @param season season definition to get
 #' @param silent boolean (not used.)
 #' @return return the entry of historical.tables config for the season (first year of the season)
@@ -178,6 +210,11 @@ season.def = function(season, silent=F) {
 }
 
 #' Get list of available season names
+#'
+#' @seealso \code{\link{concepts}}
+#'
+#'
+#' @return character vector of season names
 #' @export
 get_historical_seasons = function() {
   names(.Share$historical.tables)
@@ -187,6 +224,7 @@ get_historical_seasons = function() {
 #' Get Historical tables
 #'
 #' Historical tables is a list, with season year (first year of the season) as name and season definition
+#' @seealso Season in \code{\link{concepts}}
 #'
 #' @seealso season.def
 #' @export

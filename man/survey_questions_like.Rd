@@ -2,7 +2,7 @@
 % Please edit documentation in R/survey.r
 \name{survey_questions_like}
 \alias{survey_questions_like}
-\title{Returns list of question aliases matching the given pattern (glob style)}
+\title{Get list of question aliases matching the given pattern (glob style)}
 \usage{
 survey_questions_like(survey, pattern)
 }
@@ -11,6 +11,15 @@ survey_questions_like(survey, pattern)
 
 \item{pattern}{glob style pattern (ex "visit.*")}
 }
+\value{
+character vector of questions
+}
 \description{
-Returns list of question aliases matching the given pattern (glob style)
+These labels are defined in the survey  by \code{\link{platform_define_survey}} in the platform file
+}
+\examples{
+\dontRun{
+ survey_questions_like("weekly", "visit.*") # All variables starting with visit.*
+}
+
 }

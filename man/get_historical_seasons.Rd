@@ -6,6 +6,12 @@
 \usage{
 get_historical_seasons()
 }
+\value{
+character vector of season names
+}
 \description{
 Get list of available season names
+}
+\seealso{
+\code{\link{concepts}}
 }

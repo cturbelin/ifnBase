@@ -10,5 +10,7 @@ get_historical_tables()
 Historical tables is a list, with season year (first year of the season) as name and season definition
 }
 \seealso{
+Season in \code{\link{concepts}}
+
 season.def
 }
