@@ -89,26 +89,73 @@ graph.hook <- function (fn, name=NULL) {
 }
 
 #' Open a graph using standard library
+#'
+#' This function call the device function and apply some defaults params
+#'
+#' It's useasble for classical plot functions (not ggplot2 where you can use ggsave())
+#'
 #' @param file filename (without extension)
 #' @param width width (pixel)
 #' @param height height in px
-#' @param pitch pointsize value
+#' @param pointsize pointsize value
 #' @param type type of output to use
+#' @param pitch old deprecated parameters (will raise an error if not null)
 #' @param ... extra parameted
 #' @export
-graph.open <- function(file, width=NA, height=NA, pitch=12, type="png",...) {
+graph.open <- function(file, width=NA, height=NA, type="png", pointsize=12, pitch=NULL,  ...) {
   f = paste0(file, ".", type)
   graph = get_option("graph")
+
   if( is.na(width) ) {
     width = graph$width
   }
+
   if( is.na(height) ) {
     height = graph$height
   }
-  switch(type,
-    png = png(f, width=width, height=height, pointsize=pitch,...),
-    ps = postscript(f, width=width, height=height, pointsize=pitch, ...)
+
+  args = list(...)
+
+  args$width = width
+  args$height = height
+
+  if(type == "png") {
+    args$filename = f
+  } else {
+    if(width > 50 | height > 50) {
+      rlang::abort("Sizes should be in inches expect for png")
+    }
+    args$file = f
+  }
+
+  if(type %in% c("eps","ps")) {
+    args$onefile = FALSE
+    args$horizontal = FALSE
+    args$paper = "special"
+  }
+
+  if(type == "pdf") {
+    if(!hasName(args,"version")) {
+      args$version = "1.4"
+    }
+  }
+
+  if(!is.null(pitch)) {
+    rlang::abort("Deprecated argument pitch, use pointsize")
+  }
+
+  args$pointsize = pointsize
+
+  dev = switch(type,
+     png = grDevices::png,
+     ps = grDevices::postscript,
+     pdf=grDevices::pdf,
+     svg=svglite::svglite,
+     rlang::abort(paste0("Unknown device type '", type,"'"), file=file)
   )
+
+  do.call(dev, args)
+
   .Share$graph.last <- f
 }
 
