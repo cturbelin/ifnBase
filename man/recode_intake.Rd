@@ -2,19 +2,24 @@
 % Please edit documentation in R/recode.r
 \name{recode_intake}
 \alias{recode_intake}
-\title{Recode Intake variables to more error proof labels
-by default translate labels used to recode variables}
+\title{Recode Intake variables to more error-proof labels
+Value to label mapping are defined in the survey \code{\link{platform_define_survey}}}
 \usage{
-recode_intake(intake, translate = TRUE, remove = TRUE)
+recode_intake(intake, translate = FALSE, remove = TRUE, mode = "all")
 }
 \arguments{
 \item{intake}{data.frame() raw intake data}
 
 \item{translate}{translate levels}
 
-\item{remove}{bool unused}
+\item{remove}{if TRUE remove date.birth after the age is computed}
+
+\item{mode}{recoding mode, by default all known variables will be recoded}
+}
+\value{
+intake with recoded variables
 }
 \description{
-Recode Intake variables to more error proof labels
-by default translate labels used to recode variables
+Recode Intake variables to more error-proof labels
+Value to label mapping are defined in the survey \code{\link{platform_define_survey}}
 }

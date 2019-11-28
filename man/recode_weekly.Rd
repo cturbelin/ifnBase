@@ -11,9 +11,13 @@ recode_weekly(weekly, health.status = TRUE)
 
 \item{health.status}{if TRUE try to get the health status for each row as stored in the db.}
 }
+\value{
+weekly data.frame with recoded values & extra column
+}
 \description{
-Apply common recoding for weekly data
+Variable recoding (from database value to label) are defined in the survey description in the platform
+definition file using
 }
 \seealso{
-survey_load_health_status
+\code{\link{survey_load_health_status}}
 }

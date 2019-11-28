@@ -6,6 +6,16 @@
 \usage{
 recode_var(x, mapping, translate = FALSE)
 }
+\arguments{
+\item{x}{value to recode}
+
+\item{mapping}{list of mapping db value to label, label as name and db value as value}
+
+\item{translate}{if TRUE translate labels with \code{\link{i18n}}}
+}
+\value{
+factor vector of recoded values
+}
 \description{
 Recode values with a given mapping
 }
