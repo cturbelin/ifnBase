@@ -21,4 +21,5 @@ build_vignettes_to_inst <- function() {
 devtools::build_vignettes()
 build_vignettes_to_inst()
 devtools::build(binary=TRUE)
+unlink("inst/Meta", recursive = TRUE)
 devtools::build()
