@@ -26,7 +26,19 @@ survey_template = function(name) {
   def
 }
 
+#' Create a mapping to recode variable value to labels
+#' @param codes vector of values as stored in the database
+#' @param labels vector of labels
 as_mapping = function(codes, labels) {
+  if(length(codes) != length(labels)) {
+    rlang::abort("codes and labels must have the same length")
+  }
+  if(anyDuplicated(codes)) {
+    rlang::abort("codes values must be unique", codes=codes)
+  }
+  if(anyDuplicated(labels)) {
+    rlang::abort("labels values must be unique", labels=labels)
+  }
   codes = as.vector(codes)
   names(codes) <- labels
   codes
