@@ -176,10 +176,11 @@ create_survey_definition <- function( mapping, labels=NULL, codes=NULL, recodes=
     rr = list()
     nn = unique(c(names(recodes), names(template$recodes)))
     for(name in nn) {
-      rr[[name]] = merge_by_value(recodes[[name]], template$recodes[[name]])
-      if( !check_unique(rr[name]) ) {
-        rlang::abort(paste0("Values are not unique for recode ", name))
+      new_recodes = merge_by_value(recodes[[name]], template$recodes[[name]])
+      if( !check_unique(new_recodes) ) {
+        rlang::abort(paste0("Values are not unique for recode ", name), values=new_recodes)
       }
+      rr[[name]] = structure(new_recodes, class="survey_recode")
     }
     recodes = rr
 
@@ -225,8 +226,13 @@ merge_by_value = function(new, old) {
   if( is.list(old) ) {
     old = unlist(old)
   }
-  new = c(new, old[!old %in% new])
-  as.list(new)
+  old = old[!old %in% new]
+  new = c(new, old)
+  new = as.list(new)
+  if(length(old) > 0) {
+    attr(new, "inherited") = names(old)
+  }
+  new
 }
 
 #' Check if a survey definition is compatible with a survey template
@@ -286,6 +292,18 @@ print.survey_error = function(x, ...) {
   rr = paste(unlist(rr), collapse = "\n")
   cat(rr)
   cat("\n")
+}
+
+#' print survey recoding
+#' @param x list() recode mapping
+#' @param ... extra parameters (print interface compatibility)
+#' @export
+print.survey_recode <-function(x, ...) {
+  inherited = attr(x, "inherited")
+  cat("Variable recodings (label = db value):\n")
+  Map(function(label, value) {
+    cat(" - ", sQuote(label),'=',sQuote(value), if(label %in% inherited) " (inherited)", "\n")
+  }, names(x), as.vector(x))
 }
 
 
