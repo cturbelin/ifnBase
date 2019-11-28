@@ -29,12 +29,10 @@
 #' The package also provide two survey templates for weekly and intake survey (see \code{\link{survey_template}}) respectively
 #' named 'eu:weekly' and 'eu:intake'.
 #'
-#' A survey is a set of variables, but here `question` is used with the same meaning of "variable", one
-#' question is, for this package, a variable with a set of response value (each one is a survey response from a participant).
-#' The survey is defined by the set of output variables (not in the way it has been presented to the user).
+#' A survey is a set of variables for this package, but here `question` is often used with the same meaning of "variable".
 #'
-#' Some variables can be related to the same question (for example in case of multiple choice), this is handled by defining
-#' a set of labels in the survey (list of variable names or grob like pattern).
+#' Some variables can be related to the same question in the survey (for example in case of multiple choice), this is handled by defining
+#' a named set of labels in the survey (list of variable names or grob like pattern). see \code{\link{survey_labels}}
 #'
 #' @name concepts
 NULL
