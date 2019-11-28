@@ -37,5 +37,5 @@ new = list("var1"="Q1", "var3"=override("Q2"))
 old = list("var2"="Q2")
 check_list_mapping(new, old, raise=raise) # Only throw warning
 }
-# The checks are transmitted to a provided function \\code{\\link{raise()}}
+# The checks are transmitted to a provided function \code{\link{raise()}}
 }

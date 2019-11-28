@@ -1,40 +1,71 @@
+#' Compute Incidence using rs2014 method
+#' Active participants are selected using a set of rules
+#'
+#' @details Parameters:
+#' \describe{
+#'  \item{ignore.first.delay}{Number of days form his first survey befotre to include a participant (not compatible with ignore.first)}
+#'  \item{ignore.first.only.new}{Ignore first rule only for new participant (uses intake$first.season column @see load_results_for_incidence)}
+#'  \item{exclude.same}{should exclude syndrom if same episode is on (partcipant still active)}
+#'  \item{exclude.same.delay}{max delay to exclude syndrom if same (not excluded if over this delay)}
+#'  \item{active.max.freq}{max delay between 2 surveys (in weeks)}
+#'  \item{active.week.before}{Number of week before each computed week to count active participants}
+#'  \item{active.week.after}{Number of week after each computed week to count active participants}
+#'  \item{active.min.surveys}{min number of surveys for each participant (not active if less)}
+#' }
+#'
+#' @details Input:
+#' Input data are expected to have some columns & some fixes. They are loaded and prepared using \code{\link{load_results_for_incidence}}
+#'
+#' @details Output:
+#' Incidence estimator can output several kind of datasets
+#' \describe{
+#'  \item{inc}{inc=incidence at (national level)}
+#'  \item{zlow}{"lower geographic level (z)", if estimator is stratified by geographic level}
+#'  \item{age}{"age" age-specific incidence, age categories should be in "age.cat" column in intake data}
+#'  \item{count}{raw count of syndromes used for each syndrom by week, before incidence is computed}
+#' }
+#'
+#' Apply the full algorithm for rs2014 incidence computation
+#'
+#' @export
+IncidenceRS2014 = R6Class("IncidenceRS2014", public = list(
 
-# Public structure of incidence rs_2014 class
-#'@noRd
-incidence_rs2014_public = list(
-  # Weekly data
+  #' @field weekly Weekly data
   weekly = NULL,
 
-  # Intake data, used to build strata
+  #' @field intake Intake data, used to build strata
   intake = NULL,
 
-  # Participant based data, used to determine which participant is active each week
+  #' @field participant A data.frame() with all available participants and commputed criterias used during computation
   participant = NULL,
 
-  # Estimator parameters
+  #' @field params Parameters for computation
   params = NULL,
 
-  # List of column names containins syndromic classification of each weekly survey
+  #' @field syndromes Character vector of column names containing syndromes classification for each weekly
   syndromes = NULL,
 
-  # Internal profiler
+  #' @field profiler Time Profiler
   profiler = NULL,
 
-  # Should produce verbose output
+  #' @field verbose logical produce verbose output if TRUE
   verbose = FALSE,
 
-  # Design stucture
+  #' @field design design stratification from \code{\link{design_incidence}}
   design = NULL,
 
-  # Output structure
+  #' @field output vector of character (see Details outupus)
   output = NULL,
 
-  # @param weekly data
-  # @param intake intake data
-  # @param syndromes syndromes column names in weekly
-  # @param design design_incidence
-  # @param output list of output types to compute
-  # @params syndroms compatibility
+  #' @description
+  #' instanciate object
+  #' @param weekly data
+  #' @param intake intake data
+  #' @param syndromes syndromes column names in weekly
+  #' @param params list of parameters for computing
+  #' @param design design_incidence
+  #' @param output list of output types to compute
+  #' @param syndroms compatibility
   initialize = function(weekly, intake, params, syndromes, design, output=c('inc','zlow','age'), syndroms=NULL) {
 
     if(is.null(syndromes) && !is.null(syndroms)) {
@@ -81,8 +112,11 @@ incidence_rs2014_public = list(
 
   },
 
-  # Prepare data for incidence computation with RS2014 method
-  # compute first list of participants and filter with some parameters (with constant effects over time)
+  #' @description
+  #' Prepare data for incidence computation with RS2014 method
+  #'
+  #' compute first list of participants and filter with some parameters (with constant effects over time)
+  #'
   prepare = function() {
 
     weekly = self$weekly
@@ -179,9 +213,9 @@ incidence_rs2014_public = list(
     self$participant = participant
   },
 
-  # Internal function
-  # Estimate incidence with rs2014 method for a given week
-  # @param yw yearweek number to compute
+  #' Internal function
+  #' Estimate incidence with rs2014 method for a given week
+  #' @param yw yearweek number to compute
   compute_week = function(yw)
   {
     weekly = self$weekly
@@ -349,7 +383,11 @@ incidence_rs2014_public = list(
 
     r
   },
-  # Compute incidence
+  #' Compute incidence
+  #' @param weeks list of weeks to compute, if NULL use all in weekly
+  #' @param progress logical show progress
+  #' @param verbose verbose output if TRUE
+  #' @param verticalize logical produce a verticalized data.frame (one column "syndrome" and type) instead of horizontal one (all syndromes as columns, one row by week)
   compute = function(weeks=NULL, verbose=T, progress=F, verticalize=FALSE) {
     "Compute incidence"
 
@@ -471,48 +509,5 @@ incidence_rs2014_public = list(
   } # compute
 
 ) # Public
-
-
-#' Compute Incidence using rs2014 method
-#' Active participants are selected using a set of rules
-#'
-#' @docType class
-#'
-#' @field weekly weekly data
-#' @field intake intake data
-#' @field participants data.frame() with all available participants and commputed criterias used during computation
-#' @field params parameters for computation
-#' @field syndromes character vector of column names containing syndromes classification for each weekly
-#' @field profiler profiler
-#' @field design design stratification from \code{\link{design_incidence}}
-#' @field output vector of character (see Details outupus)
-#'
-#' @details Parameters:
-#' \describe{
-#'  \item{ignore.first.delay}{Number of days form his first survey befotre to include a participant (not compatible with ignore.first)}
-#'  \item{ignore.first.only.new}{Ignore first rule only for new participant (uses intake$first.season column @see load_results_for_incidence)}
-#'  \item{exclude.same}{should exclude syndrom if same episode is on (partcipant still active)}
-#'  \item{exclude.same.delay}{max delay to exclude syndrom if same (not excluded if over this delay)}
-#'  \item{active.max.freq}{max delay between 2 surveys (in weeks)}
-#'  \item{active.week.before}{Number of week before each computed week to count active participants}
-#'  \item{active.week.after}{Number of week after each computed week to count active participants}
-#'  \item{active.min.surveys}{min number of surveys for each participant (not active if less)}
-#' }
-#'
-#' @details Input:
-#' Input data are expected to have some columns & some fixes. They are loaded and prepared using \code{\link{load_results_for_incidence}}
-#'
-#' @details Output:
-#' Incidence estimator can output several kind of datasets
-#' \describe{
-#'  \item{inc}{inc=incidence at (national level)}
-#'  \item{zlow}{"lower geographic level (z)", if estimator is stratified by geographic level}
-#'  \item{age}{"age" age-specific incidence, age categories should be in "age.cat" column in intake data}
-#'  \item{count}{raw count of syndromes used for each syndrom by week, before incidence is computed}
-#' }
-#'
-#' Apply the full algorithm for rs2014 incidence computation
-#'
-#' @export
-IncidenceRS2014 = R6Class("IncidenceRS2014", public = incidence_rs2014_public)
+)
 

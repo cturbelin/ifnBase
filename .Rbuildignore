@@ -9,3 +9,5 @@
 ^docs$
 ^pkgdown$
 ^Meta$
+^build.R$
+^doc$

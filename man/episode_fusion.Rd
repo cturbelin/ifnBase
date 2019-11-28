@@ -4,10 +4,14 @@
 \alias{episode_fusion}
 \title{Apply function strategy}
 \usage{
-episode_fusion(strategy, weekly)
+episode_fusion(strategy, weekly, ...)
 }
 \arguments{
 \item{strategy}{fusion_strategy structure, created by \code{\link{episode_strategy}}}
+
+\item{weekly}{weekly data with "episode" column}
+
+\item{...}{other arguments (not used)}
 }
 \value{
 data.frame() one row by person_id, episode, with selected value for each variable registred in strategy

@@ -20,6 +20,7 @@ load options of a question from the database, identified by its question_id
 low level function
 }
 \seealso{
-Other survey definition functions: \code{\link{survey_load_questions}}
+Other survey definition functions: 
+\code{\link{survey_load_questions}()}
 }
 \concept{survey definition functions}

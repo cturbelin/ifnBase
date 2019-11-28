@@ -2,8 +2,7 @@
 % Please edit documentation in R/syndrome.r
 \name{regroup.syndrome}
 \alias{regroup.syndrome}
-\title{Regroup mixed syndromes to non-specific for the 2012's influezanet syndromes set
-Resulting levels are more pretty : "no.symptom", "ili", "cold", "gastro", "non.specific", "allergy"}
+\title{Regroup mixed syndromes to non-specific for the 2012's influezanet syndromes set}
 \usage{
 regroup.syndrome(x)
 }
@@ -11,6 +10,5 @@ regroup.syndrome(x)
 \item{x}{values to recode}
 }
 \description{
-Regroup mixed syndromes to non-specific for the 2012's influezanet syndromes set
 Resulting levels are more pretty : "no.symptom", "ili", "cold", "gastro", "non.specific", "allergy"
 }

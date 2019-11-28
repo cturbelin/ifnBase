@@ -4,8 +4,13 @@
 \alias{calc_season_fixed}
 \title{Compute a season index of each year week}
 \usage{
-calc_season_fixed(inc, col.yw = "yw", col.stamp = NULL,
-  date.start = "09-01", calc.index = TRUE)
+calc_season_fixed(
+  inc,
+  col.yw = "yw",
+  col.stamp = NULL,
+  date.start = "09-01",
+  calc.index = TRUE
+)
 }
 \arguments{
 \item{inc}{data.frame() data}

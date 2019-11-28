@@ -7,8 +7,11 @@
 FEVER.CODES = c('<37'=0,'[37,37.5)'=1,'[37.5,38)'=2,'[38,39)'=3,'[39,40)'=4, '>40'=5)
 
 #' Regroup mixed syndromes to non-specific for the 2012's influezanet syndromes set
+#'
 #' Resulting levels are more pretty : "no.symptom", "ili", "cold", "gastro", "non.specific", "allergy"
+#'
 #' @param x values to recode
+#'
 #' @export
 regroup.syndrome = function(x) {
   ll = levels(x)
@@ -86,13 +89,15 @@ regroup.syndrome = function(x) {
 #FROM pollster_results_weekly"""
 #
 
-#' Compute syndrome classification of weekly data according to 2012 InfluenzaNet rules (as defined in the web platform)
+#' Compute syndrome classification of weekly data according to 2012's InfluenzaNet rules
+#'
 #' This function do not require the data to be in the weekly table (i.e. do not use the DB view). So it is useables with
 #' generated data or without the weekly id
 #' @export
-#' @param r weekly data (as return by survey_load_results)
+#' @param r weekly data (as return by \code{\link{survey_load_results}})
 #' @param as.levels if TRUE returns factors
-#' @seealso syndromes.set
+#' @seealso \code{\link{syndromes.set}}
+#'
 syndromes_influenzanet_2012 = function(r, as.levels=F) {
   #' syndromes set computation for the 2012's version
  # c('no.sympt','ili', 'allergy.gastro','allergy','cold.gastro', 'cold','gastroenteritis','sympt.other')
@@ -121,7 +126,7 @@ syndromes_influenzanet_2012 = function(r, as.levels=F) {
 
 #' Compute the 2011's Influenzanet syndromes set  (NO-SYMPT/ILI/COMMON-COLD/GASTRO/OTHER)
 #' @export
-#' @seealso syndromes.influenzanet.2012
+#' @seealso \code{\link{syndromes.set}}
 #' @param r data.frame of weekly results
 #' @param as.levels return levels instead of numeric values
 syndromes_influenzanet_2011 = function(r, as.levels=F) {
@@ -141,10 +146,11 @@ syndromes_influenzanet_2011 = function(r, as.levels=F) {
 }
 
 #' Prettify syndrome names from InfluenzaNet DB health status name to another set
+#'
 #' by default, transform to pretty names (for R) from the same set ()
 #' @export
 #' @param x vector of syndrome name to prettyfy
-#' @param pretty.set template name to use, entry in \code{syndromes.set}
+#' @param pretty.set template name to use, entry in \code{\link{syndromes.set}}
 syndromes.prettify = function(x, pretty.set='influenzanet.2012') {
   ll = levels(x)
   from = syndromes.set[[ pretty.set]]
@@ -165,8 +171,11 @@ syndromes.prettify = function(x, pretty.set='influenzanet.2012') {
 }
 
 #' Syndromes set definitions
-#' Defines each known syndrome set, with possible levels, pretty levels (regrouped version)
+#'
+#' Defines each known syndromes set, with possible levels, pretty levels (regrouped version)
 #' also define a provider function, usable to compute the syndrome classification from weekly data
+#'
+#'
 #' @export
 syndromes.set = list(
   'influenzanet.2011'=list(

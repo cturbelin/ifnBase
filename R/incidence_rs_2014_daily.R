@@ -1,127 +1,176 @@
-
-# Public structure of incidence rs_2014 class
-#' @noRd
-incidence_rs2014_daily_public = list(
-    weekly = NULL,
-    intake = NULL,
-    participant = NULL,
-    params = NULL,
-    syndromes = NULL,
-    profiler = NULL,
-    verbose = FALSE,
-    design = NULL,
-    output = NULL,
-
-    initialize = function(weekly, intake, syndromes, params, design, output=c('inc')) {
-
-      requireNamespace("dplyr", quietly = FALSE)
-      requireNamespace("epitools", quietly = FALSE)
-
-      if( is.null(output) ) {
-        output =  eval(formals()$output)
-      }
-
-      # params default values
-      def = list(
-        ignore.first.delay = NA, # Number of days form his first survey befotre to include a participant (not compatible with ignore.first)
-        ignore.first.only.new = F, # Ignore first rule only for new participant (uses intake$first.season column @see load_results_for_incidence)
-        exclude.same = F, # should exclude syndrom if same episode is on (partcipant still active)
-        exclude.same.delay=15, # max delay to exclude syndrom if same (not excluded if over this delay)
-        active.max.freq=NA, # max delay between 2 surveys (in weeks)
-        active.day.before=NA, # Number of week before each computed week to count active participants
-        active.day.after=NA, # Number of week after each computed week to count active participants
-        active.min.surveys=NA, # min number of surveys for each participant (not active if less)
-        active.use.mean=FALSE
-      )
-
-      params = default.params(params, def)
-
-      self$params = params
-      self$output = output
-      self$weekly = weekly
-      self$intake = intake
-      self$design = design
-      self$syndromes = syndromes
-    },
+#' Incidence estimator using rs2014 method implemented using daily agregatation
+#'
+#' @details Input:
+#' Input data are expected to have some columns & some fixes. They are loaded and prepared using \code{\link{load_results_for_incidence}}
+#'
+#' @details Parameters:
+#'
+#' \describe{
+#'  \item{ignore.first.delay}{Number of days form his first survey befotre to include a participant (not compatible with ignore.first)}
+#'  \item{ignore.first.only.new}{Ignore first rule only for new participant (uses intake$first.season column}
+#'  \item{exclude.same}{should exclude syndrom if same episode is on (partcipant still active)}
+#'  \item{exclude.same.delay}{max delay to exclude syndrom if same (not excluded if over this delay)}
+#'  \item{active.max.freq}{max delay between 2 surveys (in weeks)}
+#'  \item{active.day.before}{Number of week before each computed week to count active participants}
+#'  \item{active.day.after}{Number of week after each computed week to count active participants}
+#'  \item{active.min.surveys}{min number of surveys for each participant (not active if less)}
+#'  \item{active.use.mean}{Use mean number of active participant over the windows [active.day.before, active.day.after]}
+#' }
+#' @export
+IncidenceDailyRS2014 = R6Class("IncidenceDailyRS2014", public = list(
 
 
-    prepare = function() {
+  #' @field weekly weekly data (loaded using \code{\link{load_results_for_incidence}})
+  weekly = NULL,
 
-      weekly = self$weekly
-      syndromes = self$syndromes
+  #' @field intake intake data (loaded using \code{\link{load_results_for_incidence}})
+  intake = NULL,
 
-      ignore.first.delay = self$params$ignore.first.delay
-      ignore.first.only.new = self$params$ignore.first.only.new
+  #' @field participant data.frame() with all available participants and commputed criterias used during computation
+  participant = NULL,
 
-      exclude.same  = self$params$exclude.same
-      exlude.same.delay = self$params$exclude.same.delay
-      active.max.freq = self$params$active.max.freq
-      active.min.surveys = self$params$active.min.surveys
+  #' @field params parameters for computation
+  params = NULL,
 
-      weekly$date = as.Date(trunc(weekly$timestamp, "day"))
+  #' @field syndromes character vector of column names containing syndromes classification for each weekly
+  syndromes = NULL,
 
-      if(exclude.same) {
-        weekly = weekly[ order(weekly$person_id, weekly$timestamp), ]
-        weekly$delay.date = calc_weekly_delay(weekly, "date")
-        same = !is.na(weekly$same.episode) & weekly$same.episode == YES  & (is.na(weekly$delay.date) | weekly$delay.date <= exlude.same.delay) # recoded value !
-        for(ss in syndromes) {
-          # Cancel a syndrom report if flagged as same episode as previous
-          i = !is.na(weekly[, ss]) & weekly[, ss] > 0
-          weekly[ same & i, ss ] = 0
-        }
-      }
+  #' @field profiler profiler
+  profiler = NULL,
 
-      if(!hasName(weekly, "onset")) {
-        stop("Weekly data should have onset column defined")
-      }
+  #' @field verbose logical show verbose message
+  verbose = FALSE,
 
-      # @TODO
-      # Actual strategy will remove aberrant data (if fever.start or sympt.start are too far)
-      # Depending on params the participant will be counted as active or not
+  #' @field design design stratification from \code{\link{design_incidence}}
+  design = NULL,
 
-      # Now aggregate to the week and person
-      weekly = aggregate(as.list(weekly[, syndromes]), list(person_id=weekly$person_id, onset=weekly$onset), sum, na.rm=T)
-      weekly[, syndromes] = weekly[, syndromes] > 0 # Only one syndrom report by participant by day
+  #' @field output vector of character, see \code{\link{IncidenceRS2014}}
+  output = NULL,
 
-      weekly = weekly[ order(weekly$person_id, weekly$onset), ]
+  #' @description
+  #' instanciate object
+  #' @param weekly data
+  #' @param intake intake data
+  #' @param syndromes syndromes column names in weekly
+  #' @param params list of parameters for computing
+  #' @param design design_incidence
+  #' @param output list of output types to compute
+  #' @param syndroms compatibility
+  initialize = function(weekly, intake, syndromes, params, design, output=c('inc')) {
 
-      weekly = weekly %>% dplyr::group_by(person_id) %>% dplyr::mutate(delay.previous=c(NA, diff(onset)))
+    requireNamespace("dplyr", quietly = FALSE)
+    requireNamespace("epitools", quietly = FALSE)
 
-      #weekly$delay.previous = calc_weekly_delay(weekly, time.col='onset')
+    if( is.null(output) ) {
+      output =  eval(formals()$output)
+    }
 
-      participant = weekly %>% dplyr::group_by(person_id) %>% dplyr::summarise(date.first=min(onset))
+    # params default values
+    def = list(
+      ignore.first.delay = NA, # Number of days form his first survey befotre to include a participant (not compatible with ignore.first)
+      ignore.first.only.new = F, # Ignore first rule only for new participant (uses intake$first.season column @see load_results_for_incidence)
+      exclude.same = F, # should exclude syndrom if same episode is on (partcipant still active)
+      exclude.same.delay=15, # max delay to exclude syndrom if same (not excluded if over this delay)
+      active.max.freq=NA, # max delay between 2 surveys (in weeks)
+      active.day.before=NA, # Number of week before each computed week to count active participants
+      active.day.after=NA, # Number of week after each computed week to count active participants
+      active.min.surveys=NA, # min number of surveys for each participant (not active if less)
+      active.use.mean=FALSE
+    )
 
-      if( !is.na(ignore.first.delay) ) {
-        if( isTRUE(ignore.first.only.new) ) {
-          if( is.null(self$intake$first.season) ) {
-            stop("ignore.first.only.new option requires intake to have a 'first.season' column indicating if participant is new for the season")
-          }
-          participant = merge(participant, self$intake[, c('person_id', 'first.season')], by='person_id', all.x=T)
-        }
-      }
+    params = default.params(params, def)
 
-      date.last = weekly %>% dplyr::group_by(person_id) %>% dplyr::summarise(date.last=max(onset))
-
-      participant = merge(participant, date.last, by='person_id')
-
-      if( !is.na(active.min.surveys) ) {
-        weekly$nb = 1
-        nb.survey = weekly %>% dplyr::group_by(person_id) %>% dplyr::summarise(nb=sum(nb))
-        participant = merge(participant, nb.survey, by='person_id')
-      }
-
-      if(!is.na(active.max.freq)) {
-        dd = weekly %>% dplyr::group_by(person_id) %>% dplyr::summarise(delay.previous=max(delay.previous, na.rm=T))
-        participant = merge(participant, dd, by='person_id')
-      }
-
-      self$weekly = weekly
-      self$participant = participant
+    self$params = params
+    self$output = output
+    self$weekly = weekly
+    self$intake = intake
+    self$design = design
+    self$syndromes = syndromes
   },
 
 
-  # Internal function
-  # Estimate incidence with rs2014 method for a given date
+  #' @description
+  #' Prepare data before to compute
+  #' Prepare participants data to be able to apply selection rules
+  prepare = function() {
+
+    weekly = self$weekly
+    syndromes = self$syndromes
+
+    ignore.first.delay = self$params$ignore.first.delay
+    ignore.first.only.new = self$params$ignore.first.only.new
+
+    exclude.same  = self$params$exclude.same
+    exlude.same.delay = self$params$exclude.same.delay
+    active.max.freq = self$params$active.max.freq
+    active.min.surveys = self$params$active.min.surveys
+
+    weekly$date = as.Date(trunc(weekly$timestamp, "day"))
+
+    if(exclude.same) {
+      weekly = weekly[ order(weekly$person_id, weekly$timestamp), ]
+      weekly$delay.date = calc_weekly_delay(weekly, "date")
+      same = !is.na(weekly$same.episode) & weekly$same.episode == YES  & (is.na(weekly$delay.date) | weekly$delay.date <= exlude.same.delay) # recoded value !
+      for(ss in syndromes) {
+        # Cancel a syndrom report if flagged as same episode as previous
+        i = !is.na(weekly[, ss]) & weekly[, ss] > 0
+        weekly[ same & i, ss ] = 0
+      }
+    }
+
+    if(!hasName(weekly, "onset")) {
+      stop("Weekly data should have onset column defined")
+    }
+
+    # @TODO
+    # Actual strategy will remove aberrant data (if fever.start or sympt.start are too far)
+    # Depending on params the participant will be counted as active or not
+
+    # Now aggregate to the week and person
+    weekly = aggregate(as.list(weekly[, syndromes]), list(person_id=weekly$person_id, onset=weekly$onset), sum, na.rm=T)
+    weekly[, syndromes] = weekly[, syndromes] > 0 # Only one syndrom report by participant by day
+
+    weekly = weekly[ order(weekly$person_id, weekly$onset), ]
+
+    weekly = weekly %>% dplyr::group_by(person_id) %>% dplyr::mutate(delay.previous=c(NA, diff(onset)))
+
+    #weekly$delay.previous = calc_weekly_delay(weekly, time.col='onset')
+
+    participant = weekly %>% dplyr::group_by(person_id) %>% dplyr::summarise(date.first=min(onset))
+
+    if( !is.na(ignore.first.delay) ) {
+      if( isTRUE(ignore.first.only.new) ) {
+        if( is.null(self$intake$first.season) ) {
+          stop("ignore.first.only.new option requires intake to have a 'first.season' column indicating if participant is new for the season")
+        }
+        participant = merge(participant, self$intake[, c('person_id', 'first.season')], by='person_id', all.x=T)
+      }
+    }
+
+    date.last = weekly %>% dplyr::group_by(person_id) %>% dplyr::summarise(date.last=max(onset))
+
+    participant = merge(participant, date.last, by='person_id')
+
+    if( !is.na(active.min.surveys) ) {
+      weekly$nb = 1
+      nb.survey = weekly %>% dplyr::group_by(person_id) %>% dplyr::summarise(nb=sum(nb))
+      participant = merge(participant, nb.survey, by='person_id')
+    }
+
+    if(!is.na(active.max.freq)) {
+      dd = weekly %>% dplyr::group_by(person_id) %>% dplyr::summarise(delay.previous=max(delay.previous, na.rm=T))
+      participant = merge(participant, dd, by='person_id')
+    }
+
+    self$weekly = weekly
+    self$participant = participant
+  },
+
+
+  #' @description
+  #' Internal function
+  #' Estimate incidence with rs2014 method for a given date
+  #' @param date date to compute
   compute_date = function(date)
   {
 
@@ -277,9 +326,13 @@ incidence_rs2014_daily_public = list(
     r
   },
 
-  # Compute weekly incidence for all requested weeks
-  # Apply the full algorithm for rs2014 incidence computation
-  # prepare data and then compute for each week by calling estimate_incidence_rs2014_week
+  #' @description
+  #' Compute weekly incidence for all requested weeks
+  #' Apply the full algorithm for rs2014 incidence computation
+  #' prepare data and then compute for each week by calling estimate_incidence_rs2014_week
+  #' @param dates dates to compute, if NULL will compute on all dates available in weekly data
+  #' @param verbose show verbose messages if TRUE
+  #' @param progress show progress
   compute = function(dates=NULL, verbose=T, progress=T) {
 
     # Prepare data for all weeks (common part)
@@ -367,36 +420,7 @@ incidence_rs2014_daily_public = list(
       params=self$params,
       method="rs2014"
     )
-  }
-)
-
-#' Incidence estimator using rs2014 method implemented using daily agregatation
-#'
-#' @field weekly weekly data (loaded using \code{\link{load_results_for_incidence}})
-#' @field intake intake data (loaded using \code{\link{load_results_for_incidence}})
-#' @field participants data.frame() with all available participants and commputed criterias used during computation
-#' @field params parameters for computation
-#' @field syndromes character vector of column names containing syndromes classification for each weekly
-#' @field verbose logical show verbose message
-#' @field design design stratification from \code{\link{design_incidence}}
-#' @field output vector of character, see \code{\link{IncidenceRS2014}}
-#'
-#' @details Input:
-#' Input data are expected to have some columns & some fixes. They are loaded and prepared using \code{\link{load_results_for_incidence}}
-#'
-#' @details Parameters:
-#'
-#' \describe{
-#'  \item{ignore.first.delay}{Number of days form his first survey befotre to include a participant (not compatible with ignore.first)}
-#'  \item{ignore.first.only.new}{Ignore first rule only for new participant (uses intake$first.season column}
-#'  \item{exclude.same}{should exclude syndrom if same episode is on (partcipant still active)}
-#'  \item{exclude.same.delay}{max delay to exclude syndrom if same (not excluded if over this delay)}
-#'  \item{active.max.freq}{max delay between 2 surveys (in weeks)}
-#'  \item{active.day.before}{Number of week before each computed week to count active participants}
-#'  \item{active.day.after}{Number of week after each computed week to count active participants}
-#'  \item{active.min.surveys}{min number of surveys for each participant (not active if less)}
-#'  \item{active.use.mean}{Use mean number of active participant over the windows [active.day.before, active.day.after]}
-#' }
-#' @export
-IncidenceDailyRS2014 = R6Class("IncidenceDailyRS2014", public = incidence_rs2014_daily_public)
+  } # Compute
+) # Public
+) # R6Class
 

@@ -69,7 +69,7 @@ recode_intake = function(intake, translate=FALSE, remove=TRUE, mode="all") {
   # recode some variables
   if( hasName(intake, "date.birth") ) {
     if( hasName(intake, "age") ) {
-        warning("")
+        rlang::warn("age is already in intake, will be overriden")
     }
     intake$age = calc_age(intake$date.birth, intake$timestamp)
     if(remove) {
@@ -106,6 +106,7 @@ recode_intake = function(intake, translate=FALSE, remove=TRUE, mode="all") {
     if(need_recode(name)) {
       mapping = recodes[[name]]
       intake[[name]] <- recode_var(intake[[name]], mapping, translate=translate)
+      recoded <- c(recoded, name)
     }
   }
 
@@ -137,7 +138,7 @@ survey_load_health_status = function(weekly, health.table=NULL) {
       season = attr(weekly, 'season')
       if( is.null(season) ) {
         # we dont have attribute
-        stop("season attribute not found in weekly, cannot determine wich table to use")
+        rlang::abort("season attribute not found in weekly, cannot determine wich table to use")
       } else {
         if( is.na(season)) {
           # current season
@@ -145,7 +146,7 @@ survey_load_health_status = function(weekly, health.table=NULL) {
         } else {
           def = season.def(season)
           if( is.null(def$health) ) {
-            stop(paste("health table not defined in historic.tables for season", season))
+            rlang::abort(paste("health table not defined in historic.tables for season", season))
           }
           health.table = def$health
         }
@@ -176,7 +177,7 @@ recode_weekly <- function(weekly, health.status=TRUE) {
       return(FALSE)
     }
     if(is.factor(weekly[[name]])) {
-      warning(paste0("column '", name,"' already in factor, not recoded"))
+      rlang::warn(paste0("column '", name,"' already in factor, not recoded"))
       return(FALSE)
     }
     TRUE

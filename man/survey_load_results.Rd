@@ -4,10 +4,22 @@
 \alias{survey_load_results}
 \title{load a survey results set}
 \usage{
-survey_load_results(survey, cols, geo = NULL, date = NULL,
-  db.table = NULL, survey.users = NULL, debug = F, account = F,
-  where = c(), season = NULL, channel = NULL, cols.sup = c(),
-  gid = F, country = NULL)
+survey_load_results(
+  survey,
+  cols,
+  geo = NULL,
+  date = NULL,
+  db.table = NULL,
+  survey.users = NULL,
+  debug = F,
+  account = F,
+  where = c(),
+  season = NULL,
+  channel = NULL,
+  cols.sup = c(),
+  gid = F,
+  country = NULL
+)
 }
 \arguments{
 \item{survey}{: survey name (as defined in epiwork.tables)}

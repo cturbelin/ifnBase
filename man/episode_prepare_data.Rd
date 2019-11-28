@@ -4,8 +4,7 @@
 \alias{episode_prepare_data}
 \title{Prepare data and select participants using given rules}
 \usage{
-episode_prepare_data(design, intake = NULL, weekly = NULL,
-  env = NULL)
+episode_prepare_data(design, intake = NULL, weekly = NULL, env = NULL)
 }
 \arguments{
 \item{design}{episode design data structure (result of \code{\link{episode_design}})}
@@ -13,6 +12,8 @@ episode_prepare_data(design, intake = NULL, weekly = NULL,
 \item{intake}{data.frame intake data}
 
 \item{weekly}{data.frame weekly data}
+
+\item{env}{environment with intake & weekly data (alternative to provide them directly in existing env)}
 }
 \value{
 environment environment containing selected data (weekly, intake, participants, selections)

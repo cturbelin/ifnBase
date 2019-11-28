@@ -4,8 +4,14 @@
 \alias{design_incidence}
 \title{Create a structure usable by incidence computation functions to describe the stratification to use (parameter design)}
 \usage{
-design_incidence(age.categories, year.pop, geo, geo_column = NULL,
-  geo_area = NULL, ...)
+design_incidence(
+  age.categories,
+  year.pop,
+  geo,
+  geo_column = NULL,
+  geo_area = NULL,
+  ...
+)
 }
 \arguments{
 \item{age.categories}{list of breaks}

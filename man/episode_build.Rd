@@ -4,8 +4,13 @@
 \alias{episode_build}
 \title{Build Episodes data from survey data}
 \usage{
-episode_build(design, intake = NULL, weekly = NULL, syndrome.column,
-  env = NULL)
+episode_build(
+  design,
+  intake = NULL,
+  weekly = NULL,
+  syndrome.column,
+  env = NULL
+)
 }
 \arguments{
 \item{design}{a design structure holding computation parameters, \code{\link{episode_design}}}

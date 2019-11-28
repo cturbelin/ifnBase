@@ -7,6 +7,7 @@
 #' @param force bool, if TRUE force the loading of the lib, regardless of the cache
 #' @param platform, look for a library in share/platform/[libname].[platform].R
 #' @param optional if TRUE dont raise an error if the library doesnt exist. By default an error is thrown.
+#'
 #' @export
 share.lib <- function(file, force=F, platform=F, optional=F) {
 

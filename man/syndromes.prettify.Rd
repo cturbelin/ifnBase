@@ -2,17 +2,15 @@
 % Please edit documentation in R/syndrome.r
 \name{syndromes.prettify}
 \alias{syndromes.prettify}
-\title{Prettify syndrome names from InfluenzaNet DB health status name to another set
-by default, transform to pretty names (for R) from the same set ()}
+\title{Prettify syndrome names from InfluenzaNet DB health status name to another set}
 \usage{
 syndromes.prettify(x, pretty.set = "influenzanet.2012")
 }
 \arguments{
 \item{x}{vector of syndrome name to prettyfy}
 
-\item{pretty.set}{template name to use, entry in \code{syndromes.set}}
+\item{pretty.set}{template name to use, entry in \code{\link{syndromes.set}}}
 }
 \description{
-Prettify syndrome names from InfluenzaNet DB health status name to another set
 by default, transform to pretty names (for R) from the same set ()
 }

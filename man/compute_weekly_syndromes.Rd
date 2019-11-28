@@ -4,8 +4,14 @@
 \alias{compute_weekly_syndromes}
 \title{Create syndrome columns in the weekly data}
 \usage{
-compute_weekly_syndromes(intake, weekly, health.status = TRUE,
-  keep.status = FALSE, regroup.syndromes = TRUE, provider = NULL)
+compute_weekly_syndromes(
+  intake,
+  weekly,
+  health.status = TRUE,
+  keep.status = FALSE,
+  regroup.syndromes = TRUE,
+  provider = NULL
+)
 }
 \arguments{
 \item{intake}{intake data.frame()}

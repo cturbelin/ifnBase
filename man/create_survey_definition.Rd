@@ -4,8 +4,14 @@
 \alias{create_survey_definition}
 \title{Create a survey definition}
 \usage{
-create_survey_definition(mapping, labels = NULL, codes = NULL,
-  recodes = list(), template = NULL, only.errors = TRUE)
+create_survey_definition(
+  mapping,
+  labels = NULL,
+  codes = NULL,
+  recodes = list(),
+  template = NULL,
+  only.errors = TRUE
+)
 }
 \arguments{
 \item{mapping}{list() variable (name) to DB column (value) mapping}

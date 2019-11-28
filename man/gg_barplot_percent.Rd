@@ -4,9 +4,17 @@
 \alias{gg_barplot_percent}
 \title{Percentage barplot}
 \usage{
-gg_barplot_percent(values, order = "desc", label.size = rel(0.9),
-  axis.label = F, color = NULL, scale_color = NULL, x.rotate = 90,
-  x.vjust = NULL, label.nudge = 0.3)
+gg_barplot_percent(
+  values,
+  order = "desc",
+  label.size = rel(0.9),
+  axis.label = F,
+  color = NULL,
+  scale_color = NULL,
+  x.rotate = 90,
+  x.vjust = NULL,
+  label.nudge = 0.3
+)
 }
 \arguments{
 \item{values}{vector}

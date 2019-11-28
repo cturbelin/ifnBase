@@ -4,9 +4,16 @@
 \alias{load_results_for_incidence}
 \title{Load data for incidence computation}
 \usage{
-load_results_for_incidence(season, age.categories,
-  syndrome.from = list(), geo = NULL, country = NULL,
-  first.season = NULL, columns = list(), onset = NULL)
+load_results_for_incidence(
+  season,
+  age.categories,
+  syndrome.from = list(),
+  geo = NULL,
+  country = NULL,
+  first.season = NULL,
+  columns = list(),
+  onset = NULL
+)
 }
 \arguments{
 \item{season}{season int[1] \code{\link{calc_season}}}

@@ -17,6 +17,7 @@ Define an ouput path for files, usable by my.path()
 by default, the path is added to the global output path (defined in OUT_PATH), unless the parameter full.path is TRUE
 }
 \seealso{
-Other path functions: \code{\link{my.path}}
+Other path functions: 
+\code{\link{my.path}()}
 }
 \concept{path functions}

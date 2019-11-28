@@ -4,8 +4,7 @@
 \alias{episode_compute_ecollan}
 \title{Compute Episodes using Marie Ecollan's strategy}
 \usage{
-episode_compute_ecollan(weekly, syndrome.column, params,
-  .progress = NULL)
+episode_compute_ecollan(weekly, syndrome.column, params, .progress = NULL)
 }
 \arguments{
 \item{weekly}{data.frame of weekly data}

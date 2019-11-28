@@ -6,6 +6,9 @@
 \usage{
 raw_value(...)
 }
+\arguments{
+\item{...}{list of values to mark as raw}
+}
 \description{
 This function can be used in \code{\link{episode_strategy}} to indicate that the list of values are not encoded values but raw values
 (values as stored in the database)

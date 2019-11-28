@@ -7,9 +7,11 @@
 \method{episode_fusion}{simple_strategy}(strategy, weekly, ...)
 }
 \arguments{
+\item{strategy}{strategy definition structure, created by \code{\link{episode_strategy}}}
+
 \item{weekly}{weekly data.frame for one episode}
 
-\item{list()}{strategy definition structure, created by \code{\link{episode_strategy}}}
+\item{...}{other arguments (not used)}
 }
 \value{
 data.frame() one row by person_id, episode, with selected value for each variable registred in strategy

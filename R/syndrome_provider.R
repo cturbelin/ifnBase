@@ -1,11 +1,32 @@
 
 #' Syndrome provider base class
+#'
+#' Define interface to build a SyndromeProvider
+#'
+#' This class compute "syndrome" definition from weekly & intake data
+#' A syndrome will be computed as a logical value attributed for each weekly survey, with value TRUE if the survey comply with the given syndrome definition
+#'
+#' A syndrome provider can compute several syndromes, each one applying for a definition
+#'
+#' compute() should return a data.frame() with one logical column for each computed syndrome definition (use names carefully to avoid names collisions, avoid using
+#' influenzanet base syndrome names : ili, cold, allergy, gastro )
+#'
+#' @export
 SyndromeProvider <- R6Class("SyndromeProvider", public = list(
 
+  #' @description
+  #' Compute syndrome
+  #' @param weekly weekly data
+  #' @param intake intake data
+  #' @return data.frame() with id column from weekly and extra column for each syndrome
   compute = function(weekly, intake) {
 
   },
 
+  #' @description
+  #' Compute age for each weekly using intake
+  #' @param weekly weekly data
+  #' @param intake intake data
   compute_age = function(weekly, intake) {
     ages = aggregate(age ~ person_id, data=intake, min) # consider only one age by person (the first given)
     ages$age[ ages$age < 0 | ages$age > 120] <- NA
@@ -13,13 +34,14 @@ SyndromeProvider <- R6Class("SyndromeProvider", public = list(
     weekly
   },
 
-  # Common function
-  # @param r weekly data
+  #' Common function, compute sudden symptomes using both variables
+  #' @param r weekly data
   is_sudden = function(r) {
       (!is.na(r$sympt.sudden) & r$sympt.sudden) | (!is.na(r$fever.sudden) & r$fever.sudden)
   }
 
-))
+ ) # public
+) # R6Class
 
 #' Test if object is a syndrome provider object
 #' @param x object to test
@@ -42,3 +64,5 @@ is_syndrome_provider = function(x, accept_class=FALSE) {
   }
   return(FALSE)
 }
+
+

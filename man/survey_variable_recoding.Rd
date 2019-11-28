@@ -9,7 +9,9 @@ survey_variable_recoding(survey, name, must.exists = TRUE)
 \arguments{
 \item{survey}{character survey name}
 
-\item{name}{question variable name}
+\item{name}{variable name}
+
+\item{must.exists}{if TRUE an error will be raised if name doesnt exists in survey definition}
 }
 \value{
 vector with label as name, database value as value

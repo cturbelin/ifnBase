@@ -3,16 +3,13 @@
 \docType{data}
 \name{syndromes.set}
 \alias{syndromes.set}
-\title{Syndromes set definitions
-Defines each known syndrome set, with possible levels, pretty levels (regrouped version)
-also define a provider function, usable to compute the syndrome classification from weekly data}
+\title{Syndromes set definitions}
 \format{An object of class \code{list} of length 3.}
 \usage{
 syndromes.set
 }
 \description{
-Syndromes set definitions
-Defines each known syndrome set, with possible levels, pretty levels (regrouped version)
+Defines each known syndromes set, with possible levels, pretty levels (regrouped version)
 also define a provider function, usable to compute the syndrome classification from weekly data
 }
 \keyword{datasets}

@@ -4,8 +4,15 @@
 \alias{graph.open}
 \title{Open a graph using standard library}
 \usage{
-graph.open(file, width = NA, height = NA, type = "png",
-  pointsize = 12, pitch = NULL, ...)
+graph.open(
+  file,
+  width = NA,
+  height = NA,
+  type = "png",
+  pointsize = 12,
+  pitch = NULL,
+  ...
+)
 }
 \arguments{
 \item{file}{filename (without extension)}

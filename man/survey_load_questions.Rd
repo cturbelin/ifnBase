@@ -15,6 +15,7 @@ survey_load_questions(survey, translation_id = NULL)
 load questions of a survey from the database
 }
 \seealso{
-Other survey definition functions: \code{\link{survey_load_options}}
+Other survey definition functions: 
+\code{\link{survey_load_options}()}
 }
 \concept{survey definition functions}

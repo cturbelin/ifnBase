@@ -2,23 +2,21 @@
 % Please edit documentation in R/syndrome.r
 \name{syndromes_influenzanet_2012}
 \alias{syndromes_influenzanet_2012}
-\title{Compute syndrome classification of weekly data according to 2012 InfluenzaNet rules (as defined in the web platform)
-This function do not require the data to be in the weekly table (i.e. do not use the DB view). So it is useables with
-generated data or without the weekly id}
+\title{Compute syndrome classification of weekly data according to 2012's InfluenzaNet rules}
 \usage{
 syndromes_influenzanet_2012(r, as.levels = F)
 }
 \arguments{
-\item{r}{weekly data (as return by survey_load_results)}
+\item{r}{weekly data (as return by \code{\link{survey_load_results}})}
 
 \item{as.levels}{if TRUE returns factors}
 }
 \description{
-Compute syndrome classification of weekly data according to 2012 InfluenzaNet rules (as defined in the web platform)
 This function do not require the data to be in the weekly table (i.e. do not use the DB view). So it is useables with
 generated data or without the weekly id
 }
 \seealso{
-syndromes.set
+\code{\link{syndromes.set}}
+
 syndromes set computation for the 2012's version
 }

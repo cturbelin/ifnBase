@@ -15,11 +15,12 @@
 #' @import ggplot2
 "_PACKAGE"
 
-#' .Share is a local configuration envirnment holding local values
+#' .Share is a local configuration environment holding local values
 #' And platform specific stuffs
 #' @noRd
 .Share = new.env()
 
+# Hold translations
 .Share$i18n = list()
 
 #' Get package option from name

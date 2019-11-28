@@ -4,9 +4,17 @@
 \alias{axis_week}
 \title{Axis for yearweek data}
 \usage{
-axis_week(side, ww, mode = c("ticks", "year", "week", "weeks", "\%\%"),
-  format = "yw", col.yw = "yw", sep = "s", century = T,
-  ticks = NULL, ...)
+axis_week(
+  side,
+  ww,
+  mode = c("ticks", "year", "week", "weeks", "\%\%"),
+  format = "yw",
+  col.yw = "yw",
+  sep = "s",
+  century = T,
+  ticks = NULL,
+  ...
+)
 }
 \arguments{
 \item{side}{side of the axeis}

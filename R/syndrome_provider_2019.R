@@ -1,13 +1,38 @@
+#' Syndrome Provider with 2019 revised ILI & Ari definitions
+#'
+#' To run need weekly with get_columns_for_incidence() column list
+#' @examples
+#' \dontrun{
+#'  season = 2017
+#'  weekly = survey_load_results("weekly", get_columns_for_incidence(), season=season)
+#'  intake = survey_load_results("weekly", c('timestamp','date.birth'))
+#'  weekly = recode_weekly(weekly)
+#'  intake = recode_intake(intake)
+#'  provider = SyndromeProviderRS2019$new()
+#'  r = provider$compute(weekly, intake)
+#' }
+#'
+#' @export
+SyndromeProviderRS2019 <- R6Class("SyndromeProviderRS2019", , inherit=SyndromeProvider,
 
-#' @noRd
-syndromes_provider_ili2019 <- list(
+public = list(
 
+  #' @field pain.age.limit age under which pain & headache will exluded from defintion
   pain.age.limit = NULL,
 
+  #' @description
+  #' instanciate object
+  #' @param pain.age.limit age to take into account of pain & heacache
   initialize = function(pain.age.limit=5) {
     self$pain.age.limit = pain.age.limit
   },
 
+  #' @description
+  #' Compute definitions for all syndromes
+  #' @param weekly weekly data
+  #' @param intake intake data with at least 'person_id', 'age' column
+  #' @param definitions character vector of definition to use
+  #' @return data.frame with each computed syndrome in column, and "id" column from weekly
   compute = function(weekly, intake, definitions=NULL) {
 
     available = c('ili', 'ili.f', 'ili.minus', 'ili.minus.fever','ili.who','ari.ecdc', 'ari.plus', 'ari')
@@ -60,7 +85,7 @@ syndromes_provider_ili2019 <- list(
     d$id = weekly$id # As the weekly has been merged, rows are not in the same order.
 
     if('ili' %in% definitions) {
-     d$ili = sudden & fever_with_level(r, fever_level_39) & pain & respi_nose
+      d$ili = sudden & fever_with_level(r, fever_level_39) & pain & respi_nose
     }
 
     if('ili.f' %in% definitions) {
@@ -96,23 +121,6 @@ syndromes_provider_ili2019 <- list(
     }
     d
   }
+ ) # Public
 )
-
-#' Syndrome Provider with 2019 revised ILI & Ari definitions
-#'
-#' To run need weekly with get_columns_for_incidence() column list
-#' @field pain.age.limit age under which pain will be considered as TRUE
-#' @examples
-#' \dontrun{
-#'  season = 2017
-#'  weekly = survey_load_results("weekly", get_columns_for_incidence(), season=season)
-#'  intake = survey_load_results("weekly", c('timestamp','date.birth'))
-#'  weekly = recode_weekly(weekly)
-#'  intake = recode_intake(intake)
-#'  provider = SyndromeProviderRS2019$new()
-#'  r = provider$compute(weekly, intake)
-#' }
-#'
-#' @export
-SyndromeProviderRS2019 <- R6Class("SyndromeProviderRS2019", public = syndromes_provider_ili2019, inherit=SyndromeProvider)
 

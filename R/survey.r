@@ -146,8 +146,8 @@ recode_var <- function(x, mapping, translate=FALSE) {
 #' Get the recoding mapping of a variable in a survey
 #'
 #' @param survey character survey name
-#' @param name question variable name
-#'
+#' @param name variable name
+#' @param must.exists if TRUE an error will be raised if name doesnt exists in survey definition
 #' @return vector with label as name, database value as value
 #'
 survey_variable_recoding <- function(survey, name, must.exists=TRUE) {
@@ -189,7 +189,7 @@ survey_single_table <- function(survey) {
 survey_definition = function(survey) {
   def = .Share$epiwork.tables[[ survey ]]
   if( is.null(def) ) {
-    stop("Unknown survey definition")
+    rlang::abort(paste0("Unknown survey definition for '", survey,'"'))
   }
   def
 }

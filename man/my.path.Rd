@@ -13,6 +13,7 @@ my.path(...)
 Return the path of a file in the current ouput path
 }
 \seealso{
-Other path functions: \code{\link{init.path}}
+Other path functions: 
+\code{\link{init.path}()}
 }
 \concept{path functions}

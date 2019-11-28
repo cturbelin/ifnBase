@@ -15,5 +15,5 @@ syndromes_influenzanet_2011(r, as.levels = F)
 Compute the 2011's Influenzanet syndromes set  (NO-SYMPT/ILI/COMMON-COLD/GASTRO/OTHER)
 }
 \seealso{
-syndromes.influenzanet.2012
+\code{\link{syndromes.set}}
 }

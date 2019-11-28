@@ -4,9 +4,17 @@
 \alias{scale_x_wid}
 \title{Scale from wid to Yearweek values}
 \usage{
-scale_x_wid(ww, week.sep = "s", breaks = "auto", col.yw = "yw",
-  label = "yw", by = NULL, week = NULL, complete = FALSE,
-  n.pretty = 5)
+scale_x_wid(
+  ww,
+  week.sep = "s",
+  breaks = "auto",
+  col.yw = "yw",
+  label = "yw",
+  by = NULL,
+  week = NULL,
+  complete = FALSE,
+  n.pretty = 5
+)
 }
 \arguments{
 \item{ww}{data.frame() associating wid to yearweek}

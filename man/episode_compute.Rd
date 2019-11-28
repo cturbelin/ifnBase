@@ -4,8 +4,7 @@
 \alias{episode_compute}
 \title{Compute episodes in weekly data}
 \usage{
-episode_compute(.env, syndrome.column, design, .progress = TRUE,
-  local = FALSE)
+episode_compute(.env, syndrome.column, design, .progress = TRUE, local = FALSE)
 }
 \arguments{
 \item{.env}{environment result of \code{\link{episode_prepare_data}}}

@@ -4,9 +4,15 @@
 \alias{episode_design}
 \title{Create a design definition for episodes computation}
 \usage{
-episode_design(delay_episode = 15, max_episode_duration = 11,
-  median_episode_duration = 7, participants = list(),
-  method = "ariza", onset = NULL, strategies = NULL)
+episode_design(
+  delay_episode = 15,
+  max_episode_duration = 11,
+  median_episode_duration = 7,
+  participants = list(),
+  method = "ariza",
+  onset = NULL,
+  strategies = NULL
+)
 }
 \arguments{
 \item{delay_episode}{int maximum delay to consider two sequential responses are in the same episode}

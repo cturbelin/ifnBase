@@ -3,7 +3,7 @@
 #'
 #' This function can be used in \code{\link{episode_strategy}} to indicate that the list of values are not encoded values but raw values
 #' (values as stored in the database)
-#'
+#' @param ... list of values to mark as raw
 #' @export
 raw_value = function(...) {
   x <- unlist(rlang::dots_list(...))
@@ -144,16 +144,19 @@ episode_strategy = function(type, ...) {
 #' Internal function to apply a fusion strategy of variables of the same episode (of each participant)
 #'
 #'
-#' @return data.frame() one row by person_id, episode, with selected value for each variable registred in strategy
 #' @param strategy fusion_strategy structure, created by \code{\link{episode_strategy}}
+#' @param weekly weekly data with "episode" column
+#' @param ... other arguments (not used)
+#' @return data.frame() one row by person_id, episode, with selected value for each variable registred in strategy
 #' @export
-episode_fusion = function(strategy, weekly) {
+episode_fusion = function(strategy, weekly, ...) {
   UseMethod("episode_fusion")
 }
 
 #' Merge episodes using a simple function as merge strategy
-#' @param list() strategy definition structure, created by \code{\link{episode_strategy}}
+#' @param strategy strategy definition structure, created by \code{\link{episode_strategy}}
 #' @param weekly weekly data.frame for one episode
+#' @param ... other arguments (not used)
 #' @seealso \code{\link{episode_fusion}}
 #' @return data.frame() one row by person_id, episode, with selected value for each variable registred in strategy
 #' @export
@@ -198,8 +201,9 @@ episode_fusion.simple_strategy = function(strategy, weekly, ...) {
 #' Apply 'worst' fusion strategy
 #'
 #' This strategy will consider
-#' @param list() strategy definition structure, created by \code{\link{episode_strategy}}
+#' @param strategy strategy definition structure, created by \code{\link{episode_strategy}}
 #' @param weekly weekly data.frame for one episode
+#' @param ... other arguments (not used)
 #' @seealso \code{\link{episode_fusion}}
 #' @return data.frame() one row by person_id, episode, with selected value for each variable registred in strategy
 #' @export

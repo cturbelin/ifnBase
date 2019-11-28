@@ -195,6 +195,7 @@ episode_select_participants = function(weekly, intake, rules) {
 #' @param design episode design data structure (result of \code{\link{episode_design}})
 #' @param intake data.frame intake data
 #' @param weekly data.frame weekly data
+#' @param env environment with intake & weekly data (alternative to provide them directly in existing env)
 #' @return environment environment containing selected data (weekly, intake, participants, selections)
 #'
 #' @details

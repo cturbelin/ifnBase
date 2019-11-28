@@ -4,9 +4,19 @@
 \alias{platform_define_survey}
 \title{Describe a survey of a platform}
 \usage{
-platform_define_survey(name, survey_id, table, mapping, labels = NULL,
-  codes = NULL, recodes = list(), single.table = FALSE,
-  geo.column = NULL, template = NULL, ...)
+platform_define_survey(
+  name,
+  survey_id,
+  table,
+  mapping,
+  labels = NULL,
+  codes = NULL,
+  recodes = list(),
+  single.table = FALSE,
+  geo.column = NULL,
+  template = NULL,
+  ...
+)
 }
 \arguments{
 \item{name}{unique name of the survey}
