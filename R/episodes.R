@@ -256,16 +256,18 @@ episode_prepare_data = function(design, intake=NULL, weekly=NULL, env=NULL) {
 
   weekly = compute_onset(weekly, design$onset)
 
+  sym_person = rlang::sym("person_id")
+
   # Keep only 1 survey by date
-  weekly = dplyr::arrange(weekly, person_id, timestamp)
+  weekly = dplyr::arrange(weekly, !!sym_person, timestamp)
   weekly = weekly[!duplicated(weekly[, c("person_id","date")], fromLast=TRUE), ] # vecteur de la position des non-doublons
 
   participants = episode_select_participants(weekly = weekly, intake=intake, rules=design$participants)
 
   ids = participants$person_id[participants$keep]
 
-  weekly = weekly %>% dplyr::filter(person_id %in% ids)
-  intake = intake %>% dplyr::filter(person_id %in% ids)
+  weekly = weekly %>% dplyr::filter(!!sym_person %in% ids)
+  intake = intake %>% dplyr::filter(!!sym_person %in% ids)
 
   selections <- attr(participants, "selections")
 
@@ -306,7 +308,9 @@ episode_prepare_data = function(design, intake=NULL, weekly=NULL, env=NULL) {
 #' @param .progress progress_estimated style progress bar, nothing if NULL
 episode_compute_ariza = function(weekly, syndrome.column, params, .progress=NULL) {
 
-  weekly = dplyr::arrange(weekly, person_id, date)
+  person_id = sym("person_id")
+
+  weekly = dplyr::arrange(weekly, !!person_id, date)
 
   delay_episode_max = params$delay_episode_max
 
@@ -547,7 +551,7 @@ episode_build = function(design, intake=NULL, weekly=NULL, syndrome.column, env=
   env = episode_prepare_data(design, intake = intake, weekly=weekly, env=env)
   episode_compute(env, syndrome.column = syndrome.column, design = design)
   if( !is.null(design$strategy) ) {
-    episode
+
   }
   env
 }
