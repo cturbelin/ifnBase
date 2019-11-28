@@ -1,5 +1,7 @@
-# ifnBase 0.4.0.9000
-
+# ifnBase 0.4.1
+* use roxygen 7
+* fix recoding name for `main.activity` variable
+* recoding are now S3 class `survey_recode` allowing pretty print
 * `recode_intake` now recode all available variables
 * remove function `coalesce()`
 * fix season censoring using `get_season_censoring()` in platform env
