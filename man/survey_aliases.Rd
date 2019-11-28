@@ -2,7 +2,7 @@
 % Please edit documentation in R/survey.r
 \name{survey_aliases}
 \alias{survey_aliases}
-\title{Convert column name (InfluenzaNet column names in the db) from (revert=F) and to variable aliases (revert=T)}
+\title{Convert DB column name (InfluenzaNet column names in the db) from (revert=F) and to question variable name (revert=T)}
 \usage{
 survey_aliases(cols, def, revert = F)
 }

@@ -9,6 +9,9 @@ survey_single_table(survey)
 \arguments{
 \item{survey}{survey name}
 }
+\value{
+logical
+}
 \description{
 Returns TRUE if the survey's data are store using a single table model
 }

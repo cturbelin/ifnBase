@@ -3,7 +3,7 @@
 \name{survey_definition}
 \alias{survey_definition}
 \title{Get survey definition
-Survey definition is a data structure of entries defining variable mapping (db name to variable name, recoding, variable sets)
+Survey definition is a data structure of entries defining variable mapping (db column name to variable name, recoding, variable sets)
 They are defined by \code{\link{platform_define_survey}} usually in the platform file}
 \usage{
 survey_definition(survey)
@@ -16,6 +16,6 @@ list parameters describing a survey
 }
 \description{
 Get survey definition
-Survey definition is a data structure of entries defining variable mapping (db name to variable name, recoding, variable sets)
+Survey definition is a data structure of entries defining variable mapping (db column name to variable name, recoding, variable sets)
 They are defined by \code{\link{platform_define_survey}} usually in the platform file
 }

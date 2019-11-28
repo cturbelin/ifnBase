@@ -12,8 +12,6 @@ character vector for variable names
 \description{
 Aliases are meaningfull names for each columns of the survey data. InfluenzaNet surveys data are named using simple names (Q + number)
 but these names are not errorproof and are hard to memorize.
-epiwork.tables list defined in platform config file should describe the mapping between column names in the DB (Qxxx) and the column
-names used in R.
 }
 \details{
 These aliases are defined in the weekly survey definition in the platform file using

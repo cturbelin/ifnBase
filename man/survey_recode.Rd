@@ -4,16 +4,18 @@
 \alias{survey_recode}
 \title{Recode data from the DB storage code to the R labels (or to its translaction into default language)}
 \usage{
-survey_recode(x, question, survey, translate = F)
+survey_recode(x, variable, survey, translate = F, question = NULL)
 }
 \arguments{
 \item{x}{values to recodes}
 
-\item{question}{name of the question (alias here)}
+\item{variable}{name of the question variable name to use for recoding}
 
 \item{survey}{name of the survey}
 
 \item{translate}{if TRUE, try to translate the labels (using i18n function @seealso i18n)}
+
+\item{question}{old parameter name for variable, for compatibility}
 }
 \value{
 vector of recoded value in factor
