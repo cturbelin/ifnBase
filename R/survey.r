@@ -111,15 +111,20 @@ survey_recode <- function(x, question, survey, translate=F) {
 
   recodes = survey_question_recoding(survey = survey, question=question, must.exists = TRUE)
 
-  codes = as.vector(recodes)
-  labels = names(recodes)
-
   if(is.null(labels)) {
     rlang::abort(sprintf("Unknown labels for question %s", question))
   }
 
+  recode_var(x, recodes, translate=translate)
+}
+
+#' Recode values with a given mapping
+recode_var <- function(x, mapping, translate=FALSE) {
+  codes = as.vector(mapping)
+  labels = names(mapping)
+
   if(length(codes) != length(labels)) {
-    rlang::abort(sprintf("invalid number of labels or codes for question %s", question))
+    rlang::abort("codes and labels should have exact same length", mapping=mapping)
   }
 
   if(translate) {
@@ -129,10 +134,10 @@ survey_recode <- function(x, question, survey, translate=F) {
   factor(x, codes, labels)
 }
 
-#' Get the recoding mapping of a survey
+#' Get the recoding mapping of a question in a survey
 #'
 #' @param survey character survey name
-#' @param question
+#' @param question question variable name
 #'
 #' @return vector with label as name, database value as value
 #'
@@ -145,8 +150,19 @@ survey_question_recoding <- function(survey, question, must.exists=TRUE) {
   recodes
 }
 
+#' Get all the recodings defined in a survey
+#'
+#' @param survey character survey name
+#'
+#' @return list with question variable name in name, a mapping as value
+#'
+survey_recodings <- function(survey) {
+  def = survey_definition(survey)
+  return(def$recodes)
+}
 
 #' Returns TRUE if the survey's data are store using a single table model
+#' @return logical
 #' @param survey survey name
 #' @export
 survey_single_table <- function(survey) {
