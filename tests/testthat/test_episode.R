@@ -43,7 +43,7 @@ test_that("episode_fusion.worst_strategy", {
     v = rlang::list2(!!test$name := test$values)
     data = data.frame(list(person_id=i), episode=1, v)
 
-    r = episode_fusion.worst_strategy(strategy, weekly=data)
+    r = episode_fusion.worst_strategy(strategy, weekly=data, episode.column='episode')
 
     result = r[[test$name]]
     if(is.na(test$expected)) {
