@@ -114,10 +114,10 @@ survey_recode <- function(x, variable, survey, translate=F, question=NULL) {
     rlang::abort("Cannot recode a factor, already recoded ?")
   }
 
-  recodes = survey_variable_recoding(survey = survey, question=question, must.exists = TRUE)
+  recodes = survey_variable_recoding(survey = survey, name=variable, must.exists = TRUE)
 
   if(is.null(labels)) {
-    rlang::abort(sprintf("Unknown labels for question %s", question))
+    rlang::abort(sprintf("Unknown labels for variable %s", variable))
   }
 
   recode_var(x, recodes, translate=translate)
