@@ -4,12 +4,14 @@
 \alias{episode_fusion.simple_strategy}
 \title{Merge episodes using a simple function as merge strategy}
 \usage{
-\method{episode_fusion}{simple_strategy}(strategy, weekly, ...)
+\method{episode_fusion}{simple_strategy}(strategy, weekly, episode.column, ...)
 }
 \arguments{
 \item{strategy}{strategy definition structure, created by \code{\link{episode_strategy}}}
 
 \item{weekly}{weekly data.frame for one episode}
+
+\item{episode.column}{character string name of column containing episode}
 
 \item{...}{other arguments (not used)}
 }

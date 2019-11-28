@@ -86,6 +86,8 @@ episode_design = function(delay_episode=15, max_episode_duration=11, median_epis
 #' @export
 episode_select_participants = function(weekly, intake, rules) {
 
+  sym_person = rlang::sym("person_id")
+
   participants = data.frame(person_id=unique(c(weekly$person_id, intake$person_id)))
 
   selections = list()
@@ -131,7 +133,7 @@ episode_select_participants = function(weekly, intake, rules) {
       }
       rule_param = as.integer(rule_param)
       p_name = paste0(rule_id,"_param")
-      p = weekly %>% dplyr::group_by(person_id) %>% dplyr::summarize(!!p_name:=n())
+      p = weekly %>% dplyr::group_by(!!sym_person) %>% dplyr::summarize(!!p_name:=dplyr::n())
       participants = dplyr::left_join(participants, p, by="person_id")
       participants[[rule_id]] = !is.na(participants[[p_name]]) & participants[[p_name]] >= rule_param
     }
@@ -308,9 +310,9 @@ episode_prepare_data = function(design, intake=NULL, weekly=NULL, env=NULL) {
 #' @param .progress progress_estimated style progress bar, nothing if NULL
 episode_compute_ariza = function(weekly, syndrome.column, params, .progress=NULL) {
 
-  person_id = sym("person_id")
+  sym_person = sym("person_id")
 
-  weekly = dplyr::arrange(weekly, !!person_id, date)
+  weekly = dplyr::arrange(weekly, !!sym_person, date)
 
   delay_episode_max = params$delay_episode_max
 
@@ -366,7 +368,7 @@ episode_compute_ariza = function(weekly, syndrome.column, params, .progress=NULL
     data.frame(id=ww$id, episode=onset)
   }
 
-  weekly %>% dplyr::group_by(person_id) %>% dplyr::group_modify(find_episodes)
+  weekly %>% dplyr::group_by(!!sym_person) %>% dplyr::group_modify(find_episodes)
 }
 
 #' Compute Episodes using Marie Ecollan's strategy
@@ -376,10 +378,12 @@ episode_compute_ariza = function(weekly, syndrome.column, params, .progress=NULL
 #' @param .progress progress_estimated style progress bar, nothing if NULL
 episode_compute_ecollan <- function(weekly, syndrome.column, params, .progress=NULL) {
 
+  sym_person = sym("person_id")
+
   weekly = weekly %>%
-    dplyr::arrange(person_id, date) %>%
-    dplyr::group_by(person_id) %>%
-    dplyr::mutate(date_previous=lag(date), delay_previous=as.integer(date - date_previous))
+    dplyr::arrange(!!sym_person, date) %>%
+    dplyr::group_by(!!sym_person) %>%
+    dplyr::mutate(date_previous=dplyr::lag(date), delay_previous=as.integer(date - date_previous))
 
   delay_episode_max = params$delay_episode_max
 
@@ -433,7 +437,7 @@ episode_compute_ecollan <- function(weekly, syndrome.column, params, .progress=N
 
   } # find ecollan
 
-  weekly %>% dplyr::group_by(person_id) %>% dplyr::group_modify(find_episodes_ecollan)
+  weekly %>% dplyr::group_by(!!sym_person) %>% dplyr::group_modify(find_episodes_ecollan)
 }
 
 #' Compute Episodes using Cecile Souty's strategy
@@ -443,8 +447,10 @@ episode_compute_ecollan <- function(weekly, syndrome.column, params, .progress=N
 #' @param .progress progress_estimated style progress bar, nothing if NULL
 episode_compute_souty <- function(weekly, syndrome.column, params, .progress=NULL) {
 
+  sym_person = sym("person_id")
+
   weekly = weekly %>%
-    dplyr::arrange(person_id, date)
+    dplyr::arrange(!!sym_person, date)
 
   delay_episode_max = params$delay_episode_max
 
@@ -490,7 +496,7 @@ episode_compute_souty <- function(weekly, syndrome.column, params, .progress=NUL
 
   } # find souty
 
-  weekly %>% dplyr::group_by(person_id) %>% dplyr::group_modify(find_episodes_souty)
+  weekly %>% dplyr::group_by(!!sym_person) %>% dplyr::group_modify(find_episodes_souty)
 }
 
 

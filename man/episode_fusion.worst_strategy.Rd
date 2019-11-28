@@ -4,12 +4,14 @@
 \alias{episode_fusion.worst_strategy}
 \title{Apply 'worst' fusion strategy}
 \usage{
-\method{episode_fusion}{worst_strategy}(strategy, weekly, ...)
+\method{episode_fusion}{worst_strategy}(strategy, weekly, episode.column, ...)
 }
 \arguments{
 \item{strategy}{strategy definition structure, created by \code{\link{episode_strategy}}}
 
 \item{weekly}{weekly data.frame for one episode}
+
+\item{episode.column}{episode column}
 
 \item{...}{other arguments (not used)}
 }

@@ -14,7 +14,7 @@ strategy_create_coding(data, survey = "weekly")
 \item{survey}{survey name to use to compare variable definition (by default "weekly" survey)}
 }
 \value{
-list() each variables will have recoded (codes) and non encoded (raw) values
+fusion_strategy_dict object each variables will have recoded (codes) and non encoded (raw) values
 }
 \description{
 Create a encoding dictionnary for each variable used in a strategy

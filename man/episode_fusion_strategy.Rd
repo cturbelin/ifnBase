@@ -4,16 +4,16 @@
 \alias{episode_fusion_strategy}
 \title{Compute episode dataset}
 \usage{
-episode_fusion_strategy(weekly, design, column.episode = "episode")
+episode_fusion_strategy(weekly, design, episode.column = "episode")
 }
 \arguments{
 \item{weekly}{weekly data with episode column (typically computed by \code{\link{episode_compute}})}
 
 \item{design}{study params, structure returned by \code{\link{episode_design}}}
 
-\item{column.episode}{name of the column containing episode identifier}
+\item{episode.column}{name of the column containing episode identifier}
 }
 \description{
-This function will keep only one weekly by disease "episode" previously computed in the column in \code{column.episode} parameter
+This function will keep only one weekly by disease "episode" previously computed in the column in \code{episode.column} parameter
 Variables of all weekly in the same episode will
 }

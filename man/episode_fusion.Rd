@@ -4,12 +4,14 @@
 \alias{episode_fusion}
 \title{Apply function strategy}
 \usage{
-episode_fusion(strategy, weekly, ...)
+episode_fusion(strategy, weekly, episode.column, ...)
 }
 \arguments{
 \item{strategy}{fusion_strategy structure, created by \code{\link{episode_strategy}}}
 
 \item{weekly}{weekly data with "episode" column}
+
+\item{episode.column}{character string name of column containing episode}
 
 \item{...}{other arguments (not used)}
 }

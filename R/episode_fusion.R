@@ -16,7 +16,7 @@ raw_value = function(...) {
 #' Performs some checks that values should be known and unique.
 #' @param data list() describing values for each variable (name as key)
 #' @param survey survey name to use to compare variable definition (by default "weekly" survey)
-#' @return list() each variables will have recoded (codes) and non encoded (raw) values
+#' @return fusion_strategy_dict object each variables will have recoded (codes) and non encoded (raw) values
 strategy_create_coding = function(data, survey="weekly") {
   def = survey_definition(survey)
   vars = names(data)
@@ -67,7 +67,7 @@ strategy_create_coding = function(data, survey="weekly") {
     list(raw=raw, codes=codes)
   })
   names(dict) <- vars
-  dict
+  structure(dict, class="fusion_strategy_dict")
 }
 
 
@@ -128,6 +128,8 @@ episode_strategy = function(type, ...) {
 
   if(dict) {
     vars = strategy_create_coding(vars)
+  } else {
+    vars = unlist(vars)
   }
 
   structure(
@@ -139,6 +141,33 @@ episode_strategy = function(type, ...) {
   )
 }
 
+#' Print fusion strategy
+#' @param x fusion_strategy object
+#' @param ... other params (compat print interface)
+#' @export
+print.fusion_strategy <- function(x, ...) {
+  cat("Episode fusion strategy : ", x$strategy,"\n")
+  if(is(x, "simple_strategy")) {
+    cat("Applied to ", paste(sQuote(x$vars), collapse=','),"\n")
+  } else {
+    print(x$vars)
+  }
+}
+
+#' Print fusion strategy
+#' @param x fusion_strategy_dict object
+#' @param ... other params (compat print interface)
+#' @export
+print.fusion_strategy_dict <- function(x, ...) {
+  Map(function(name, r) {
+    cat(" - ", name, ": ")
+    m = sapply(seq_along(r$raw), function(i) {
+      paste(sQuote(r$raw[i]), if(!is.null(r$codes)) paste0('=',sQuote(r$codes[i])))
+    })
+    cat(paste(m, collapse=" > "), "\n")
+  }, names(x),x)
+}
+
 #' Apply function strategy
 #'
 #' Internal function to apply a fusion strategy of variables of the same episode (of each participant)
@@ -146,21 +175,29 @@ episode_strategy = function(type, ...) {
 #'
 #' @param strategy fusion_strategy structure, created by \code{\link{episode_strategy}}
 #' @param weekly weekly data with "episode" column
+#' @param episode.column character string name of column containing episode
 #' @param ... other arguments (not used)
 #' @return data.frame() one row by person_id, episode, with selected value for each variable registred in strategy
 #' @export
-episode_fusion = function(strategy, weekly, ...) {
+episode_fusion = function(strategy, weekly, episode.column, ...) {
   UseMethod("episode_fusion")
 }
+
+group_by_episode = function(.data, episode.column, ...) {
+  groups = rlang::syms(c("person_id", episode.column))
+  dplyr::group_by(.data, !!!groups, ...)
+}
+
 
 #' Merge episodes using a simple function as merge strategy
 #' @param strategy strategy definition structure, created by \code{\link{episode_strategy}}
 #' @param weekly weekly data.frame for one episode
+#' @param episode.column character string name of column containing episode
 #' @param ... other arguments (not used)
 #' @seealso \code{\link{episode_fusion}}
 #' @return data.frame() one row by person_id, episode, with selected value for each variable registred in strategy
 #' @export
-episode_fusion.simple_strategy = function(strategy, weekly, ...) {
+episode_fusion.simple_strategy = function(strategy, weekly, episode.column, ...) {
 
   vars = strategy$vars
 
@@ -194,7 +231,7 @@ episode_fusion.simple_strategy = function(strategy, weekly, ...) {
     ifelse(all(is.na(y)), NA, fusion_fun(y))
   }
 
-  weekly %>% dplyr::group_by(person_id, episode) %>% dplyr::summarize_at(vv, .funs = apply_strategy)
+  weekly %>% group_by_episode(episode.column = episode.column) %>% dplyr::summarize_at(vv, .funs = apply_strategy)
 
 }
 
@@ -203,11 +240,12 @@ episode_fusion.simple_strategy = function(strategy, weekly, ...) {
 #' This strategy will consider
 #' @param strategy strategy definition structure, created by \code{\link{episode_strategy}}
 #' @param weekly weekly data.frame for one episode
+#' @param episode.column episode column
 #' @param ... other arguments (not used)
 #' @seealso \code{\link{episode_fusion}}
 #' @return data.frame() one row by person_id, episode, with selected value for each variable registred in strategy
 #' @export
-episode_fusion.worst_strategy =  function(strategy, weekly, ...) {
+episode_fusion.worst_strategy =  function(strategy, weekly, episode.column, ...) {
 
   # List of available variables in weekly
   vars = swMisc::select_columns(weekly, names(strategy$vars))
@@ -275,23 +313,23 @@ episode_fusion.worst_strategy =  function(strategy, weekly, ...) {
     out
   }
 
-  ww = weekly %>% dplyr::group_by(person_id, episode) %>% dplyr::group_modify(apply_strategy)
+  ww = weekly %>% group_by_episode(episode.column = episode.column) %>% dplyr::group_modify(apply_strategy)
   ww
 }
 
 
 #' Compute episode dataset
 #'
-#' This function will keep only one weekly by disease "episode" previously computed in the column in \code{column.episode} parameter
+#' This function will keep only one weekly by disease "episode" previously computed in the column in \code{episode.column} parameter
 #' Variables of all weekly in the same episode will
 #'
 #' @param weekly weekly data with episode column (typically computed by \code{\link{episode_compute}})
 #' @param design study params, structure returned by \code{\link{episode_design}}
-#' @param column.episode name of the column containing episode identifier
+#' @param episode.column name of the column containing episode identifier
 #' @export
-episode_fusion_strategy = function(weekly, design, column.episode="episode") {
+episode_fusion_strategy = function(weekly, design, episode.column="episode") {
 
-  weekly = weekly[ !is.na(weekly[[column.episode]]), ]
+  weekly = weekly[ !is.na(weekly[[episode.column]]), ]
 
   #weekly = dplyr::arrange(weekly, timestamp)
 
@@ -323,12 +361,12 @@ episode_fusion_strategy = function(weekly, design, column.episode="episode") {
     ee
   }
 
-  episodes = weekly %>% dplyr::group_by(person_id, !!sym(column.episode)) %>% dplyr::group_modify(compute_ending)
+  episodes = weekly %>% group_by_episode(episode.column=episode.column) %>% dplyr::group_modify(compute_ending)
 
 
   for(i in seq_along(design$strategies)) {
     strategy = design$strategies[[i]]
-    fusion = episode_fusion(strategy, weekly)
+    fusion = episode_fusion(strategy, weekly, episode.column=episode.column)
     episodes = merge(episodes, fusion, by=c('person_id','episode'), all=T)
   }
 
