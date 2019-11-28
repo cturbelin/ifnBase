@@ -45,7 +45,19 @@ as_mapping = function(codes, labels) {
 }
 
 
-.labels_ynp = as_mapping(c(0:2), YES_NO_DNK)
+labels_activities = c(
+  'activity.fulltime'="0",
+  'activity.partial'="1",
+  'activity.self'="2",
+  'activity.student'="3",
+  'activity.home'="4",
+  'activity.unemployed'="5",
+  'activity.sick'="6",
+  'activity.retired'="7",
+  'activity.other'="8"
+)
+
+labels_ynp = as_mapping(c(0:2), YES_NO_DNK)
 
 
 #' survey templates list
@@ -199,20 +211,11 @@ survey_templates[["eu:intake"]] = list(
       'female'='1'
     ),
 
-    main.activity = recode_alias("activities"),
+    activities = labels_activities,
 
-    activities = c(
-        'activity.fulltime'="0",
-        'activity.partial'="1",
-        'activity.self'="2",
-        'activity.student'="3",
-        'activity.home'="4",
-        'activity.unemployed'="5",
-        'activity.sick'="6",
-        'activity.retired'="7",
-        'activity.other'="8"
-      ),
-      occupation = c(
+    main.activity = labels_activities,
+
+    occupation = c(
         'occupation.prof' = "0",
         'occupation.office' = "1",
         'occupation.shop' ="2",
@@ -246,11 +249,11 @@ survey_templates[["eu:intake"]] = list(
         'often.dkn'="5"
       ),
 
-    'pregnant'=as_mapping(0:2, YES_NO_DNK),
+    'pregnant'= labels_ynp,
 
-    'vacc.lastseason'=as_mapping(0:2, YES_NO_DNK),
+    'vacc.lastseason'=labels_ynp,
 
-    'vacc.curseason'=as_mapping(0:2, YES_NO_DNK),
+    'vacc.curseason'=labels_ynp,
 
     smoker = c(
         'smoker.no'="0",
@@ -491,3 +494,7 @@ survey_templates[["eu:weekly"]] = list(
     )
   )
 )
+
+# Remove not useful anymore
+rm(labels_ynp)
+rm(labels_activities)
