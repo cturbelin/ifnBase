@@ -227,7 +227,7 @@ episode_prepare_data = function(design, intake=NULL, weekly=NULL, env=NULL) {
   if(is.null(intake) ) {
     rlang::abort("intake should be provided either as argument or in env")
   }
-  if(!is.null(weekly) ) {
+  if(is.null(weekly) ) {
     rlang::abort("weekly should be provided either as argument or in env")
   }
 
