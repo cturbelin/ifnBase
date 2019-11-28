@@ -26,6 +26,16 @@ survey_template = function(name) {
   def
 }
 
+as_mapping = function(codes, labels) {
+  codes = as.vector(codes)
+  names(codes) <- labels
+  codes
+}
+
+
+.labels_ynp = as_mapping(c(0:2), YES_NO_DNK)
+
+
 #' survey templates list
 #' @noRd
 survey_templates = list()
@@ -171,6 +181,11 @@ survey_templates[["eu:intake"]] = list(
     notvac.reason = 'notvac.reason.*'
   ),
   recodes = list(
+    gender = c(
+      'male'='0',
+      'female'='1'
+    ),
+
     activities = c(
         'activity.fulltime'="0",
         'activity.partial'="1",
@@ -213,6 +228,9 @@ survey_templates[["eu:intake"]] = list(
         'often.10'="4",
         'often.dkn'="5"
       ),
+      'pregnant'=as_mapping(0:2, YES_NO_DNK),
+     'vacc.lastseason'=as_mapping(0:2, YES_NO_DNK),
+     'vacc.curseason'=as_mapping(0:2, YES_NO_DNK),
       smoker = c(
         'smoker.no'="0",
         'smoker.occas'="1",
@@ -364,7 +382,7 @@ survey_templates[["eu:weekly"]] = list(
 
     # Q10b
     off.work = c(
-      'Yes' = 0,
+    'Yes' = 0,
      'No' = 1,
      'other' = 3 # Weird coding..
     ),
