@@ -27,8 +27,14 @@
 #' more meaningfull names), and a value to label mapping (recoding a value in the database to a label)
 #'
 #' The package also provide two survey templates for weekly and intake survey (see \code{\link{survey_template}}) respectively
-#' named 'eu:weekly' and 'eu:intake'
+#' named 'eu:weekly' and 'eu:intake'.
 #'
+#' A survey is a set of variables, but here `question` is used with the same meaning of "variable", one
+#' question is, for this package, a variable with a set of response value (each one is a survey response from a participant).
+#' The survey is defined by the set of output variables (not in the way it has been presented to the user).
+#'
+#' Some variables can be related to the same question (for example in case of multiple choice), this is handled by defining
+#' a set of labels in the survey (list of variable names or grob like pattern).
 #'
 #' @name concepts
 NULL

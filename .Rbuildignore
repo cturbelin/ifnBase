@@ -5,3 +5,5 @@
 ^tic\.R$
 ^TODO\.fr$
 ^data-raw$
+^doc$
+^Meta$
