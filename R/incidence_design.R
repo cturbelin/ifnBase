@@ -95,10 +95,10 @@ design_incidence = function(age.categories, year.pop, geo, geo_column=NULL, geo_
   structure(data, class="design.incidence")
 }
 
-#' Define structure containing incidence results output
-#' "output" parameter of estimate_incidence_* functions could be either a character vector with the name of each desired
-#' output type (inc, zlow, age)
-#' or a structure return by this function which allow to pass some extra parameters to the output function (@see calc_adjusted_incidence)
+#' Define structure containing incidence results output and some metadata
+#'
+#' This function which allow to pass some extra parameters to the output function \code{\link{calc_adjusted_incidence}}
+#'
 #' @param types types of measures computed
 #' @param conf.int confidence interval computed
 #' @param adjust adjusted measures
@@ -117,7 +117,6 @@ output_incidence = function(types, conf.int=T, adjust=T, ...) {
   attr(ss, 'calc.adj') <- adjust
   ss
 }
-
 
 
 #' Compute confidence interval for rate

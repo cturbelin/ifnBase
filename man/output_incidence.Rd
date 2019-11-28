@@ -2,10 +2,7 @@
 % Please edit documentation in R/incidence_design.R
 \name{output_incidence}
 \alias{output_incidence}
-\title{Define structure containing incidence results output
-"output" parameter of estimate_incidence_* functions could be either a character vector with the name of each desired
-output type (inc, zlow, age)
-or a structure return by this function which allow to pass some extra parameters to the output function (@see calc_adjusted_incidence)}
+\title{Define structure containing incidence results output and some metadata}
 \usage{
 output_incidence(types, conf.int = T, adjust = T, ...)
 }
@@ -19,8 +16,5 @@ output_incidence(types, conf.int = T, adjust = T, ...)
 \item{...}{data sets}
 }
 \description{
-Define structure containing incidence results output
-"output" parameter of estimate_incidence_* functions could be either a character vector with the name of each desired
-output type (inc, zlow, age)
-or a structure return by this function which allow to pass some extra parameters to the output function (@see calc_adjusted_incidence)
+This function which allow to pass some extra parameters to the output function \code{\link{calc_adjusted_incidence}}
 }
