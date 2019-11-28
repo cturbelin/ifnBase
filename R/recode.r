@@ -44,22 +44,15 @@ recode_ynp = function(x) {
   ifelse(is.na(x), NA, ifelse(x == 0, TRUE, ifelse(x == 1, FALSE, NA)))
 }
 
-#' Recode Intake variables to more error proof labels
-#' by default translate labels used to recode variables
+#' Recode Intake variables to more error-proof labels
+#' Value to label mapping are defined in the survey \code{\link{platform_define_survey}}
 #' @param intake data.frame() raw intake data
 #' @param translate translate levels
-#' @param remove bool unused
+#' @param remove if TRUE remove date.birth after the age is computed
+#' @param mode recoding mode, by default all known variables will be recoded
+#' @return intake with recoded variables
 #' @export
-recode_intake = function(intake, translate=TRUE, remove=TRUE) {
-
-  trans <- function(x) {
-    if(translate) {
-      i18n(x)
-    } else {
-      x
-    }
-  }
-
+recode_intake = function(intake, translate=FALSE, remove=TRUE, mode="all") {
   need_recode <- function(name) {
     if(!hasName(intake, name)) {
       return(FALSE)
@@ -85,27 +78,35 @@ recode_intake = function(intake, translate=TRUE, remove=TRUE) {
     recoded <- c(recoded, "age")
   }
 
-  if( need_recode("gender") ) {
-    intake$gender = factor(intake$gender, c(0,1), trans(c('male','female')))
-    recoded <- c(recoded, "gender")
-  }
+  # if( need_recode("gender") ) {
+  #   intake$gender = factor(intake$gender, c(0,1), trans(c('male','female')))
+  #   recoded <- c(recoded, "gender")
+  # }
+  #
+  # if( need_recode("vacc.curseason") ) {
+  #   # error proof recoding (0 is yes in data)
+  #   intake$vacc.curseason = factor(intake$vacc.curseason, 0:2, trans(YES_NO_DNK))
+  #   recoded <- c(recoded, "vacc.curseason")
+  # }
+  #
+  # if( need_recode("vacc.lastseason") ) {
+  #   # error proof recoding (0 is yes in data)
+  #   intake$vacc.lastseason = factor(intake$vacc.lastseason, 0:2, trans(YES_NO_DNK))
+  #   recoded <- c(recoded, "vacc.lastseason")
+  # }
 
-  if( need_recode("vacc.curseason") ) {
-    # error proof recoding (0 is yes in data)
-    intake$vacc.curseason = factor(intake$vacc.curseason, 0:2, trans(YES_NO_DNK))
-    recoded <- c(recoded, "vacc.curseason")
-  }
+  #if( need_recode("pregnant") ) {
+  #  # error proof recoding (0 is yes in data)
+  #  intake$pregnant = factor(intake$pregnant, 0:2, trans(YES_NO_DNK))
+  #recoded <- c(recoded, "pregnant")
+  #}
 
-  if( need_recode("vacc.lastseason") ) {
-    # error proof recoding (0 is yes in data)
-    intake$vacc.lastseason = factor(intake$vacc.lastseason, 0:2, trans(YES_NO_DNK))
-    recoded <- c(recoded, "vacc.lastseason")
-  }
-
-  if( need_recode("pregnant") ) {
-    # error proof recoding (0 is yes in data)
-    intake$pregnant = factor(intake$pregnant, 0:2, trans(YES_NO_DNK))
-    recoded <- c(recoded, "pregnant")
+  recodes = survey_recodings("intake")
+  for(name in names(recodes)) {
+    if(need_recode(name)) {
+      mapping = recodes[[name]]
+      intake[[name]] <- recode_var(intake[[name]], mapping, translate=translate)
+    }
   }
 
   attr(intake, "recode_intake") <- TRUE
@@ -121,6 +122,7 @@ recode_intake = function(intake, translate=TRUE, remove=TRUE) {
 #' @export
 #' @param weekly a data.frame loaded by survey_load_results (weekly survey)
 #' @param health.table name of a health status coding view. CAUTION if used, no check is done (is right table used for the right season)
+#' @return weekly with extra column 'status'
 survey_load_health_status = function(weekly, health.table=NULL) {
   h = .Share$health.status
   id = ifelse(is.null(h), "pollster_results_weekly_id", h$id)
@@ -158,9 +160,14 @@ survey_load_health_status = function(weekly, health.table=NULL) {
 }
 
 #' Apply common recoding for weekly data
+#'
+#' Variable recoding (from database value to label) are defined in the survey description in the platform
+#' definition file using
+#'
 #' @param weekly data.frame weekly data (return by survey_load_results)
 #' @param health.status if TRUE try to get the health status for each row as stored in the db.
-#' @seealso survey_load_health_status
+#' @return weekly data.frame with recoded values & extra column
+#' @seealso \code{\link{survey_load_health_status}}
 #' @export
 recode_weekly <- function(weekly, health.status=TRUE) {
 

@@ -1,3 +1,15 @@
+# ifnBase 0.4.0.9000
+
+* `recode_intake` now recode all available variables
+* remove function `coalesce()`
+* fix season censoring using `get_season_censoring()` in platform env
+* censoring can be parametrized passing list() in `first.season` in `load_incidence_results()`
+* episode function now handle fusion strategies and end date of episode computation
+* 'ari*' definitions provided by `SyndromeProviderRS2019` dont anymore consider pain and headache for child under age defined by `pain.age.limit`
+* `recode_weekly` check if data was already recoded and dont recode it, added flags
+* added constants objects in uppercase YES, NO, DONTKNOW, see `?constants`
+* added concepts page `?concepts`
+
 # ifnBase 0.4.0
 
 * introduce episodes computation functions

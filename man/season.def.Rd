@@ -15,7 +15,7 @@ season.def(season, silent = F)
 return the entry of historical.tables config for the season (first year of the season)
 }
 \description{
-Each season should be described in the platform in historical.tables variables
+Each season should be described in the platform using \code{\link{platform_season_history}}
 historical.tables is a list with an entry for each season (season = year number of the first september in the season)
 \describe{
  \item{intake}{table containing the intake survey data for the season}
@@ -24,4 +24,5 @@ historical.tables is a list with an entry for each season (season = year number 
  \item{year.pop}{population year to use}
  \item{dates}{list(start, end), starting and ending date of the season}
 }
+This entries are defined
 }

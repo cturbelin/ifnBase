@@ -11,6 +11,9 @@ survey_load_health_status(weekly, health.table = NULL)
 
 \item{health.table}{name of a health status coding view. CAUTION if used, no check is done (is right table used for the right season)}
 }
+\value{
+weekly with extra column 'status'
+}
 \description{
 load health status from the table (or view) in db. If weekly are store in separated tables by season,
 the weekly data.frame should have a "season" attribute telling which table to use (historical.tables variable should map table for each seasons)

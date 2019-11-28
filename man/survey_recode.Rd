@@ -4,23 +4,23 @@
 \alias{survey_recode}
 \title{Recode data from the DB storage code to the R labels (or to its translaction into default language)}
 \usage{
-survey_recode(x, question, survey, translate = F)
+survey_recode(x, variable, survey, translate = F, question = NULL)
 }
 \arguments{
 \item{x}{values to recodes}
 
-\item{question}{name of the question (alias here)}
+\item{variable}{name of the question variable name to use for recoding}
 
 \item{survey}{name of the survey}
 
 \item{translate}{if TRUE, try to translate the labels (using i18n function @seealso i18n)}
+
+\item{question}{old parameter name for variable, for compatibility}
+}
+\value{
+vector of recoded value in factor
 }
 \description{
-This function recode the code used in the DB and replace each values by a label more meaningful (like the column name but applied
-on response values of a question). Mapping between DB codes and labels are described in the survey's section of epiwork.tables
-(defined in platform file):
-\describe{
- \item{codes}{section are the list of the DB codes}
- \item{labels}{section are the labels corresponding to each code (in the same order)}
-}
+This function recode from database values to labels (more meaningful). The recoding mapping for each variable is
+defined \code{\link{platform_define_survey}} usually in the platform file
 }

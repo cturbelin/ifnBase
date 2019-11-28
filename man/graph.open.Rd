@@ -4,8 +4,8 @@
 \alias{graph.open}
 \title{Open a graph using standard library}
 \usage{
-graph.open(file, width = NA, height = NA, pitch = 12, type = "png",
-  ...)
+graph.open(file, width = NA, height = NA, type = "png",
+  pointsize = 12, pitch = NULL, ...)
 }
 \arguments{
 \item{file}{filename (without extension)}
@@ -14,12 +14,17 @@ graph.open(file, width = NA, height = NA, pitch = 12, type = "png",
 
 \item{height}{height in px}
 
-\item{pitch}{pointsize value}
-
 \item{type}{type of output to use}
+
+\item{pointsize}{pointsize value}
+
+\item{pitch}{old deprecated parameters (will raise an error if not null)}
 
 \item{...}{extra parameted}
 }
 \description{
-Open a graph using standard library
+This function call the device function and apply some defaults params
+}
+\details{
+It's useasble for classical plot functions (not ggplot2 where you can use ggsave())
 }

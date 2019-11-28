@@ -2,7 +2,7 @@
 % Please edit documentation in R/survey.r
 \name{survey_aliases}
 \alias{survey_aliases}
-\title{Convert column name (InfluenzaNet column names) from (revert=F) and to aliases (revert=T)}
+\title{Convert DB column name (InfluenzaNet column names in the db) from (revert=F) and to question variable name (revert=T)}
 \usage{
 survey_aliases(cols, def, revert = F)
 }
@@ -14,6 +14,5 @@ survey_aliases(cols, def, revert = F)
 \item{revert}{if TRUE, aliases to Db names, if false (default) DB names to aliases}
 }
 \description{
-Description of mapping is set in the config variable epiwork.tables defined
-in the platform configuration files
+Description of mapping are defined in the survey  by \code{\link{platform_define_survey}} in the platform file
 }

@@ -11,7 +11,7 @@ episode_fusion_strategy(weekly, design, column.episode = "episode")
 
 \item{design}{study params, structure returned by \code{\link{episode_design}}}
 
-\item{column.episode}{}
+\item{column.episode}{name of the column containing episode identifier}
 }
 \description{
 This function will keep only one weekly by disease "episode" previously computed in the column in \code{column.episode} parameter

@@ -36,7 +36,7 @@ dbQuery <- function(...) {
 
 dbConnect.RPostgreSQL <- function(dsn) {
   if( !requireNamespace("RPostgreSQL") ) {
-    stop("RPostgreSQL needed to use this driver")
+    rlang::abort("RPostgreSQL needed to use this driver")
   }
   dbiConnect <- DBI::dbConnect
  .Share$dbHandle <- dbiConnect(RPostgreSQL::PostgreSQL(), user=dsn$user, password=dsn$password,host=dsn$host, dbname=dsn$dbname)
@@ -63,7 +63,7 @@ dbQuery.RPostgreSQL <- function(..., show.errors = T, dbHandle=NULL) {
 # Connect to DB
 dbConnect.RODBC <- function(dsn) {
   if( !requireNamespace("RODBC") ) {
-    stop("RODBC needed to use this driver")
+    rlang::abort("RODBC needed to use this driver")
   }
   .Share$dbLastError = 0
   .Share$dbHandle = NULL
