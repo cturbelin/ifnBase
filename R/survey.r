@@ -90,6 +90,7 @@ survey_variables_like <- function(survey, pattern) {
 }
 
 #' @rdname survey_variables_like
+#' @export
 survey_questions_like <- survey_variables_like
 
 #' Recode data from the DB storage code to the R labels (or to its translaction into default language)
@@ -149,7 +150,7 @@ recode_var <- function(x, mapping, translate=FALSE) {
 #' @param name variable name
 #' @param must.exists if TRUE an error will be raised if name doesnt exists in survey definition
 #' @return vector with label as name, database value as value
-#'
+#' @export
 survey_variable_recoding <- function(survey, name, must.exists=TRUE) {
   def = survey_definition(survey)
   recodes = def$recodes[[ name ]]
@@ -164,7 +165,7 @@ survey_variable_recoding <- function(survey, name, must.exists=TRUE) {
 #' @param survey character survey name
 #'
 #' @return list with question variable name in name, a mapping as value
-#'
+#' @export
 survey_recodings <- function(survey) {
   def = survey_definition(survey)
   return(def$recodes)
