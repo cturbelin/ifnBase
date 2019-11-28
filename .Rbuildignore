@@ -5,3 +5,6 @@
 ^tic\.R$
 ^TODO\.fr$
 ^data-raw$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
