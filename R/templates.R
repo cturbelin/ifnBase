@@ -193,10 +193,13 @@ survey_templates[["eu:intake"]] = list(
     notvac.reason = 'notvac.reason.*'
   ),
   recodes = list(
+
     gender = c(
       'male'='0',
       'female'='1'
     ),
+
+    main.activity = recode_alias("activities"),
 
     activities = c(
         'activity.fulltime'="0",
@@ -225,6 +228,7 @@ survey_templates[["eu:intake"]] = list(
         'transport.public'="4",
         'transport.other'="5"
       ),
+
       time.transport = c(
         'transtime.no'="0",
         'transtime.half'="1",
@@ -232,6 +236,7 @@ survey_templates[["eu:intake"]] = list(
         'transtime.less4h'="3",
         'transtime.more4h'="4"
       ),
+
       often.ili = c(
         'often.never'="0",
         'often.once'="1",
@@ -240,10 +245,14 @@ survey_templates[["eu:intake"]] = list(
         'often.10'="4",
         'often.dkn'="5"
       ),
-      'pregnant'=as_mapping(0:2, YES_NO_DNK),
-     'vacc.lastseason'=as_mapping(0:2, YES_NO_DNK),
-     'vacc.curseason'=as_mapping(0:2, YES_NO_DNK),
-      smoker = c(
+
+    'pregnant'=as_mapping(0:2, YES_NO_DNK),
+
+    'vacc.lastseason'=as_mapping(0:2, YES_NO_DNK),
+
+    'vacc.curseason'=as_mapping(0:2, YES_NO_DNK),
+
+    smoker = c(
         'smoker.no'="0",
         'smoker.occas'="1",
         'smoker.dailyfew'="2",
