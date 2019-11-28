@@ -1,7 +1,7 @@
 Package: ifnBase
 Type: Package
 Title: InfluenzaNet Data Analysis Base
-Version: 0.4.0
+Version: 0.4.0.9000
 Imports:
   methods,
   swMisc,
@@ -16,10 +16,12 @@ Suggests:
     DBI,
     RODBC,
     RColorBrewer,
+    svglite,
     epitools,
     knitr,
     scales,
-    testthat
+    testthat,
+    rmarkdown
 URL: https://github.com/cturbelin/ifnBase
 Additional_repositories: https://cran.sentiweb.fr/
 BugReports: https://github.com/cturbelin/ifnBase/issues
