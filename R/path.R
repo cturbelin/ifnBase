@@ -76,7 +76,7 @@ add_path_prefix = function(name, prefix) {
 }
 
 #' Internal function create the path from the current paths prefix & suffix
--create_path = function() {
+create_path = function() {
   path = get_option('base.out.path')
   if(length(.Share$path.prefix) > 0) {
     path = paste0(path, paste0(.Share$path.prefix, collapse='/'))
