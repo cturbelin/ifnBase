@@ -12,3 +12,16 @@ share.data.path(file = "")
 \description{
 path of a file in data
 }
+\seealso{
+Other path-functions: 
+\code{\link{add_path_prefix}()},
+\code{\link{get_current_paths}()},
+\code{\link{init.path}()},
+\code{\link{my.path}()},
+\code{\link{platform_path}()},
+\code{\link{print.paths_definition}()},
+\code{\link{share.cache.path}()},
+\code{\link{share.lib.path}()},
+\code{\link{share_path}()}
+}
+\concept{path-functions}

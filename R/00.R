@@ -50,8 +50,8 @@ get_option <- function(name = NULL) {
 #'  \item{platform}{unique id of the platform, ISO name of the country and 'eu' for european}
 #'  \item{platform.path}{path to platform definition files}
 #'  \item{autoload.platform}{if TRUE launch load_platform() when package is loaded}
-#'  \item{DB_DRIVER}{name of the DB driver to use. Actually 'RPostgreSQL' or 'RODBC'}
-#'  \item{DB_DSN}{Database connexion string (or list). for ROBDC list with 'file' entry will load DSN from the file}
+#'  \item{db_driver}{name of the DB driver to use. Actually 'RPostgreSQL' or 'RODBC'}
+#'  \item{db_dsn}{Database connexion string (or list). for ROBDC list with 'file' entry will load DSN from the file}
 #'  \item{base.out.path}{output path used by default init.path function}
 #' }
 #'
@@ -81,6 +81,10 @@ share.option <- function(...) {
     n = nn[i]
     o = opts[[i]]
     oo[[n]] <- o
+  }
+
+  if("base.out.path" %in% nn) {
+    oo$base.out.path = ending_slash(oo$base.out.path)
   }
   base::options("ifn" = oo)
 }

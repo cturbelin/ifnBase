@@ -12,3 +12,16 @@ share.lib.path(file)
 \description{
 Get file in lib path
 }
+\seealso{
+Other path-functions: 
+\code{\link{add_path_prefix}()},
+\code{\link{get_current_paths}()},
+\code{\link{init.path}()},
+\code{\link{my.path}()},
+\code{\link{platform_path}()},
+\code{\link{print.paths_definition}()},
+\code{\link{share.cache.path}()},
+\code{\link{share.data.path}()},
+\code{\link{share_path}()}
+}
+\concept{path-functions}
