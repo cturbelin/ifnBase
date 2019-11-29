@@ -27,6 +27,7 @@
 #' @param debug if TRUE show query
 #' @param country country name (if survey data has country column)
 #' @return data.frame data of the survey
+#' @family survey-load
 #' @export
 survey_load_results = function(survey, cols, geo=NULL, date=NULL, db.table=NULL, survey.users=NULL, debug=F, account=F, where=c(), season=NULL, channel=NULL, cols.sup=c(), gid=F, country=NULL) {
   def = survey_definition(survey)
@@ -179,6 +180,7 @@ survey_load_results = function(survey, cols, geo=NULL, date=NULL, db.table=NULL,
 #' List of participants registred in weekly at least once for a given season
 #' @param season season number to get
 #' @param use.season.dates restrict to season's starting & ending dates.
+#' @family survey-load
 #' @export
 survey_participant_season = function(season, use.season.dates=F) {
   h = season.def(season)
@@ -197,6 +199,7 @@ survey_participant_season = function(season, use.season.dates=F) {
 #' @param ids list of participants to keep
 #' @param use.season.dates if TRUE restrist weekly scan to the official date of each season (@see historical.tables)
 #' @param seasons list of seasons to scan, relatively to the given [season], for ex -1 = only previous
+#' @family survey-load
 #' @export
 survey_participant_previous_season = function(season, ids=NULL, use.season.dates=F, seasons=NULL) {
   all.seasons = as.numeric(names(.Share$historical.tables))
@@ -224,6 +227,7 @@ survey_participant_previous_season = function(season, ids=NULL, use.season.dates
 #' Load participants data
 #' @param active.account logical only active user account if TRUE
 #' @param ids list of survey_user ids
+#' @family survey-load
 #' @export
 survey_load_participants = function(active.account=NULL, ids=NULL) {
 
@@ -257,6 +261,7 @@ survey_load_participants = function(active.account=NULL, ids=NULL) {
 #' @param survey survey shortname
 #' @param cols list of columns to load
 #' @export
+#' @family survey-load
 #' @importFrom methods is
 survey_load_results_historic = function(ids, survey, cols) {
   if(!requireNamespace("dplyr")) {
@@ -301,6 +306,7 @@ survey_load_results_historic = function(ids, survey, cols) {
 #' Load last participation date for intake & weekly survey for each participants
 #' @param ids list of participants
 #' @param years list of season to scan, all if NULL
+#' @family survey-load
 #' @export
 survey_load_participations = function(ids, years=NULL) {
 

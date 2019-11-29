@@ -7,7 +7,7 @@
 #' low level function
 #' @param question_id int[]
 #' @param translation_id id the translation to use
-#' @family survey definition functions
+#' @family survey-load
 #' @return data.frame() option_id, text
 #' @export
 survey_load_options <- function(question_id, translation_id=NULL) {
@@ -22,6 +22,7 @@ survey_load_options <- function(question_id, translation_id=NULL) {
 #' load questions of a survey from the database
 #' @family survey definition functions
 #' @param survey survey name (@see epiwork.tables)
+#' @family survey-load
 #' @param translation_id id of the translation to use
 #' @export
 survey_load_questions <- function(survey, translation_id=NULL) {
@@ -49,6 +50,7 @@ survey_load_questions <- function(survey, translation_id=NULL) {
 #' load a translation for a survey for a given language
 #' @param survey survey name
 #' @param language code (as used in the db)
+#' @family survey-load
 #' @export
 survey_load_translation <-function(survey, language=survey_default_language()) {
   def = survey_definition(survey)
@@ -62,6 +64,7 @@ survey_load_translation <-function(survey, language=survey_default_language()) {
 #' @param varname variable name of the question (db's column name or R alias of the column)
 #' @param language language translation to use
 #' @return int
+#' @family survey-load
 #' @export
 survey_question_id <- function(survey, varname, language=survey_default_language()) {
   def = survey_load_all(survey, language=language)
@@ -73,6 +76,7 @@ survey_question_id <- function(survey, varname, language=survey_default_language
 #' This is not the "options" defined
 #' @param survey survey name
 #' @param varname variable name
+#' @family survey-load
 #' @export
 survey_options_for <- function(survey, varname) {
   id = survey_question_id(survey, varname)
@@ -84,6 +88,7 @@ survey_options_for <- function(survey, varname) {
 #' @param survey survey name
 #' @param language translation language to use, by default use \code{survey_default_language}
 #' @return definition of the survey (also update the global definition in memory)
+#' @family survey-load
 #' @seealso survey_default_language
 #' @export
 survey_load_all <- function(survey, language=survey_default_language()) {

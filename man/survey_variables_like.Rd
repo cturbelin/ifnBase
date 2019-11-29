@@ -24,5 +24,14 @@ These labels are defined in the survey by \code{\link{platform_define_survey}} i
 \dontrun{
  survey_questions_like("weekly", "visit.*") # All variables starting with visit.*
 }
-
 }
+\seealso{
+Other survey: 
+\code{\link{survey_aliases}()},
+\code{\link{survey_definition}()},
+\code{\link{survey_labels}()},
+\code{\link{survey_recode}()},
+\code{\link{survey_recodings}()},
+\code{\link{survey_variable_recoding}()}
+}
+\concept{survey}

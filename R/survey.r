@@ -24,6 +24,7 @@ get_symptoms_aliases <- function() {
 #' @param cols names of columns to rename
 #' @param def list of aliases
 #' @param revert if TRUE, aliases to Db names, if false (default) DB names to aliases
+#' @family survey
 #' @export
 survey_aliases <- function(cols, def, revert=F) {
   aliases = def$aliases
@@ -55,6 +56,7 @@ survey_default_language = function() {
 #' @param survey name of the survey
 #' @param question name of the question variable, or if multichoice name of the question group (sometimes a more generic name)
 #' @return character vector of names
+#' @family survey
 #' @export
 survey_labels <- function(survey, question) {
 	def = survey_definition(survey)
@@ -81,6 +83,7 @@ survey_labels <- function(survey, question) {
 #' \dontrun{
 #'  survey_questions_like("weekly", "visit.*") # All variables starting with visit.*
 #' }
+#' @family survey
 #'
 survey_variables_like <- function(survey, pattern) {
   p = glob2rx(pattern)
@@ -104,6 +107,7 @@ survey_questions_like <- survey_variables_like
 #' @param translate if TRUE, try to translate the labels (using i18n function @seealso i18n)
 #' @param question old parameter name for variable, for compatibility
 #' @return vector of recoded value in factor
+#' @family survey
 #' @export
 survey_recode <- function(x, variable, survey, translate=F, question=NULL) {
 
@@ -150,6 +154,7 @@ recode_var <- function(x, mapping, translate=FALSE) {
 #' @param name variable name
 #' @param must.exists if TRUE an error will be raised if name doesnt exists in survey definition
 #' @return vector with label as name, database value as value
+#' @family survey
 #' @export
 survey_variable_recoding <- function(survey, name, must.exists=TRUE) {
   def = survey_definition(survey)
@@ -165,6 +170,7 @@ survey_variable_recoding <- function(survey, name, must.exists=TRUE) {
 #' @param survey character survey name
 #'
 #' @return list with question variable name in name, a mapping as value
+#' @family survey
 #' @export
 survey_recodings <- function(survey) {
   def = survey_definition(survey)
@@ -185,6 +191,7 @@ survey_single_table <- function(survey) {
 #' They are defined by \code{\link{platform_define_survey}} usually in the platform file
 #' @param survey survey name
 #' @return list parameters describing a survey
+#' @family survey
 #'
 #' @export
 survey_definition = function(survey) {

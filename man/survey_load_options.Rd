@@ -20,7 +20,17 @@ load options of a question from the database, identified by its question_id
 low level function
 }
 \seealso{
-Other survey definition functions: 
-\code{\link{survey_load_questions}()}
+Other survey-load: 
+\code{\link{survey_load_all}()},
+\code{\link{survey_load_participants}()},
+\code{\link{survey_load_participations}()},
+\code{\link{survey_load_questions}()},
+\code{\link{survey_load_results_historic}()},
+\code{\link{survey_load_results}()},
+\code{\link{survey_load_translation}()},
+\code{\link{survey_options_for}()},
+\code{\link{survey_participant_previous_season}()},
+\code{\link{survey_participant_season}()},
+\code{\link{survey_question_id}()}
 }
-\concept{survey definition functions}
+\concept{survey-load}

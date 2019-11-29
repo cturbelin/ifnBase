@@ -21,3 +21,13 @@ If it is a single choice question, it will return a list of language independent
 \details{
 These labels are defined in the survey  by \code{\link{platform_define_survey}} in the platform file
 }
+\seealso{
+Other survey: 
+\code{\link{survey_aliases}()},
+\code{\link{survey_definition}()},
+\code{\link{survey_recode}()},
+\code{\link{survey_recodings}()},
+\code{\link{survey_variable_recoding}()},
+\code{\link{survey_variables_like}()}
+}
+\concept{survey}

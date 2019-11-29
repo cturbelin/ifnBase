@@ -19,3 +19,13 @@ Get survey definition
 Survey definition is a data structure of entries defining variable mapping (db column name to variable name, recoding, variable sets)
 They are defined by \code{\link{platform_define_survey}} usually in the platform file
 }
+\seealso{
+Other survey: 
+\code{\link{survey_aliases}()},
+\code{\link{survey_labels}()},
+\code{\link{survey_recode}()},
+\code{\link{survey_recodings}()},
+\code{\link{survey_variable_recoding}()},
+\code{\link{survey_variables_like}()}
+}
+\concept{survey}

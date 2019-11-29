@@ -15,3 +15,13 @@ list with question variable name in name, a mapping as value
 \description{
 Get all the recodings defined in a survey
 }
+\seealso{
+Other survey: 
+\code{\link{survey_aliases}()},
+\code{\link{survey_definition}()},
+\code{\link{survey_labels}()},
+\code{\link{survey_recode}()},
+\code{\link{survey_variable_recoding}()},
+\code{\link{survey_variables_like}()}
+}
+\concept{survey}

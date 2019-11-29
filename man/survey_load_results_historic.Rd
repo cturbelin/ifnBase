@@ -16,3 +16,18 @@ survey_load_results_historic(ids, survey, cols)
 \description{
 Load historical data for a set of users
 }
+\seealso{
+Other survey-load: 
+\code{\link{survey_load_all}()},
+\code{\link{survey_load_options}()},
+\code{\link{survey_load_participants}()},
+\code{\link{survey_load_participations}()},
+\code{\link{survey_load_questions}()},
+\code{\link{survey_load_results}()},
+\code{\link{survey_load_translation}()},
+\code{\link{survey_options_for}()},
+\code{\link{survey_participant_previous_season}()},
+\code{\link{survey_participant_season}()},
+\code{\link{survey_question_id}()}
+}
+\concept{survey-load}

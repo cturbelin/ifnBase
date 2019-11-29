@@ -19,3 +19,13 @@ vector with label as name, database value as value
 \description{
 Get the recoding mapping of a variable in a survey
 }
+\seealso{
+Other survey: 
+\code{\link{survey_aliases}()},
+\code{\link{survey_definition}()},
+\code{\link{survey_labels}()},
+\code{\link{survey_recode}()},
+\code{\link{survey_recodings}()},
+\code{\link{survey_variables_like}()}
+}
+\concept{survey}

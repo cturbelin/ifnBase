@@ -64,3 +64,18 @@ survey_load_results loads results set for a given survey. It handles several fea
 \details{
 Note : "global_id" is not used here we use person_id (sequential index of the user = primary key of survey_surveyuser table) instead because it is really cheaper for memory
 }
+\seealso{
+Other survey-load: 
+\code{\link{survey_load_all}()},
+\code{\link{survey_load_options}()},
+\code{\link{survey_load_participants}()},
+\code{\link{survey_load_participations}()},
+\code{\link{survey_load_questions}()},
+\code{\link{survey_load_results_historic}()},
+\code{\link{survey_load_translation}()},
+\code{\link{survey_options_for}()},
+\code{\link{survey_participant_previous_season}()},
+\code{\link{survey_participant_season}()},
+\code{\link{survey_question_id}()}
+}
+\concept{survey-load}

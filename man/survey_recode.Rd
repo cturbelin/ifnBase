@@ -24,3 +24,13 @@ vector of recoded value in factor
 This function recode from database values to labels (more meaningful). The recoding mapping for each variable is
 defined \code{\link{platform_define_survey}} usually in the platform file
 }
+\seealso{
+Other survey: 
+\code{\link{survey_aliases}()},
+\code{\link{survey_definition}()},
+\code{\link{survey_labels}()},
+\code{\link{survey_recodings}()},
+\code{\link{survey_variable_recoding}()},
+\code{\link{survey_variables_like}()}
+}
+\concept{survey}
