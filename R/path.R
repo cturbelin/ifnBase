@@ -76,8 +76,7 @@ add_path_prefix = function(name, prefix) {
 }
 
 #' Internal function create the path from the current paths prefix & suffix
-#' @param p path to add
-create_path = function() {
+-create_path = function() {
   path = get_option('base.out.path')
   if(length(.Share$path.prefix) > 0) {
     path = paste0(path, paste0(.Share$path.prefix, collapse='/'))
@@ -181,7 +180,15 @@ share_path <- function(file='') {
 share.path = share_path
 
 #' Path to platform definition files
+#'
+#' Platform files are located in the path defined by the option "platform.path" (see \code{\link{share.option}})
+#' Usually in share/platform in the root of the workspace (see \code{\link{concepts}}).
+#'
 #' @family path-functions
+#' @param file character file name to get in the 'platform' directory
+#'
+#' @return character path of the file in platform files location.
+#'
 #' @export
 platform_path = function(file='') {
   paste0(get_option('platform.path'), file)
