@@ -281,7 +281,11 @@ complete_intake_strategy = function(data, intake, ...) {
   if( is.null(strategy) ) {
     return(intake)
   }
-  complete_intake(data, intake, ...)
+  max.year = NA
+  if(!is.null(strategy$max.year)) {
+    max.year = strategy$max.year
+  }
+  complete_intake(data, intake, max.year=max.year, ...)
 }
 
 #' Complete intake for a survey using intake from the past seasons
