@@ -129,8 +129,9 @@ If you want to handle command line parameters, you should use Rscript to run the
  Rscript myscript.r param=value
 ```
 
-Using Rscript to run the script will allow to catch the parameters passed on the command line (using the "cli" shared library for example)
+Using Rscript to run the script will allow to catch the parameters passed on the command line (using `parseArgs()` from swMisc package for example).
 
 ## Using RStudio
+
 If you use RStudio, you have to create a RStudio project for each project in your workspace. By doing this, RStudio will always use the project directory as the working directory of R, and you will be able to use
 the "Run" or "Source" buttons directly.
