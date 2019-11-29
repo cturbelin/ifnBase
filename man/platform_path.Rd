@@ -6,8 +6,15 @@
 \usage{
 platform_path(file = "")
 }
+\arguments{
+\item{file}{character file name to get in the 'platform' directory}
+}
+\value{
+character path of the file in platform files location.
+}
 \description{
-Path to platform definition files
+Platform files are located in the path defined by the option "platform.path" (see \code{\link{share.option}})
+Usually in share/platform in the root of the workspace (see \code{\link{concepts}}).
 }
 \seealso{
 Other path-functions: 

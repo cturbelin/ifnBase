@@ -6,9 +6,6 @@
 \usage{
 create_path()
 }
-\arguments{
-\item{p}{path to add}
-}
 \description{
 Internal function create the path from the current paths prefix & suffix
 }
