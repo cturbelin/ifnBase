@@ -15,12 +15,13 @@ episode_compute_ariza(weekly, syndrome.column, params, .progress = NULL)
 
 \item{params}{episode_design}
 
-\item{.progress}{progress_estimated style progress bar, nothing if NULL
-Find episodes, identify episodes sequences for one person_id
-Returns a data.frame() with weekly row id (column "id") & episode number}
+\item{.progress}{progress_estimated style progress bar, nothing if NULL}
 }
 \description{
 Compute episodes using M Ariza's algorithm
 The onset date is used as the episode identifier, the algorithm iteratively replace onset date to the first date for all survey considered
 to belong to the same disease episode.
 }
+\concept{episodes
+Find episodes, identify episodes sequences for one person_id
+Returns a data.frame() with weekly row id (column "id") & episode number}

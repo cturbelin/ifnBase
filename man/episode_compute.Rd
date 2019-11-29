@@ -26,3 +26,16 @@ This function use environment returned by \code{\link{episode_prepare_data}}
 \details{
 It is an intermediate function, in a simple setting \code{\link{episode_build}} can be more convenient to use
 }
+\seealso{
+Other episodes: 
+\code{\link{episode_build}()},
+\code{\link{episode_design}()},
+\code{\link{episode_fusion.simple_strategy}()},
+\code{\link{episode_fusion.worst_strategy}()},
+\code{\link{episode_fusion_strategy}()},
+\code{\link{episode_fusion}()},
+\code{\link{episode_prepare_data}()},
+\code{\link{episode_select_participants}()},
+\code{\link{episode_strategy}()}
+}
+\concept{episodes}

@@ -17,3 +17,16 @@ episode_fusion_strategy(weekly, design, episode.column = "episode")
 This function will keep only one weekly by disease "episode" previously computed in the column in \code{episode.column} parameter
 Variables of all weekly in the same episode will
 }
+\seealso{
+Other episodes: 
+\code{\link{episode_build}()},
+\code{\link{episode_compute}()},
+\code{\link{episode_design}()},
+\code{\link{episode_fusion.simple_strategy}()},
+\code{\link{episode_fusion.worst_strategy}()},
+\code{\link{episode_fusion}()},
+\code{\link{episode_prepare_data}()},
+\code{\link{episode_select_participants}()},
+\code{\link{episode_strategy}()}
+}
+\concept{episodes}

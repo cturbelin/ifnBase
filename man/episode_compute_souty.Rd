@@ -13,10 +13,17 @@ episode_compute_souty(weekly, syndrome.column, params, .progress = NULL)
 
 \item{params}{episode_design}
 
-\item{.progress}{progress_estimated style progress bar, nothing if NULL
-ww : all weekly of one person_id ordered by date (!! Only one weekly by date)
-.keys = dummy variable needed by dplyr::group_map()}
+\item{.progress}{progress_estimated style progress bar, nothing if NULL}
 }
 \description{
 Compute Episodes using Cecile Souty's strategy
 }
+\seealso{
+Other episodes
+ww : all weekly of one person_id ordered by date (!! Only one weekly by date)
+.keys = dummy variable needed by dplyr::group_map(): 
+\code{\link{episode_compute_ecollan}()}
+}
+\concept{episodes
+ww : all weekly of one person_id ordered by date (!! Only one weekly by date)
+.keys = dummy variable needed by dplyr::group_map()}

@@ -21,3 +21,16 @@ data.frame() one row by person_id, episode, with selected value for each variabl
 \description{
 Internal function to apply a fusion strategy of variables of the same episode (of each participant)
 }
+\seealso{
+Other episodes: 
+\code{\link{episode_build}()},
+\code{\link{episode_compute}()},
+\code{\link{episode_design}()},
+\code{\link{episode_fusion.simple_strategy}()},
+\code{\link{episode_fusion.worst_strategy}()},
+\code{\link{episode_fusion_strategy}()},
+\code{\link{episode_prepare_data}()},
+\code{\link{episode_select_participants}()},
+\code{\link{episode_strategy}()}
+}
+\concept{episodes}

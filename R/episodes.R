@@ -15,6 +15,7 @@
 #' @param onset onset design expression or false, design parameter passed to \code{\link{compute_onset}}
 #' @param strategies not implemented yet
 #' @return episodes design data structure
+#' @family episodes
 #' @export
 episode_design = function(delay_episode=15, max_episode_duration=11, median_episode_duration=7, participants=list(),  method="ariza", onset=NULL, strategies=NULL ) {
 
@@ -82,7 +83,7 @@ episode_design = function(delay_episode=15, max_episode_duration=11, median_epis
 #' "has_between"=list(start="2019-01-02",end="2019-03-01")
 #' )
 #'
-#'
+#' @family episodes
 #' @export
 episode_select_participants = function(weekly, intake, rules) {
 
@@ -209,6 +210,7 @@ episode_select_participants = function(weekly, intake, rules) {
 #'  \item{weekly}{the weekly for selected participants}
 #' }
 #'
+#' @family episodes
 #' @export
 episode_prepare_data = function(design, intake=NULL, weekly=NULL, env=NULL) {
 
@@ -308,6 +310,7 @@ episode_prepare_data = function(design, intake=NULL, weekly=NULL, env=NULL) {
 #' @param syndrome.column name of the syndrome column to use
 #' @param params episode_design
 #' @param .progress progress_estimated style progress bar, nothing if NULL
+#' @family episodes
 episode_compute_ariza = function(weekly, syndrome.column, params, .progress=NULL) {
 
   sym_person = sym("person_id")
@@ -376,6 +379,7 @@ episode_compute_ariza = function(weekly, syndrome.column, params, .progress=NULL
 #' @param syndrome.column name of the syndrome column to use
 #' @param params episode_design
 #' @param .progress progress_estimated style progress bar, nothing if NULL
+#' @family episodes
 episode_compute_ecollan <- function(weekly, syndrome.column, params, .progress=NULL) {
 
   sym_person = sym("person_id")
@@ -445,6 +449,7 @@ episode_compute_ecollan <- function(weekly, syndrome.column, params, .progress=N
 #' @param syndrome.column name of the syndrome column to use
 #' @param params episode_design
 #' @param .progress progress_estimated style progress bar, nothing if NULL
+#' @family episodes
 episode_compute_souty <- function(weekly, syndrome.column, params, .progress=NULL) {
 
   sym_person = sym("person_id")
@@ -513,6 +518,7 @@ episode_compute_souty <- function(weekly, syndrome.column, params, .progress=NUL
 #' @param local if TRUE do not modify .env, only returns episodes
 #' @export
 #' @return data.frame (episodes)
+#' @family episodes
 episode_compute = function(.env, syndrome.column, design, .progress=TRUE, local=FALSE) {
   if(!is.logical(.env$weekly[[syndrome.column]])) {
     stop(paste0("syndrome column ", syndrome.column, " should be logical"))
@@ -551,8 +557,8 @@ episode_compute = function(.env, syndrome.column, design, .progress=TRUE, local=
 #'  episode_build(design, weekly, intake)
 #' }
 #'
-#'
 #' @export
+#' @family episodes
 episode_build = function(design, intake=NULL, weekly=NULL, syndrome.column, env=NULL) {
   env = episode_prepare_data(design, intake = intake, weekly=weekly, env=env)
   episode_compute(env, syndrome.column = syndrome.column, design = design)

@@ -55,3 +55,16 @@ episode_strategy("any", "chills", "cough", "fever")
 episode_strategy("worst", "take.temp"=c('Yes','DontKnow','No'))
 }
 }
+\seealso{
+Other episodes: 
+\code{\link{episode_build}()},
+\code{\link{episode_compute}()},
+\code{\link{episode_design}()},
+\code{\link{episode_fusion.simple_strategy}()},
+\code{\link{episode_fusion.worst_strategy}()},
+\code{\link{episode_fusion_strategy}()},
+\code{\link{episode_fusion}()},
+\code{\link{episode_prepare_data}()},
+\code{\link{episode_select_participants}()}
+}
+\concept{episodes}

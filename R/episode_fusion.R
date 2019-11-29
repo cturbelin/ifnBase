@@ -115,6 +115,7 @@ strategy_create_coding = function(data, survey="weekly") {
 #' episode_strategy("worst", "take.temp"=c('Yes','DontKnow','No'))
 #' }
 #' @export
+#' @family episodes
 episode_strategy = function(type, ...) {
   if(type %in% c('any','min','max','mean','first','last')) {
     klass = "simple_strategy"
@@ -179,6 +180,7 @@ print.fusion_strategy_dict <- function(x, ...) {
 #' @param ... other arguments (not used)
 #' @return data.frame() one row by person_id, episode, with selected value for each variable registred in strategy
 #' @export
+#' @family episodes
 episode_fusion = function(strategy, weekly, episode.column, ...) {
   UseMethod("episode_fusion")
 }
@@ -197,6 +199,7 @@ group_by_episode = function(.data, episode.column, ...) {
 #' @seealso \code{\link{episode_fusion}}
 #' @return data.frame() one row by person_id, episode, with selected value for each variable registred in strategy
 #' @export
+#' @family episodes
 episode_fusion.simple_strategy = function(strategy, weekly, episode.column, ...) {
 
   vars = strategy$vars
@@ -245,6 +248,7 @@ episode_fusion.simple_strategy = function(strategy, weekly, episode.column, ...)
 #' @seealso \code{\link{episode_fusion}}
 #' @return data.frame() one row by person_id, episode, with selected value for each variable registred in strategy
 #' @export
+#' @family episodes
 episode_fusion.worst_strategy =  function(strategy, weekly, episode.column, ...) {
 
   # List of available variables in weekly
@@ -327,6 +331,7 @@ episode_fusion.worst_strategy =  function(strategy, weekly, episode.column, ...)
 #' @param design study params, structure returned by \code{\link{episode_design}}
 #' @param episode.column name of the column containing episode identifier
 #' @export
+#' @family episodes
 episode_fusion_strategy = function(weekly, design, episode.column="episode") {
 
   weekly = weekly[ !is.na(weekly[[episode.column]]), ]
