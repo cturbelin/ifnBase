@@ -64,11 +64,13 @@ platform_options(
 )
 
 ```
-## Survey description
+## Survey registration
 
-Each survey has to be described to allow the package to deal with the database and know how to load the survey data.
+Each survey has to be registred to the package before the surveys_* functions can be used. 
+Registration is done by calling the function `platform_define_survey()` (usually in the platform file to be available in all the scripts, but it's possible to register a new survey in a script).
 
-Using the function `platform_define_survey()`
+This registration will assign a unique internal name to the survey that all the `survey_*` will recognise in the *survey* parameter. You can give the name you want to your surveys (by convention we use "intake" and "weekly" for respectively)
+
 
 For example for a short survey about vaccination
 
@@ -93,6 +95,9 @@ platform_define_survey(
 )
 
 ```
+
+
+
 
 ## Survey History
 

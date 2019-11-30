@@ -27,15 +27,15 @@ Aims are :
  - standardize data management by providing functions (recode.intake, recode.weekly,..)
 
 Some library are made to wrap R libraries in order to write script without taking account of which R library is currently 
-used or where files are really located (graph.* functions or db* functions).
+used or where files are really located.
 
-We recommand an workspace organization (see [workspace](workspace.html))
+We recommend an workspace organization (see [workspace](workspace.html))
 
 ## Configuration
 
 Several configuration information should be provided in order the package works correctly
 
-Configuration is holded in a list, stored in R `options()` entry named 'ifn'
+Configuration is stored in a list in R `options()` at the entry named 'ifn'
 
 It can be set before the package is loaded (in this case some initialization can be done automatically) or after the package is loaded.
 
@@ -72,7 +72,8 @@ Basically it wil get or modify 'ifn' entry in base `options()` set of R.
 To write good program, think as if the program should never know where are the files outside a project directory but
 the program should ask to the framework the path for the file. It provides a set of function to do that :
  
-We provided several function allowing to use files from a location outside from a given project. They assume an external location (called "share" as its is intented to be shared accross several projects).
+We provided several function allowing to use files from a location outside from a given project. 
+They assume an external location (called "share" as its is intended to be shared across several projects).
 
 This location can have several directories :
  
@@ -86,7 +87,9 @@ This location can have several directories :
  
 ### Output path 
 
-package options contains a `base.out.path` entry, this allow to put all the files and graph in a global output directory. If `base.out.path` is set to an empty string, the output will be done into the current directory (running one). As it is defined in the global configuration, a given script into a project should be agnostic from this.
+package options contains a `base.out.path` entry, this allow to put all the files and graph in a global output directory. 
+If `base.out.path` is set to an empty string, the output will be done into the current directory (running one). 
+As it is defined in the global configuration, a given script into a project should be agnostic from this.
 
 To do that, use the following two functions in you script
 
@@ -102,9 +105,9 @@ Just call :
   init.path('web')
 ```
 
-All further ouput (using my.path()) will be done into a "web" subdirectory of the current ouput path. If the "web" directory does not exists, it will be created.
+All further output (using my.path()) will be done into a "web" subdirectory of the current output path. If the "web" directory does not exists, it will be created.
 
-To know the path of a given file in the ouput path (to load the file or to output data), use the file name wrapped by the
+To know the path of a given file in the output path (to load the file or to output data), use the file name wrapped by the
 my.path() function:
 ```r
   my.path('myfile.csv')
@@ -131,10 +134,10 @@ This functions are device graphic function wrappers. Default use `png()` functio
 * `graph.close()` : ends the output
 * `graph.hook(function)` : register a hook function called after the graphic output (once the file is created)
 * `graph.save(file)` : wrapper around `ggsave` to output *ggplot2* graphs, with hooks
-* `whith_ggplot()` init ggplot2 package with a default theme
+* `with_ggplot()` init ggplot2 package with a default theme
 * `gg_barplot_percent()` to create barplot with percentage
 * `plot_age_pyramid()` to create population age pyramid with ggplot2
-* `scale_x_wid` to create scales for weekly data, using a weeks dictionnary (create using make_week_index())
+* `scale_x_wid` to create scales for weekly data, using a weeks dictionary (create using make_week_index())
 
 You can also, use a function directly but if you need to change the driver or the type of ouput file, you will need to change
 all your script.
@@ -144,7 +147,7 @@ Moreover, `graph.xxx()` function handle "hooks", a function that is automaticall
 ## ISO 8601 week number computation functions 
 These functions allow to manipulate ISO 8601 week number.
 
-A week number is reprensented as yearoftheweek * 100 + weeknumber (called yearweek number)
+A week number is represented as year_of_the_week * 100 + week_number (called yearweek number)
 
 * `iso_yearweek(dates)` : yearweek number of each date
 * `week_of_date(from, to)` : yearweek numbers for each date of a date interval
@@ -156,19 +159,19 @@ A week number is reprensented as yearoftheweek * 100 + weeknumber (called yearwe
 
 ## Geographic levels
 
-Package provivdes a set of functions to handle geographic levels (to describe a way a territory, let's say a country, is divided in several areas in a hierarchical ways.). You can have several levels (country, regions, ...). Each level is divided into areas, which can be divided in sub-area in the lower level.
+Package provides a set of functions to handle geographic levels (to describe a way a territory, let's say a country, is divided in several areas in a hierarchical ways.). You can have several levels (country, regions, ...). Each level is divided into areas, which can be divided in sub-area in the lower level.
 
-The only assumption made is an area can only belongs to a single area on the upper level (it doesnt handle overlap). But it can handle several level hierarchies.
+The only assumption made is an area can only belongs to a single area on the upper level (it doesn't handle overlap). But it can handle several level hierarchies.
 
 Concepts & functions are described in [geography](geography.pdf) vignette
 
 ## Loading libraries functions
 
-To load function of a library in share/ you have to use the `share.lib` function.
+To load function of a library in share/lib/ you have to use the `share.lib` function.
 
 ```
   share.lib('survey') # load survey functions
-  share.lib(c('survey','syndrom','i18n')) # load several
+  share.lib(c('survey','syndrome','i18n')) # load several
 ```
 
 If you want to have a platform specific library (or load a platform specific implementation of a library) you can

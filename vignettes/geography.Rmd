@@ -19,7 +19,7 @@ Theses concepts are used to describe administrative division of a given territor
 
 ### Geographic level
   
-  A geographic level is a named way to divide a territory in a set of non overlaping area. The full available territory must be divided into area in the level (i.e. the division is complete over the territory).
+  A geographic level is a named way to divide a territory in a set of non overlapping area. The full available territory must be divided into area in the level (e.g. the division is complete over the territory).
   
   The concept is abstract from spatial concerns, an "area" of a level can regroup sub-area not spatially connected if needed, as long as the division is consistent (no overlap, and complete). 
   
@@ -45,9 +45,9 @@ Geographic tables are named using the pattern 'geo_[name]' where [name] is the l
 
 Each table contains :
 
-- a primary key: id of the area in the level, preferrably named by `code_[name]`
+- a primary key: id of the area in the level, preferably named by `code_[name]`
 - a title column: name of the area in the level
-- ids of the upper levels to allow query accross levels
+- ids of the upper levels to allow query across levels
 
 In order to be consistent you should use names for columns using the name of the corresponding level. Using the example 'code_country', 'code_nuts2', 'code_nuts3', 'code_zip' should be the name of the column for each levels (as primary key for the table of the level and in the other geo_* tables to describe hierarchy).
 
@@ -61,7 +61,7 @@ code_nuts3   | code_nuts2   | code_country |               |
 code_nuts2   | code_country |              |               |
 code_country |              |              |               | 
 
-Primary keys are marked with the *. It is important that the name of the column refering to a given level must have the exact same name in all geographic tables. The column containing the title should also be the same in every table.
+Primary keys are marked with the *. It is important that the name of the column referring to a given level must have the exact same name in all geographic tables. The column containing the title should also be the same in every table.
 
 Extract column could be available to describe property of each level.
 
@@ -129,9 +129,9 @@ If age.breaks are provided population will be aggregated on this groups (must be
 ### Global population
 Population tables contains population count for a given level, and a given year
 
-They are named usign the pattern : `pop_[name]`
+They are named using the pattern : `pop_[name]`
 
-Table structute should be:
+Table structure should be:
  - code_[name]
  - year
  - population
