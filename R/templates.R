@@ -471,7 +471,6 @@ survey_templates[["eu:weekly"]] = list(
       'Unk' = 100
     ),
 
-    "visit.delay"   = recode_alias("visit.delay"),
     "visit.delay.hospital"  = recode_alias("visit.delay"),
     "visit.delay.emergency"   = recode_alias("visit.delay"),
     "visit.delay.other" = recode_alias("visit.delay"),
