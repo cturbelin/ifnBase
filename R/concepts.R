@@ -26,13 +26,22 @@
 #' A survey can be associated with a table name in the database, and variable mapping (to recode database column name to
 #' more meaningfull names), and a value to label mapping (recoding a value in the database to a label)
 #'
-#' The package also provide two survey templates for weekly and intake survey (see \code{\link{survey_template}}) respectively
+#' The package also provide two survey templates for weekly and intake survey (see \code{\link{survey_template}()}) respectively
 #' named 'eu:weekly' and 'eu:intake'.
 #'
-#' A survey is a set of variables for this package, but here `question` is often used with the same meaning of "variable".
+#' A survey is a set of variables for this package, some variables can be related to the same question in the survey (for example in case of multiple choice), this is handled by defining
+#' a named set of labels in the survey (list of variable names or grob like pattern). see \code{\link{survey_labels}()}
 #'
-#' Some variables can be related to the same question in the survey (for example in case of multiple choice), this is handled by defining
-#' a named set of labels in the survey (list of variable names or grob like pattern). see \code{\link{survey_labels}}
+#' See \code{vignette("surveys", "ifnBase")}
+#'
+#' @section Participants:
+#'
+#' A participant is an individual subject of a survey response (either by filling by himself the survey or delegate to someone else). Each
+#' survey response is registrer to belonging to a participant (with "global_id" value in the database).
+#' This package doesnt use global_id but match it with survey_user table id, assigning one numerical id to each participant.
+#'
+#' An influenzanet user, is not a participant but an individual connected to an account, and several participant can be registred in one account
+#' (the set of participants of an account is often called "household").
 #'
 #' @name concepts
 NULL
