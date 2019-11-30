@@ -12,6 +12,7 @@ raw_value = function(...) {
 }
 
 #' Create a encoding dictionnary for each variable used in a strategy
+#'
 #' Lookup for each variable to get raw values (database encoded value) and data recoding available in survey (\code{\link{survey_definition}}).
 #' Performs some checks that values should be known and unique.
 #' @param data list() describing values for each variable (name as key)
@@ -72,6 +73,7 @@ strategy_create_coding = function(data, survey="weekly") {
 
 
 #' Define a strategy to merge data of the same episode of a participant
+#'
 #' @param type name of the strategy to apply
 #' @param ... variable names in weekly (columns) & parameters to apply (see details)
 #'
@@ -192,6 +194,8 @@ group_by_episode = function(.data, episode.column, ...) {
 
 
 #' Merge episodes using a simple function as merge strategy
+#'
+#'
 #' @param strategy strategy definition structure, created by \code{\link{episode_strategy}}
 #' @param weekly weekly data.frame for one episode
 #' @param episode.column character string name of column containing episode
