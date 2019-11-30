@@ -114,6 +114,7 @@ platform_define_survey <- function(name, survey_id=NULL, table=NULL, mapping=lis
   }
 
   def$single.table = single.table
+  def$name = name
 
  .Share$epiwork.tables[[name]] <- def
  invisible(def)
@@ -166,12 +167,32 @@ create_survey_definition <- function( mapping, labels=NULL, codes=NULL, recodes=
 
   checks = NULL
 
+  # Resolve recode_alias by finding the recoding in another entry either in the mapping list or in the template if provided
+  resolve_alias = function(rr, template=NULL) {
+    lapply(rr, function(r) {
+      if(is(r, "recode_alias")) {
+        map = rr[[r]]
+        if(is.null(map) & !is.null(template)) {
+          map = template[[r]]
+        }
+        if(is.null(map)) {
+          rlang::abort(paste0("Unable to find recode name for '", r,'"', recodes=rr, template=template))
+        }
+        r = map
+      }
+      r
+    })
+  }
+
+
   if( !is.null(template) ) {
     if( is.null(survey_templates[[template]]) ) {
       rlang::abort(paste0("Unknown template '", template,'"'))
     }
 
     template = survey_templates[[template]]
+
+    template$recodes = resolve_alias(template$recodes)
 
     checks = check_survey_template(template, mapping, recodes, only.errors = only.errors)
 
@@ -181,6 +202,9 @@ create_survey_definition <- function( mapping, labels=NULL, codes=NULL, recodes=
     # Merge recodes
     rr = list()
     nn = unique(c(names(recodes), names(template$recodes)))
+
+    recodes = resolve_alias(recodes, template)
+
     for(name in nn) {
       new_recodes = merge_by_value(recodes[[name]], template$recodes[[name]])
       if( !check_unique(new_recodes) ) {
@@ -193,6 +217,8 @@ create_survey_definition <- function( mapping, labels=NULL, codes=NULL, recodes=
     # Merge labels
     labels = merge_list(labels, template$labels)
 
+  } else {
+    recodes = resolve_alias(recodes)
   }
 
   # Check if any mapping to protected names
@@ -202,8 +228,8 @@ create_survey_definition <- function( mapping, labels=NULL, codes=NULL, recodes=
   }
 
   list(
-    mapping = mapping,
-    labels = labels,
+    mapping = structure(mapping, class="survey_mapping"),
+    labels = structure(labels, class="survey_labels"),
     recodes = recodes,
     checks = checks
   )
@@ -313,6 +339,71 @@ print.survey_recode <-function(x, ...) {
   Map(function(label, value) {
     cat(" - ", sQuote(label),'=',sQuote(value), if(label %in% inherited) " (inherited)", "\n")
   }, names(x), as.vector(x))
+}
+
+#' print survey variable mapping
+#' @param x list() variable mapping
+#' @param ... extra parameters (print interface compatibility)
+#' @export
+print.survey_mapping <-function(x, ...) {
+  inherited = attr(x, "inherited")
+  cat("Variable mapping (variable = db name):\n")
+  Map(function(label, value) {
+    cat(" - ", sQuote(label),'=',sQuote(value), if(label %in% inherited) " (inherited)", "\n")
+  }, names(x), as.vector(x))
+}
+
+#' print survey labels mapping
+#' @param x list() variable mapping
+#' @param ... extra parameters (print interface compatibility)
+#' @export
+print.survey_labels <-function(x, ...) {
+  inherited = attr(x, "inherited")
+  cat("Labels :\n")
+  Map(function(label, value) {
+    cat(" - ", sQuote(label),'=', paste(sQuote(value), collapse=","), if(label %in% inherited) " (inherited)", "\n")
+  }, names(x), as.vector(x))
+}
+
+
+#' print survey definition
+#' @param x list() recode mapping
+#' @param ... extra parameters (print interface compatibility)
+#' @export
+print.survey_definition <-function(x, ...) {
+  cat("Survey", sQuote(x$name))
+  if(!is.null(x$template_name)) {
+    cat(" inherits survey template", sQuote(x$template_name))
+  }
+  if(!is.null(x$table)) {
+    cat(" table:", sQuote(x$table))
+    if(x$single.table) {
+      cat(" using single table model")
+    }
+  }
+  if(!is.null(x$survey_id)) {
+    cat(" Survey db id:", sQuote(x$survey_id))
+  }
+  cat("\n")
+  if(!is.null(x$aliases)) {
+    print(x$aliases)
+  }
+  if(!is.null(x$labels)) {
+    print(x$labels)
+  }
+  if(!is.null(x$recodes)) {
+    cat("Recodings:\n")
+    print(x$recodes)
+  }
+  if(!is.null(x$checks)) {
+    cat("Checks\n")
+    print(x$checks)
+  }
+  nn = names(x)
+  nn = nn[! nn %in% c('aliases','labels','name','template_name','table','single.table','survey_id','recodes','checks')]
+  if(length(nn) > 0) {
+    print(x[nn])
+  }
 }
 
 
