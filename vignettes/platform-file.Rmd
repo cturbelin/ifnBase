@@ -37,7 +37,7 @@ Define the code of the language to use by default in i18n files.
 boolean. If TRUE by default survey response will be loaded only for empty channel. If FALSE, channel column will be ignored.
 
 ### `first.season.censored` (optional)
-boolean value. if TRUE the first season of each particpant need to be left censored (we dont have data before)
+boolean value. if TRUE the first season of each participant need to be left censored (we dont have data before)
 
 ### `get_first_season_country` function(country)
 function with one parameter `country`. Should return the first available season year for the country. This is needed when `first.season.censored` is active (TRUE) to
@@ -47,7 +47,7 @@ If the data storage model is using a single table for each survey, you have to d
 health status computed from each weekly survey 
 
 ```{r eval=FALSE}
-list(
+health.status = list(
  default="health_status_view" # Table name containing health status for each survey
  id="weekly_id" # Name of the column containg the corresponding response id in the weekly's data response table. 
 )
@@ -66,45 +66,91 @@ platform_options(
 ```
 ## Survey registration
 
-Each survey has to be registred to the package before the surveys_* functions can be used. 
+Each survey has to be registered to the package before the `surveys_*` functions can be used. 
 Registration is done by calling the function `platform_define_survey()` (usually in the platform file to be available in all the scripts, but it's possible to register a new survey in a script).
 
-This registration will assign a unique internal name to the survey that all the `survey_*` will recognise in the *survey* parameter. You can give the name you want to your surveys (by convention we use "intake" and "weekly" for respectively)
+The survey definition is described in the [survey definition section](surveys.html)
 
+## Survey History
 
-For example for a short survey about vaccination
+InfluenzaNet is collecting data during specific time period each year, mainly during a wide winter season (classically november to april). 
+Use the `platform_season_history()` function to describe each season.
 
-```{r eval=FALSE}
+This function accept several parameters :
+ - season : the season number (this is the year number of the starting year of the season, e.g. 2010 for 2010-2011 season, 2017 for 2017-2018 season )
+ - dates : list(start, end) starting and ending dates for the season
+ - weekly: name of the weekly table  for this season (if not single data table model)
+ - intake: name of the intake table for this season (if not single data table model)
+ - health: name of the view containing health status for this season, used by `survey_load_health_status()`function
 
-platform_define_survey(
-  name="mysurvey"
-  survey_id = 12,
-  mapping= list(
-    'age'='Q1'  # Q1 = Name in the DB -> 'age' name in the R data
-    'vaccination'='Q2',
-    'vacc.at_risk'='Q3_1',
-    'vacc.health_prof'='Q3_2'
-    'vacc.work'='Q3_3'
-    ),
-  recoding=list(
-    'vaccination'=c('yes'='1','no'='2', 'unknown'='3') # Describe recoding to meaningfull levels
-  ),
-  labels = list(
-    'vacc.reason'='vacc.*' # Define a pattern to identify all variables about vaccination reason
-  )
+```r
+# Season 2011 is from 2011 10 of November to 2012, 22 of April
+# This single table model, if single.table=TRUE in survey definition you dont have to indicate table names
+platform_season_history(2011, dates=list(start="2011-11-10", end="2012-04-22"))
+
+# Other platform
+# Using a by season table model, for each season we need to indicate what is the table name to use to get the data
+# (here we have created view to have more convenient table name )
+# You can add extra parameter for the season, here `year.pop` indicating the year of the population to use 
+platform_season_history(
+  season ='2014',
+  weekly='pollster_results_weekly_2014',
+  intake='pollster_results_intake_2014',
+  health='pollster_health_status_2014',
+  dates=list('start'='2014-11-19','end'='2015-04-20'),
+  year.pop=2013
 )
 
 ```
 
-
-
-
-## Survey History
-
-- platform_season_history(season, dates, ...): describes dates of a season & optionnally table name for each season (multiple table model)
-
 ## Geographic tables
 
-`platform_geographic_levels` describes available geographic levels and how they are organized (hierarchies)
+### platform_geographic_levels()
+describes available geographic levels and how they are organized (hierarchies)
 
-`platform_geographic_tables` allows to describe for each level the table describing area and the columns mapping.
+```r
+# Describe geographic levels names and hierarchy 
+# Here zip < nuts3 < nuts2 < country
+# The lowest level is zip
+# Table describing all level mappings from zip level is "geo_zip"
+# And each column with the corresponding level is described
+# Hierarchy of levels can also be describe
+# "country" option will indicate we must specify country with the level
+platform_geographic_levels(
+  geo.levels = c('zip', 'nuts3', 'nuts2', 'nuts1', 'country'),
+  # level code of the information in the survey
+  level.base = 'zip',
+  table = 'geo_zip',
+  columns =  c(
+    'zip'='code_zip',
+    'nuts3'='code_nuts3',
+    'nuts2'='code_nuts2',
+    'nuts1'='code_nuts1',
+    'country'='country'
+  ),
+  hierarchies=list(
+    'europe'=c('zip', 'nuts3', 'nuts2', 'nuts1', 'country')
+  ),
+  country = TRUE,
+  default.hierarchy="europe"
+)
+```
+
+### platform_geographic_tables 
+Allows to describe for each level the name of the table containing all area in the level and the name of the columns.
+By using this function you inform the package on how your database is organized.
+This function is needed to use geographic function and to be able to load the data about geographic levels
+
+```r
+# Example of geographic tables describing each levels and their areas
+# For european database (we include a "country" level, which is not needed for a country specific platform database)
+platform_geographic_tables(
+   list(
+     'zip'=list(table='geo_zip', title=NULL, column='code_zip'),
+     'nuts3'=list(table='geo_nuts3', title="title", column='code_nuts3'),
+     'nuts2'=list(table='geo_nuts2', title="title", column='code_nuts2'),
+     'nuts1'=list(table='geo_nuts1', title="title", column='code_nuts1'),
+     'country'=list(table='geo_country', title="title", column='country')
+  )
+)
+```

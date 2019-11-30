@@ -24,7 +24,124 @@ knitr::opts_chunk$set(
 1. Functions to load data from the platform database (survey definition or collected data) 
 2. Functions to work with survey data (variable aliases, recoding and labelling) 
 
-To work these functions need the surveys to be registered to the package. This part is described in a dedicated vignette [survey-definition](survey-definition.html).
+To work these functions need the surveys to be registered to the package by providing a survey definition.
+
+# Survey definition
+
+Survey definition is provided by calling the `platform_define_survey()` function, either in the [platform file](platform-file.html) or in a script before using it.
+To do it in the platform file will guarantee the survey definition is available everywhere once the package is loaded and only defined once.
+
+Two examples :
+
+```{r eval=FALSE}
+
+# A Simple survey about vaccination
+platform_define_survey(
+  name="mysurvey",
+  table="pollster_results_vaccination",
+  survey_id = 12,
+  mapping= list(
+    'age'='Q1'  # Q1 = Name in the DB -> 'age' name in the R data
+    'vaccination'='Q2',
+    'vacc.at_risk'='Q3_1',
+    'vacc.health_prof'='Q3_2'
+    'vacc.work'='Q3_3'
+    ),
+  recodes=list(
+    'vaccination'=c('yes'='1','no'='2', 'unknown'='3') # Describe recoding to meaningful levels
+  ),
+  labels = list(
+    'vacc.reason'='vacc.*' # Define a pattern to identify all variables about vaccination reason
+  )
+)
+
+# Define "intake" survey to be exactly as the european one.
+platform_define_survey(name = "intake", template = "eu:intake") # That's all.
+
+```
+
+the `platform_define_survey` function returns a value but you dont need to care about it. The package manage a registry of all surveys. The surveys is automatically
+registered when you call this function !
+
+## Survey definition elements
+each element is a parameter to pass to the `platform_define_survey` function.
+
+### name
+A unique internal name has to be given to each survey. This is the name to be used when calling the packages functions. It can be different than the survey name registered in the 
+Influenzanet platform database (but it's a good idea to have the same name ;)).
+
+### survey_id : what is the survey definition in the Influenzanet database
+id of the survey in the Influenzanet platform database (if not provided some functions like `survey_load_question()`, `survey_load_all()` will not be useable).
+
+This parameter is only useable if you work with a full featured Influenzanet platform's database (with all tables of the pollster app). You can omit it if you work offline or with a restricted database.
+
+### table, single.table : defining how data are stored
+`table` parameter has to be set to the name of the table containing the survey data. If several table are available it must be the common table ("pollster_results_intake" for example)
+
+This package handles 2 data models :
+- single table model: all data of all seasons are stored in the same table (e.g. all in "pollster_results_intake"), to use this model set parameter `single.table` to TRUE
+- multiple table: one table for each season, then each season should be described individually (see season's handling section). `single.table` should be FALSE (default).
+
+### mapping : define mapping between database column names and variable names
+This parameters is a list of key value pairs, the key is the variable name, the value the name of the database column for this variable.
+
+```r
+ mapping= list(
+    'age'='Q1'  # Q1 = Name in the DB -> 'age' name in the R data
+    'vaccination'='Q2',
+    'vacc.at_risk'='Q3_1',
+    'vacc.health_prof'='Q3_2'
+    'vacc.work'='Q3_3'
+ )
+
+```
+
+### recodes : define the recoding for each variables
+This parameter should be a list of list.
+The first key, should be the variable name, the value a list of key,value pairs, with recoded label as key and database value as value.
+
+```r
+  recodes = list(
+     smoker = c(
+        'smoker.no'="0",
+        'smoker.occas'="1",
+        'smoker.dailyfew'="2",
+        'smoker.daily'="3",
+        'smoker.dkn'="4",
+        'smoker.stopped'="5",
+        'smoker.juststop'="6"
+      ),
+      pregnant = c(
+        'Yes' = '0',
+        'No' = '1',
+        'DNK'='2'
+      ),
+      another_variable = recode_alias("pregnant")
+  )
+```
+
+It is recommended to use prefixed labels ('smoker.no' instead of 'no') because this is really identify the modality of this question (by making the label unique across the surveys) and
+enable specific translation for this label.
+
+It is possible to reuse an already define recoding by using the function recode_alias() with the name of the variable to copy the recoding from.
+
+### labels
+
+Labels are a way to define group of variable names (see [survey_labels()](#survey_labels)). They can be defined either with the full list of names
+
+```r
+  labels = list(
+    'vacc.reason'='vacc.*' # Define a pattern to identify all variables about vaccination reason. Will select all variable starting with 'vacc.'
+  )
+```
+
+### template
+It's possible to define a survey by inheriting an existing template (with mapping, recodes & labels defined).
+
+2 templates are built-in the package :
+ - 'eu:weekly' : weekly Influenzanet survey
+ - 'eu:intake' : intake Influenzanet survey
+
 
 # Loading functions
 
@@ -63,7 +180,7 @@ Results will have several mandatory variables (regardless the parameter `cols`)
 - `id`: unique number identifying the survey response
 - `person_id` : number of the participant (see note below)
 
-In the resulting data.frame variable names names will be the *internal aliases* defined in the [survey definition](survey-definition.html)
+In the resulting data.frame variable names names will be the *internal aliases* defined in the [survey definition](#survey-definition)
 
 > **Note about participants identification**
 > The Influenzanet platforms identify participants by a string usually called "global_id". This package doesn't load use it directly for memory saving reasons.
@@ -81,7 +198,7 @@ In the resulting data.frame variable names names will be the *internal aliases* 
 ## Variable names
 
 To analyse the data we don't work with the names of the database tables (`Qxxx`) because they are not meaningful and error prone but with internal variable names (called *aliases*)
-The mapping between the database column names and variable names is defined in the survey [survey definition](survey-definition.html).
+The mapping between the database column names and variable names is defined in the survey [survey definition](#survey-definition).
 
 For "intake" and "weekly", the set of variables is available from a template for each survey, using them allow to use the same names in all analysis whatever the platform. 
 it's possible to override a template to add platform's specific questions and coding.
@@ -148,7 +265,7 @@ Return the recoding mapping of all known variable of a survey
 survey_recodings("intake")
 ```
 
-## Variable groups and survey_labels()
+## Variable groups and survey_labels() [survey_labels]
 
 Several survey variables can store the responses for a single survey question, for example the multiple choices questions (each modality response is stored in a boolean column a).
 
@@ -182,7 +299,7 @@ For example:
 ```
 
 ## survey_definition()
-You can get all the configuration of a survey by calling survey_definition(). It will show all variable aliases, label recodings, and other parameters of a survey.
+You can get all the configuration of a survey by calling survey_definition(). It will show all variable aliases, label recoding, and other parameters of a survey.
 
 ```{r, eval=FALSE}
 survey_definition("intake") # Show intake survey definition
