@@ -9,3 +9,4 @@ validate_platform()
 \description{
 Post loading function to validate platform info
 }
+\keyword{internal}

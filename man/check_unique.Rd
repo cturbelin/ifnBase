@@ -12,3 +12,4 @@ check_unique(x)
 \description{
 Check if list values are unique
 }
+\keyword{internal}

@@ -21,3 +21,4 @@ list()
 \description{
 Check if a survey definition is compatible with a survey template
 }
+\concept{[platform_define_survey()]}

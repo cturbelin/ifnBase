@@ -2,8 +2,7 @@
 % Please edit documentation in R/incidence_design.R
 \name{calc_adjusted_incidence}
 \alias{calc_adjusted_incidence}
-\title{Compute crude & adjusted incidence from a count data.frame
-This function is shared by all incidence computation methods, once active participants & syndrome counts are provided}
+\title{Compute crude & adjusted incidence from a count data}
 \usage{
 calc_adjusted_incidence(count.week, design, syndromes, output)
 }
@@ -17,6 +16,9 @@ calc_adjusted_incidence(count.week, design, syndromes, output)
 \item{output}{char() list of requested output "inc"=global incidence, "zlow"=lower geo level incidence, "age" by age incidence,}
 }
 \description{
+This function is shared by all incidence computation methods, once active participants & syndrome counts are provided
+}
+\details{
 Ouput columns are ([syndrome] is the column with logical value for presence of one syndrome in the weekly data, for example "ili"):
  - active : count of active participants
  - [syndrome] : count for this syndrome (or variable)

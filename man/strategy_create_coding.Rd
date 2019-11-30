@@ -2,9 +2,7 @@
 % Please edit documentation in R/episode_fusion.R
 \name{strategy_create_coding}
 \alias{strategy_create_coding}
-\title{Create a encoding dictionnary for each variable used in a strategy
-Lookup for each variable to get raw values (database encoded value) and data recoding available in survey (\code{\link{survey_definition}}).
-Performs some checks that values should be known and unique.}
+\title{Create a encoding dictionnary for each variable used in a strategy}
 \usage{
 strategy_create_coding(data, survey = "weekly")
 }
@@ -17,7 +15,6 @@ strategy_create_coding(data, survey = "weekly")
 fusion_strategy_dict object each variables will have recoded (codes) and non encoded (raw) values
 }
 \description{
-Create a encoding dictionnary for each variable used in a strategy
 Lookup for each variable to get raw values (database encoded value) and data recoding available in survey (\code{\link{survey_definition}}).
 Performs some checks that values should be known and unique.
 }

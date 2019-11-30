@@ -31,8 +31,11 @@ list(mapping, labels, recodes, checks)
 }
 \description{
 Create and check survey structure and import from template if provided.
-This function is mainly used internally by \code{\link{platform_define_survey}}. Unless you want to test definition you should not need this function.
+This function is mainly used internally by [platform_define_survey()]. Unless you want to test definition you should not need this function.
 }
 \seealso{
-\code{\link{platform_define_survey}}
+Other platform: 
+\code{\link{load_platform}()},
+\code{\link{platform_define_survey}()}
 }
+\concept{platform}

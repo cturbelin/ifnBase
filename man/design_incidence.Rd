@@ -2,7 +2,7 @@
 % Please edit documentation in R/incidence_design.R
 \name{design_incidence}
 \alias{design_incidence}
-\title{Create a structure usable by incidence computation functions to describe the stratification to use (parameter design)}
+\title{Describe the stratification to use for incidence computation (parameter design)}
 \usage{
 design_incidence(
   age.categories,
@@ -26,8 +26,12 @@ design_incidence(
 
 \item{...}{other parameters to include in the design}
 }
+\value{
+design.incidence object
+}
 \description{
-Embed all data & metadata about stratification
+Create a structure usable by incidence computation functions.
+The returned structure embed all data & metadata about stratification
 Only handle strata on age and geo level for instance
 By convention age group column will be names "age.cat"
 }

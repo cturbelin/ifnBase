@@ -2,8 +2,7 @@
 % Please edit documentation in R/incidence_utils.R
 \name{calc_weekly_delay}
 \alias{calc_weekly_delay}
-\title{Compute delay between 2 surveys for each participant
-weekly should be ordered by person_id then timestamp !}
+\title{Compute delay between 2 surveys for each participant}
 \usage{
 calc_weekly_delay(weekly, time.col)
 }
@@ -13,6 +12,5 @@ calc_weekly_delay(weekly, time.col)
 \item{time.col}{column containg time value to compute delay from}
 }
 \description{
-Compute delay between 2 surveys for each participant
 weekly should be ordered by person_id then timestamp !
 }

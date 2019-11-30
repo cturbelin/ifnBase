@@ -44,3 +44,9 @@ Some variables can be related to the same question in the survey (for example in
 a named set of labels in the survey (list of variable names or grob like pattern). see \code{\link{survey_labels}}
 }
 
+\section{Participants}{
+
+
+A participant is a person registred
+}
+

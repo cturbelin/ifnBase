@@ -2,9 +2,7 @@
 % Please edit documentation in R/i18n.r
 \name{titlelize}
 \alias{titlelize}
-\title{Create a title from a set of character vectors
-Each argument will be translated and then concatenated in a single string
-Caution, this function collapse all arguments, and return ONE string}
+\title{Create a title from a set of character vectors}
 \usage{
 titlelize(..., translate = T)
 }
@@ -14,7 +12,6 @@ titlelize(..., translate = T)
 \item{translate}{bool use i18n for each fragment}
 }
 \description{
-Create a title from a set of character vectors
 Each argument will be translated and then concatenated in a single string
 Caution, this function collapse all arguments, and return ONE string
 }

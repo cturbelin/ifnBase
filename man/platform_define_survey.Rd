@@ -2,13 +2,13 @@
 % Please edit documentation in R/platform.R
 \name{platform_define_survey}
 \alias{platform_define_survey}
-\title{Describe a survey of a platform}
+\title{Describe a survey of a platform and register it}
 \usage{
 platform_define_survey(
   name,
-  survey_id,
-  table,
-  mapping,
+  survey_id = NULL,
+  table = NULL,
+  mapping = list(),
   labels = NULL,
   codes = NULL,
   recodes = list(),
@@ -41,9 +41,14 @@ platform_define_survey(
 
 \item{...}{extra parameters to set for the survey}
 }
+\value{
+invisibly return the survey_definition object
+}
 \description{
-Describe structure of a survey and the mapping from DB names &
-coding to R names & factor levels
+Describe configuration of a survey and the mapping from DB names &
+coding to R names & factor levels.
+A call to this function is needed to register a survey in the package before to use other survey functions.
+Usually it is done in the platform definition file, which is loaded by \code{\link{load_platform}()} function
 }
 \section{Mapping}{
 
@@ -79,5 +84,12 @@ One of common labels is "symptoms" in weekly survey definition, providing the li
 }
 
 \seealso{
+[survey_definition()]
+
 \code{\link{survey_recode}}
+
+Other platform: 
+\code{\link{create_survey_definition}()},
+\code{\link{load_platform}()}
 }
+\concept{platform}

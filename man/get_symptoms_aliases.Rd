@@ -2,7 +2,7 @@
 % Please edit documentation in R/survey.r
 \name{get_symptoms_aliases}
 \alias{get_symptoms_aliases}
-\title{aliases for symptom columns}
+\title{Aliases for symptom columns}
 \usage{
 get_symptoms_aliases()
 }

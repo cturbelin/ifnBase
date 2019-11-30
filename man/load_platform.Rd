@@ -7,7 +7,13 @@
 load_platform()
 }
 \description{
-Launch this function to init environment
+Launch this function to init the package environment
 It can be loaded automatically by setting 'autoload.platform' option. In this case
-options should have been provided using options(ifn=list(...)) before the package is loaded
+options should have been provided using options(ifn=list(...)) before the package is loaded see \code{\link{share.option}()}
 }
+\seealso{
+Other platform: 
+\code{\link{create_survey_definition}()},
+\code{\link{platform_define_survey}()}
+}
+\concept{platform}

@@ -2,8 +2,7 @@
 % Please edit documentation in R/i18n.r
 \name{i18n_inflect}
 \alias{i18n_inflect}
-\title{Inflexion for a count
-return translated string according to count}
+\title{Inflexion for a count}
 \usage{
 i18n_inflect(count, single, plural)
 }
@@ -15,6 +14,5 @@ i18n_inflect(count, single, plural)
 \item{plural}{plural text id if count > 1}
 }
 \description{
-Inflexion for a count
 return translated string according to count
 }
