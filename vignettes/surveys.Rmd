@@ -1,0 +1,197 @@
+---
+title: "Working with surveys"
+author: "Clément Turbelin"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Working with surveys}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+source("bootstrap.R")
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Introduction
+
+*ifnBase* provides two categories of functions to work with surveys. 
+
+1. Functions to load data from the platform database (survey definition or collected data) 
+2. Functions to work with survey data (variable aliases, recoding and labelling) 
+
+To work these functions need the surveys to be registered to the package. This part is described in a dedicated vignette [survey-definition](survey-definition.html).
+
+# Loading functions
+
+## Survey description  from database
+
+Several functions are available to load information about a survey defined in an Influenzanet platform database.
+
+- **survey_load_questions(survey)**: load questions definition of a survey
+- **survey_load_options(question_id, translation_id)** : load options for question(s)
+- **survey_load_translation(survey, language)** : load translation set of a survey
+- **survey_load_all(survey, language)** : load all information (question, options, translations) of a survey
+
+These functions are only needed if you want to work with the definitions stored in the database (how data are collected using the web forms), they are not necessary to work with surveys responses (therefore it's possible to work only with the survey data, without the database).
+The survey definition provided by this package allow to work offline or with a data only database (with only "_results" tables).
+
+## Load Survey data (responses) from the database
+
+### survey_load_results()
+
+load survey data, all options are described in R documentation `?survey_load_results`. Basically you can :
+- load data of a season with the `season` parameter
+- for a country (in european database)
+- for a list of participants (`survey.users` parameter)
+- get geographical levels matching with the participant location (for intake survey) with the `geo` parameter
+- get a subset of columns (using `cols`) parameter, the name to use are the either the database column name or the *internal aliases*
+
+```{r, eval=FALSE}
+# Load weekly data for the season 2017-2018, with all columns
+weekly = survey_load_results("weekly", cols="*", season=2017)
+# Load intake for 2019-2020 seasons, and match with the corresponding nuts2 level for each fetched survey
+intake = survey_load_results("intake", cols=c('timestamp','date-birth','code_zip'), season=2019, geo="nuts2")
+
+```
+
+Results will have several mandatory variables (regardless the parameter `cols`)
+- `id`: unique number identifying the survey response
+- `person_id` : number of the participant (see note below)
+
+In the resulting data.frame variable names names will be the *internal aliases* defined in the [survey definition](survey-definition.html)
+
+> **Note about participants identification**
+> The Influenzanet platforms identify participants by a string usually called "global_id". This package doesn't load use it directly for memory saving reasons.
+> We use the integer id in the *survey_surveyuser* table, in this package it is named "**person_id**" in the data and parameter of function who uses it.
+
+### Other utility functions
+
+- *survey_load_participants()* : Load the list of registered participants (list of available global_id), this will load the contents of the `survey_surveyuser` table
+- *survey_participant_season()* : load the list of participants id (person_id) who have at least one survey filled in the given season
+- *survey_load_results_historic()* : load all historical data (all seasons) for a participant sets for a given survey
+- *survey_participant_previous_season()* : load list of participants (person_id) 
+
+# Working with survey data
+
+## Variable names
+
+To analyse the data we don't work with the names of the database tables (`Qxxx`) because they are not meaningful and error prone but with internal variable names (called *aliases*)
+The mapping between the database column names and variable names is defined in the survey [survey definition](survey-definition.html).
+
+For "intake" and "weekly", the set of variables is available from a template for each survey, using them allow to use the same names in all analysis whatever the platform. 
+it's possible to override a template to add platform's specific questions and coding.
+
+In principle you would not have to use database column name (the goal of the package is to do the job for you).
+
+## Variable recoding
+
+Survey data are encoded using integer codes to represent each variable modality. These codes are defined for each question (`options` in the survey data model of Influenzanet platform).
+Unfortunately those codes are not meaningful (e.g. '0' can represent either the response 'Yes', or 'No') and error prone.
+To reduce the error by manipulating data we propose a recoding of each categorical variable with a unique and meaningful set of labels (they are not perfect but better than a number).
+
+Predefined labels are provided for Yes/No/I dont know questions with labels 'Yes', 'No', and 'DNK'. 
+This package provides 3 constants for each corresponding level : `YES`, `NO`, `DONTKNOW` they are useful to test a recoded value with this label (more error proof than using the label itself)
+
+```{r, eval=FALSE}
+intake = survey_load_results("intake", c('vacc.curseason','pregnant')) # Load intake data with vaccination and pregnancy responses
+intake = recode_intake(intake) # Recode to labels
+if(intake$vacc.curseason == YES) {
+  # DO something
+}
+#  Also useable to select subset
+not_pregnant = intake %>% filter(pregnant == NO)
+
+```
+
+### recode_weekly(), recode_intake()
+For weekly and intake the package provides 2 dedicated function. They will recode categorical variables to factor using labels mapping in the corresponding survey definition.
+
+```{r, eval=FALSE}
+intake = survey_load_results("intake", "*") # Load all intake data for the current season
+intake = recode_intake(intake) # Recode all variables
+
+weekly = survey_load_results("weekly", "*") # Load all intake data for the current season
+weekly = recode_weekly(weekly)
+
+```
+These two functions are useable with data loaded from database or stored in a Rdata file. If some variables are already recoded (in factor) they will not be recoded.
+Of course before recoding, the variables should be encoded with the database code (if you change these values before recoding it will lead to unpredictable results).
+
+## survey_recode()
+This function recode a vector of values using the mapping of a known variable.
+
+```{r, eval=TRUE}
+x = c(0, 1, 0, 0, 1)
+x = survey_recode(x, variable="pregnant", survey="intake") # Recode using the mapping of the "pregnant" variable of intake survey
+print(x)
+```
+
+## `survey_variable_recoding()`
+Get the mapping to recode a given variable of a survey
+
+```{r, eval=TRUE}
+survey_variable_recoding("intake", "pregnant")
+survey_variable_recoding("intake", "smoker")
+```
+
+The mention *'(inherited)'* means the recoding comes from the template the survey definition inherits.
+
+## survey_recodings()
+Return the recoding mapping of all known variable of a survey
+
+```{r, eval=FALSE}
+survey_recodings("intake")
+```
+
+## Variable groups and survey_labels()
+
+Several survey variables can store the responses for a single survey question, for example the multiple choices questions (each modality response is stored in a boolean column a).
+
+A survey definition can contains "labels", a label in a named list of values, useable to define "groups". 
+They can be used to get the list of recoding labels but also to get list of variables corresponding to a multiple choice question.
+
+The function `survey_labels()` get the group with the name of labels.
+
+```{r, eval=TRUE}
+  condition.vars = survey_labels("intake", "condition") # List of variables for the "condition" question of intake
+```
+
+This mechanism allows to write programs without knowing the exact list of modalities of the variable (if it changes, only the definition has to be updated)
+
+For example:
+
+```{r, eval=FALSE}
+  condition.vars = survey_labels("intake", "condition") # List of variables for the "condition" question of intake
+  allergy.vars = survey_labels("intake", "allergy") # List of variables for the "condition" question of intake
+
+  intake = survey_load_results("intake", cols=c(condition.vars, allergy.vars), season=2016) # Get the response of the 2 questions
+
+  # Frequency of condition
+  condition.freq = multiple_freq(intake[, condition.vars])
+  gg_barplot_percent(condition.freq) # plot it
+  
+  # Frequency of allergies
+  allergy.freq = multiple_freq(intake[, allergy.vars])
+  gg_barplot_percent(allergy.freq) # plot it
+
+```
+
+## survey_definition()
+You can get all the configuration of a survey by calling survey_definition(). It will show all variable aliases, label recodings, and other parameters of a survey.
+
+```{r, eval=FALSE}
+survey_definition("intake") # Show intake survey definition
+```
+## survey_aliases()
+The function `survey_aliases()` is responsible to convert from database column name to internal variable names (called *aliases*).
+The survey definition should be passed directly
+
+```{r, eval=FALSE}
+survey_aliases('code_zip', survey_definition("intake")) 
+# 'Q3'
+```
