@@ -5,13 +5,13 @@
 #'
 PROTECTED_QUESTIONS = c('timestamp','channel','user')
 
-
 #' Load platform file containing definitions and specific functions into .Share environment
 #'
-#' Launch this function to init environment
+#' Launch this function to init the package environment
 #' It can be loaded automatically by setting 'autoload.platform' option. In this case
-#' options should have been provided using options(ifn=list(...)) before the package is loaded
+#' options should have been provided using options(ifn=list(...)) before the package is loaded see \code{\link{share.option}()}
 #'
+#' @family platform
 #' @export
 load_platform = function() {
 
@@ -33,11 +33,14 @@ load_platform = function() {
   validate_platform()
 }
 
-#' Describe a survey of a platform
+#' Describe a survey of a platform and register it
 #'
-#' Describe structure of a survey and the mapping from DB names &
-#' coding to R names & factor levels
-#'
+#' Describe configuration of a survey and the mapping from DB names &
+#' coding to R names & factor levels.
+#' A call to this function is needed to register a survey in the package before to use other survey functions.
+#' Usually it is done in the platform definition file, which is loaded by \code{\link{load_platform}()} function
+#' @seealso [survey_definition()]
+#' @family platform
 #' @param name unique name of the survey
 #' @param survey_id id of the survey in the database
 #' @param table name of the default table storing response of the survey
@@ -49,6 +52,8 @@ load_platform = function() {
 #' @param geo.column name of the variable (R names)
 #' @param template name of the template to override
 #' @param ... extra parameters to set for the survey
+#'
+#' @return invisibly return the survey_definition object
 #'
 #' @section Mapping:
 #'
@@ -80,9 +85,9 @@ load_platform = function() {
 #' One of common labels is "symptoms" in weekly survey definition, providing the list of the variables names for symptoms question.
 #'
 #' @export
-platform_define_survey <- function(name, survey_id, table, mapping, labels=NULL, codes=NULL, recodes=list(), single.table = FALSE, geo.column=NULL, template=NULL, ...) {
+platform_define_survey <- function(name, survey_id=NULL, table=NULL, mapping=list(), labels=NULL, codes=NULL, recodes=list(), single.table = FALSE, geo.column=NULL, template=NULL, ...) {
 
-  def = list(...)
+  def = structure(list(...), class="survey_definition")
 
   def$survey_id = survey_id
   def$table = table
@@ -111,14 +116,15 @@ platform_define_survey <- function(name, survey_id, table, mapping, labels=NULL,
   def$single.table = single.table
 
  .Share$epiwork.tables[[name]] <- def
+ invisible(def)
 }
 
 #' Create a survey definition
 #'
 #' Create and check survey structure and import from template if provided.
-#' This function is mainly used internally by \code{\link{platform_define_survey}}. Unless you want to test definition you should not need this function.
+#' This function is mainly used internally by [platform_define_survey()]. Unless you want to test definition you should not need this function.
 #'
-#' @seealso \code{\link{platform_define_survey}}
+#' @family platform
 #'
 #' @param mapping list() variable (name) to DB column (value) mapping
 #' @param labels list() named list of labels
@@ -205,6 +211,7 @@ create_survey_definition <- function( mapping, labels=NULL, codes=NULL, recodes=
 }
 
 #' Check if list values are unique
+#' @keywords internal
 #' @param x vector or list of values to check for unicity
 check_unique = function(x) {
   if(is.list(x)) {
@@ -213,10 +220,11 @@ check_unique = function(x) {
   all(table(x) == 1)
 }
 
-#' Merge two named lists by their values
+#' Merge two named lists by their values (survey recoding)
 #'
+#' Internal function to be used for survey recoding definition.
 #' Only keep in old values that are not already in new
-#'
+#' @keywords internal
 #' @param new vector or list of values
 #' @param old vector or list of values
 merge_by_value = function(new, old) {
@@ -241,6 +249,7 @@ merge_by_value = function(new, old) {
 #' @param recodes new recoding to test
 #' @param only.errors boolean if TRUE only report errors
 #' @return list()
+#' @family [platform_define_survey()]
 #' @export
 check_survey_template <- function(template, mapping, recodes, only.errors=TRUE) {
 
@@ -594,6 +603,7 @@ platform_env <- function(name=NULL) {
 }
 
 #' Post loading function to validate platform info
+#' @keywords internal
 validate_platform =function() {
 
   if(isTRUE(.Share$first.season.censored)) {

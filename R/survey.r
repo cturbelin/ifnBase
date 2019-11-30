@@ -3,7 +3,7 @@
 # Functions dedicated to get surveys data and definitions from
 ##
 
-#' aliases for symptom columns
+#' Aliases for symptom columns
 #'
 #' Aliases are meaningfull names for each columns of the survey data. InfluenzaNet surveys data are named using simple names (Q + number)
 #' but these names are not errorproof and are hard to memorize.
@@ -18,15 +18,16 @@ get_symptoms_aliases <- function() {
   def$labels$symptoms
 }
 
-#' Convert DB column name (InfluenzaNet column names in the db) from (revert=F) and to question variable name (revert=T)
+#' Convert DB column name from and to question variable name (aliases)
 #'
 #' Description of mapping are defined in the survey  by \code{\link{platform_define_survey}} in the platform file
+#'
 #' @param cols names of columns to rename
 #' @param def list of aliases
 #' @param revert if TRUE, aliases to Db names, if false (default) DB names to aliases
 #' @family survey
 #' @export
-survey_aliases <- function(cols, def, revert=F) {
+survey_aliases <- function(cols, def, revert=FALSE) {
   aliases = def$aliases
   if(revert) {
     n = unlist(aliases)
@@ -187,8 +188,10 @@ survey_single_table <- function(survey) {
 }
 
 #' Get survey definition
+#'
 #' Survey definition is a data structure of entries defining variable mapping (db column name to variable name, recoding, variable sets)
 #' They are defined by \code{\link{platform_define_survey}} usually in the platform file
+#'
 #' @param survey survey name
 #' @return list parameters describing a survey
 #' @family survey
