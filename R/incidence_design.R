@@ -27,9 +27,11 @@ get_columns_for_incidence = function() {
   c('timestamp', get_symptoms_aliases(), 'fever.sudden','highest.temp','same.episode','sympt.start','fever.start','sympt.sudden')
 }
 
-#' Create a structure usable by incidence computation functions to describe the stratification to use (parameter design)
+#' Describe the stratification to use for incidence computation (parameter design)
 #'
-#' Embed all data & metadata about stratification
+#'
+#' Create a structure usable by incidence computation functions.
+#' The returned structure embed all data & metadata about stratification
 #' Only handle strata on age and geo level for instance
 #' By convention age group column will be names "age.cat"
 #'
@@ -39,6 +41,7 @@ get_columns_for_incidence = function() {
 #' @param geo_column name of the geographic column  (value return by strata.call), geo_level's column name by default
 #' @param geo_area id of geographic area to keep at the geographic level
 #' @param ... other parameters to include in the design
+#' @return design.incidence object
 #' @export
 design_incidence = function(age.categories, year.pop, geo, geo_column=NULL, geo_area=NULL, ...) {
 
@@ -136,7 +139,8 @@ calc.conf.int = function(inc, v, type='crude', unit=1) {
 }
 
 
-#' Compute crude & adjusted incidence from a count data.frame
+#' Compute crude & adjusted incidence from a count data
+#'
 #' This function is shared by all incidence computation methods, once active participants & syndrome counts are provided
 #'
 #' Ouput columns are ([syndrome] is the column with logical value for presence of one syndrome in the weekly data, for example "ili"):

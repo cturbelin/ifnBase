@@ -19,6 +19,7 @@ create_syndrome_columns = function(weekly, column) {
 }
 
 #' Default set parameters replace default value if exits in params
+#'
 #' @noRd
 #' @param params list of parameters
 #' @param def.params default parameters list
@@ -35,6 +36,7 @@ default.params = function(params, def.params) {
 
 
 #' Compute delay between 2 surveys for each participant
+#'
 #' weekly should be ordered by person_id then timestamp !
 #' @param weekly data.frame with at least (person_id, [time.col]) columns
 #' @param time.col column containg time value to compute delay from
@@ -44,6 +46,7 @@ calc_weekly_delay = function(weekly, time.col) {
 }
 
 #' Compute order of weekly response
+#'
 #' @param weekly weekly data.frame()
 #' @export
 calc_weekly_order = function(weekly) {

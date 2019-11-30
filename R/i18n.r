@@ -52,6 +52,7 @@ i18n_load <- function(..., language=NULL, debug=F) {
 }
 
 #' Translate a string
+#'
 #' @param x object to translate
 #' @return translation or the string itself it not found
 #'
@@ -85,6 +86,7 @@ i18n.factor = function(x) {
 }
 
 #' Inflexion for a count
+#'
 #' return translated string according to count
 #' @param count int count
 #' @param single single text id if count <= 1
@@ -95,8 +97,10 @@ i18n_inflect = function(count, single, plural) {
 }
 
 #' Create a title from a set of character vectors
+#'
 #' Each argument will be translated and then concatenated in a single string
 #' Caution, this function collapse all arguments, and return ONE string
+#'
 #' @param ... list of character string fragments to titlelize
 #' @param translate bool use i18n for each fragment
 #' @export
@@ -117,6 +121,7 @@ titlelize = function(..., translate=T) {
 }
 
 #' translate names attribute
+#'
 #' @param data data structure name to translate
 #' @export
 i18n_names = function(data) {
