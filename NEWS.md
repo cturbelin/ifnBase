@@ -1,3 +1,10 @@
+# ifnBase 0.4.1.9000
+* improve documentation, add several vignettes surveys, 
+* fix recode_alias()
+* add print S3 methods for survey_definition
+* add episode fusion strategies
+* add functions to manage paths : `get_current_paths()`, `add_path_prefix()`
+
 # ifnBase 0.4.1
 * use roxygen 7
 * fix recoding name for `main.activity` variable
