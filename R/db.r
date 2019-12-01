@@ -28,7 +28,7 @@ dbConnect <- function() {
 }
 
 #' Run a query
-#' @param ... query to execute
+#' @param ... query to execute coerced to character vector using paste0
 #' @export
 dbQuery <- function(...) {
   .Share$dbQuery(...)
@@ -48,6 +48,9 @@ dbQuery.RPostgreSQL <- function(..., show.errors = T, dbHandle=NULL) {
     dbHandle = .Share$dbHandle
   }
   query = paste0(...)
+  if(isTRUE(.Share$debug.query)) {
+    debug_query(query)
+  }
   stm <- DBI::dbGetQuery(dbHandle, query)
   if( is.data.frame(stm) || (is.logical(stm) && stm )) {
     return( stm )
@@ -83,6 +86,9 @@ dbQuery.RODBC <- function(..., show.errors = T, dbHandle=NULL) {
     dbHandle = .Share$dbHandle
   }
   query = paste0(...)
+  if(isTRUE(.Share$debug.query)) {
+    debug_query(query)
+  }
   stm <- RODBC::odbcQuery(dbHandle, query)
   if (stm == -1) {
     # handle error
@@ -110,4 +116,8 @@ db_quote_str = function(x) {
 #' @export
 get_db_handle = function() {
   .Share$dbHandle
+}
+
+debug_query = function(query) {
+  print(query)
 }
