@@ -96,6 +96,16 @@ dbQuery.RODBC <- function(..., show.errors = T, dbHandle=NULL) {
   }
 }
 
+#' @noRd
+db_quote_var = function(x) {
+  paste0('"', x, '"')
+}
+
+#' @noRd
+db_quote_str = function(x) {
+  paste0("'", x, "'")
+}
+
 #' get database connexion handle
 #' @export
 get_db_handle = function() {
