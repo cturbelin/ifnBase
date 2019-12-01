@@ -19,7 +19,7 @@
 season_definition = function(season, silent=F) {
   h = .Share$historical.tables[[as.character(season)]]
   if( is.null(h) ) {
-    stop(paste("Unknown season", season,"in historical tables"))
+    rlang::abort(paste("Unknown season", season,"in historical tables"))
   }
   h
 }
@@ -50,5 +50,16 @@ get_historical_seasons = function() {
 #' @export
 get_historical_tables <- function() {
   .Share$historical.tables
+}
+
+#' Get dates of the season
+get_season_dates = function(season) {
+  def = season_definition(season)
+  d = def$dates
+  d$start = as.Date(d$start)
+  if(is.null(d$end) | is.na(d$end)) {
+    d$end = Sys.Date()
+  }
+  d
 }
 
