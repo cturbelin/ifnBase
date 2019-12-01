@@ -12,8 +12,17 @@ platform_options(...)
 \describe{
   \item{first.season.censored}{left censor first season participants for some countries}
   \item{health.status}{structure of the health.status table in case of single table model for weekly}
+  \item{debug.query}{debug SQL queries}
 }}
 }
 \description{
 Define some platform options
 }
+\seealso{
+Other platfom: 
+\code{\link{platform_env}()},
+\code{\link{platform_geographic_levels}()},
+\code{\link{platform_geographic_tables}()},
+\code{\link{platform_season_history}()}
+}
+\concept{platfom}

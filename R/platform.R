@@ -625,18 +625,7 @@ platform_geographic_tables = function(def=NULL, default.title = "title", define=
 #' @export
 platform_season_history <- function(season, dates, ...) {
 
-  s = as.integer(season)
-  if(is.na(s)) {
-    rlang::abort("season must be a number")
-  }
-
-  if(s < 2003) {
-    rlang::abort("season must be a year from 2000 to present year")
-  }
-  max.season = calc_season(Sys.Date())
-  if(s > max.season) {
-    rlang::abort(paste0("season must be a year from 2000 to present year, given ",s))
-  }
+  season = parse_season(season)
 
   if( is.null(.Share$historical.tables) ) {
     .Share$historical.tables = list()
@@ -675,6 +664,7 @@ platform_season_history <- function(season, dates, ...) {
 #' \describe{
 #'   \item{first.season.censored}{left censor first season participants for some countries}
 #'   \item{health.status}{structure of the health.status table in case of single table model for weekly}
+#'   \item{debug.query}{debug SQL queries}
 #' }
 #' @family platfom
 #' @export
@@ -682,11 +672,23 @@ platform_options = function(...) {
 
   oo = list(...)
 
-  if(!is.null(oo$first.season.censored)) {
-    if( !is.logical(oo$first.season.censored) ) {
-      rlang::abort("'first.season.censored' should be logical value")
+  # Import true/false single value
+  import_flag = function(name) {
+    if(hasName(oo, name) ) {
+      v = oo[[name]]
+      if(!is.logical(v)) {
+        rlang::abort(paste0(sQuote(name)," should be logical value"))
+      }
+      if(length(v) > 1) {
+        rlang::abort(paste0(sQuote(name)," only expect one value"))
+      }
+      .Share[[name]] = v
     }
-    .Share$first.season.censored = oo$first.season.censored[1]
+  }
+
+  flags = c("first.season.censored", "debug.query", "use.country")
+  for(name in flags) {
+    import_flag(name)
   }
 
   # Health status table option (in case of single table model)
@@ -728,4 +730,19 @@ validate_platform =function() {
     }
   }
 
+}
+
+#' Check if the platform is allowed to use "country" value
+#'
+#' raise an error if the platform is not configured to use country value
+#'
+#' @return TRUE if country is definied and platform can use country
+can_use_country = function(country) {
+  if(!is.null(country)) {
+    if( !isTRUE(platform_env("use.country")) ) {
+      rlang::abort("Cannot use `country`for this platform not configured")
+    }
+    return(TRUE)
+  }
+  return(FALSE)
 }

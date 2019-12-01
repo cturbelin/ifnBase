@@ -26,3 +26,11 @@ Create geographic tables description
   \item{title}{name of the column containing label of the area}
 }
 }
+\seealso{
+Other platfom: 
+\code{\link{platform_env}()},
+\code{\link{platform_geographic_levels}()},
+\code{\link{platform_options}()},
+\code{\link{platform_season_history}()}
+}
+\concept{platfom}

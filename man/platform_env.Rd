@@ -17,3 +17,11 @@ Platform environment holds platform variables & definition structure.
 \description{
 Get the platform env
 }
+\seealso{
+Other platfom: 
+\code{\link{platform_geographic_levels}()},
+\code{\link{platform_geographic_tables}()},
+\code{\link{platform_options}()},
+\code{\link{platform_season_history}()}
+}
+\concept{platfom}

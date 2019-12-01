@@ -66,3 +66,30 @@ test_that("Check list mapping allowing override (only warn)", {
   expect_equal(err$value, override("Q1"))
   expect_equal(err$problem, "override")
 })
+
+test_that("Check platform options", {
+  flags = c("use.country","first.season.censored", "debug.query")
+  for(flag in flags) {
+    args = list()
+    args[[flag]] = TRUE
+    do.call(platform_options, args)
+    expect_true(platform_env(flag))
+    args[[flag]] = FALSE
+    do.call(platform_options, args)
+    expect_false(platform_env(flag))
+  }
+
+})
+
+test_that("Check use_country", {
+  env = platform_env()
+  env$COUNTRY_CODES = "FR"
+  platform_options(use.country=FALSE)
+  func = ifnBase:::can_use_country
+  expect_error(func("FR"))
+  expect_false(func(NULL))
+  platform_options(use.country=TRUE)
+  expect_true(func("FR"))
+  expect_false(func(NULL))
+})
+

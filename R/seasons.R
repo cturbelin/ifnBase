@@ -53,6 +53,8 @@ get_historical_tables <- function() {
 }
 
 #' Get dates of the season
+#' @family seasons
+#' @export
 get_season_dates = function(season) {
   def = season_definition(season)
   d = def$dates
@@ -63,3 +65,21 @@ get_season_dates = function(season) {
   d
 }
 
+#' Check if input is a season number
+#' @param season value to check (number or character)
+#' @return integer value of season number
+#' @keywords internal
+parse_season = function(season) {
+  s = as.integer(season)
+  if(is.na(s)) {
+    rlang::abort("season must be a number")
+  }
+  if(s < 2003) {
+    rlang::abort(paste0("season must be a year from 2000 to present year, given ",s))
+  }
+  max.season = calc_season(Sys.Date())
+  if(s > max.season) {
+    rlang::abort(paste0("season must be a year from 2000 to present year, given ",s))
+  }
+  s
+}

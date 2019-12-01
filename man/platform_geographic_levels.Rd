@@ -35,3 +35,11 @@ platform_geographic_levels(
 \description{
 Create structure defining an geographic table system
 }
+\seealso{
+Other platfom: 
+\code{\link{platform_env}()},
+\code{\link{platform_geographic_tables}()},
+\code{\link{platform_options}()},
+\code{\link{platform_season_history}()}
+}
+\concept{platfom}

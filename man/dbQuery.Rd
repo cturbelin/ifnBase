@@ -7,7 +7,7 @@
 dbQuery(...)
 }
 \arguments{
-\item{...}{query to execute}
+\item{...}{query to execute coerced to character vector using paste0}
 }
 \description{
 Run a query

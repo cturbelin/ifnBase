@@ -2,8 +2,7 @@
 % Please edit documentation in R/platform.R
 \name{platform_season_history}
 \alias{platform_season_history}
-\title{Define historical data
-For each season you can describe how data are organized}
+\title{Define historical data}
 \usage{
 platform_season_history(season, dates, ...)
 }
@@ -15,7 +14,6 @@ platform_season_history(season, dates, ...)
 \item{...}{tables names for each survey containing data of the season in case of by-season storage model.}
 }
 \description{
-Define historical data
 For each season you can describe how data are organized
 }
 \section{Data storage model}{
@@ -42,3 +40,11 @@ platfrom_season_history('2012',
 )
 }
 }
+\seealso{
+Other platfom: 
+\code{\link{platform_env}()},
+\code{\link{platform_geographic_levels}()},
+\code{\link{platform_geographic_tables}()},
+\code{\link{platform_options}()}
+}
+\concept{platfom}
