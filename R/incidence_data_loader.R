@@ -304,15 +304,22 @@ complete_intake = function(data, intake, intake.columns, geo=NULL, max.year=NA, 
   if(length(p) > 0) {
     message(paste("Completing intake from previous data for ", length(p)," participants"))
     dates = list()
-    min_time = min(intake$timestamp)
-    dates$max = as.Date(min_time) # Before the first survey
+
+    if(nrow(intake) > 0) {
+      min_time = min(intake$timestamp)
+    } else {
+      min_time = min(data$timestamp)
+    }
+    dates$max = as.Date(min_time) - 1 # Before the first survey
     if( !is.na(max.year) ) {
       dates$min = dates$max - (max.year * 365)
     }
     ii = survey_load_results("intake", intake.columns, survey.users=p, geo=geo, debug=F, date=dates)
     if( nrow(ii) > 0) {
       ii = keep_last_survey(ii)
-      intake$complete = FALSE
+      if(nrow(intake) > 0) {
+        intake$complete = FALSE
+      }
       ii$complete = TRUE
       if(fix.timestamp) {
         ii$timestamp.org = ii$timestamp
