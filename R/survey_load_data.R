@@ -32,7 +32,7 @@
 survey_load_results = function(survey, cols, geo=NULL, date=NULL, db.table=NULL, survey.users=NULL, debug=F, account=F, where=c(), season=NULL, channel=NULL, cols.sup=c(), gid=F, country=NULL) {
   def = survey_definition(survey)
   if( !is.null(season) ) {
-    h = season.def(season)
+    h = season_definition(season)
     if( is.null(db.table) ) {
       db.table = h[[survey]]
     }
@@ -48,14 +48,14 @@ survey_load_results = function(survey, cols, geo=NULL, date=NULL, db.table=NULL,
         date = lapply(date, as.POSIXct)
         if(!is.null(date$min)) {
           if( !( date$min >= d$start && date$min <= d$end )) {
-            stop(paste("Requested minimum date", date$min," is not included in the season period (", d$start,"-", d$end,")"))
+            rlang::abort(paste("Requested minimum date", date$min," is not included in the season period (", d$start,"-", d$end,")"))
           }
         } else {
           date$min = d$start
         }
         if( !is.null(date$max) ) {
           if( !( date$max >= d$start && date$max <= d$end )) {
-            stop(paste("Requested minimum date", date$min," is not included in the season period (", d$start,"-", d$end,")"))
+            rlang::abort(paste("Requested minimum date", date$min," is not included in the season period (", d$start,"-", d$end,")"))
           }
         } else {
           date$max = d$end
@@ -63,15 +63,13 @@ survey_load_results = function(survey, cols, geo=NULL, date=NULL, db.table=NULL,
       }
     }
   }
+  msg = c()
   if( is.null(db.table) ) {
-    cat("loading survey using default table\n")
+    msg = c(msg, "using default table")
     tb = def$table
   } else {
-    cat("loading survey using table ", db.table,"\n")
+    msg = c(msg, paste("using table", db.table))
     tb = db.table
-  }
-  if( !is.null(date) ) {
-    cat("Loading data from ", format(format="%Y-%m-%d %H:%M:%S", date$min), "to", format(format="%Y-%m-%d %H:%M:%S", date$max),"\n")
   }
   if( length(cols) == 1 && (cols == "*") ) {
     cc = "p.*"
@@ -88,7 +86,7 @@ survey_load_results = function(survey, cols, geo=NULL, date=NULL, db.table=NULL,
   }
   if( !is.null(geo) ) {
     if( is.null(def$geo.column) ) {
-      stop("geographic column not defined for this column")
+      rlang::abort("geographic column not defined for this column")
     }
     geo.column = def$geo.column
     if( is.logical(geo) ) {
@@ -112,12 +110,13 @@ survey_load_results = function(survey, cols, geo=NULL, date=NULL, db.table=NULL,
     where = c(where, paste0('s.id IN(', paste(survey.users, collapse=','), ')'))
   }
   if( !is.null(date) ) {
+    msg = c(msg, paste("from", sQuote(format(format="%Y-%m-%d %H:%M:%S", date$min)), "to", sQuote(format(format="%Y-%m-%d %H:%M:%S", date$max))) )
     if( !is.null(date$min) ) {
-      where = c(where, paste0("timestamp >= '", date$min, "'"))
+      where = c(where, paste0(db_quote_var("timestamp")," >= ", db_quote_str(date$min)))
     }
     if( !is.null(date$max) ) {
       m = paste0(as.Date(date$max) + 1,' 00:00:00') # last day + 1
-      where = c(where, paste0("timestamp < '",m,"'"))
+      where = c(where, paste0(db_quote_var("timestamp")," < ", db_quote_str(m)))
     }
   }
 
@@ -126,31 +125,34 @@ survey_load_results = function(survey, cols, geo=NULL, date=NULL, db.table=NULL,
 
   if( !is.null(channel) ) {
     if( !is.na(channel) ) {
-      where = c(where, paste('"channel"=\'', channel,'\'',sep=''))
-      cat("Fetching channel=",channel,"\n")
-    } else {
-      cat("Fetching all channels\n")
+      where = c(where, paste0(db_quote_var("channel"),'=', db_quote_str(channel)))
+      msg = c(msg, paste("channel=",channel))
     }
   } else {
     use_channel = get0("platform.use.channel", ifnotfound = FALSE, envir = .Share)
     if(use_channel) {
-      cat("Fetching only empty channel\n")
-      where = c(where, "channel=''")
+      msg = c(msg, "only empty channel")
+      where = c(where, paste0(db_quote_var("channel"), "=''"))
     }
   }
 
   if( !is.null(country) ) {
     if( is.null(def$aliases$country) ) {
-      stop("Country column not set for this table, unable to use 'country' parameter")
+      rlang::abort("Country column not set for this table, unable to use 'country' parameter")
     }
     if(length(country) > 0) {
       country = toupper(country) # fix compat with incidence
       if(any(!country %in% .Share$COUNTRY_CODES)) {
         stop(paste("Unknown country codes :", paste(country[!country %in% .Share$COUNTRY_CODES], collapse = ",")))
       }
-      country = paste0("'",country,"'")
-      where = c(where, paste("p.country IN(", paste(country, collapse = ','),")"))
+      country = db_quote_str(country)
+      where = c(where, paste("p.", db_quote_var("country")," IN(", paste(country, collapse = ','),")"))
     }
+  }
+
+  if(length(msg) > 0) {
+    msg = paste("Loading",survey, paste(msg, collapse = ", "))
+    cat(msg,"\n")
   }
 
   cc = c(cc, cols.sup)
