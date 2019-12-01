@@ -62,6 +62,7 @@ theme_no_axis = function() {
 
 #' Theme with a list of recipes
 #' @param ... name of recipes to apply
+#' @export
 theme_with = function(...) {
   recipes = list(...)
   g = theme()
