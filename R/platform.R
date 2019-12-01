@@ -624,9 +624,24 @@ platform_geographic_tables = function(def=NULL, default.title = "title", define=
 #' @family platfom
 #' @export
 platform_season_history <- function(season, dates, ...) {
+
+  s = as.integer(season)
+  if(is.na(s)) {
+    rlang::abort("season must be a number")
+  }
+
+  if(s < 2003) {
+    rlang::abort("season must be a year from 2000 to present year")
+  }
+  max.season = calc_season(Sys.Date())
+  if(s > max.season) {
+    rlang::abort(paste0("season must be a year from 2000 to present year, given ",s))
+  }
+
   if( is.null(.Share$historical.tables) ) {
     .Share$historical.tables = list()
   }
+
   def = list(...)
   def$dates = dates
 
