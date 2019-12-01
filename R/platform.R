@@ -486,6 +486,7 @@ check_list_mapping = function(new, old, raise, only.errors=TRUE) {
 }
 
 #' Create structure defining an geographic table system
+#'
 #' @param levels list of levels with level name in names and column name in value, if it not a named vector, the use value as level
 #' @param level.base name of the base level (if null, first level is used)
 #' @param table name of the table containing all the levels (it can be the lowest level table as it should contains reference to all upper levels)
@@ -494,6 +495,7 @@ check_list_mapping = function(new, old, raise, only.errors=TRUE) {
 #' @param default.hierarchy name of the default hierarchy to be used to get upper or lower column
 #' @param country handle country column
 #' @param define if TRUE set the geo.levels during the call, set to FALSE if you dont want to change configuration
+#' @family platfom
 #' @export
 platform_geographic_levels = function(levels,  level.base = NULL, table = 'geo_levels', columns = NULL, hierarchies=NULL, default.hierarchy='default', country=FALSE, define=TRUE) {
 
@@ -561,6 +563,7 @@ platform_geographic_levels = function(levels,  level.base = NULL, table = 'geo_l
 #'   \item{column}{name of the column in the table containing the area id of the level}
 #'   \item{title}{name of the column containing label of the area}
 #' }
+#' @family platfom
 #'
 #' @export
 platform_geographic_tables = function(def=NULL, default.title = "title", define=TRUE) {
@@ -590,6 +593,7 @@ platform_geographic_tables = function(def=NULL, default.title = "title", define=
 }
 
 #' Define historical data
+#'
 #' For each season you can describe how data are organized
 #'
 #' @param season name of the season. By convention it is the year number of the starting year (2011 for 2011-2012,...)
@@ -617,6 +621,7 @@ platform_geographic_tables = function(def=NULL, default.title = "title", define=
 #'      weekly="pollster_results_weekly_2012"
 #')
 #' }
+#' @family platfom
 #' @export
 platform_season_history <- function(season, dates, ...) {
   if( is.null(.Share$historical.tables) ) {
@@ -644,6 +649,8 @@ platform_season_history <- function(season, dates, ...) {
   check_date(dates$start)
   check_date(dates$end, after=dates$start)
 
+  def = structure(def, class="season_definition")
+
   .Share$historical.tables[[as.character(season)]] <- def
 }
 
@@ -654,6 +661,7 @@ platform_season_history <- function(season, dates, ...) {
 #'   \item{first.season.censored}{left censor first season participants for some countries}
 #'   \item{health.status}{structure of the health.status table in case of single table model for weekly}
 #' }
+#' @family platfom
 #' @export
 platform_options = function(...) {
 
@@ -679,11 +687,13 @@ platform_options = function(...) {
 }
 
 #' Get the platform env
+#'
 #' @param name name of the value to get in the platform envirnoment
 #'
 #' @return if name is NULL, returns the full environment, if not get the named element in the environment
 #'
 #' Platform environment holds platform variables & definition structure.
+#' @family platfom
 #' @export
 platform_env <- function(name=NULL) {
   if(is.null(name)) {
