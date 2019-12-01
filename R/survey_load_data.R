@@ -113,11 +113,11 @@ survey_load_results = function(survey, cols, geo=NULL, date=NULL, db.table=NULL,
   }
   if( !is.null(date) ) {
     if( !is.null(date$min) ) {
-      where = c(where, paste("timestamp >= '", date$min, "'", sep=''))
+      where = c(where, paste0("timestamp >= '", date$min, "'"))
     }
     if( !is.null(date$max) ) {
       m = paste0(as.Date(date$max) + 1,' 00:00:00') # last day + 1
-      where = c(where, paste("timestamp < '",m,"'", sep=''))
+      where = c(where, paste0("timestamp < '",m,"'"))
     }
   }
 
@@ -160,14 +160,14 @@ survey_load_results = function(survey, cols, geo=NULL, date=NULL, db.table=NULL,
   } else {
     where = ''
   }
-  query = paste('SELECT s.id as person_id, ',cc,' from ',tb,' p left join survey_surveyuser s on p.global_id=s.global_id', j, where, sep='')
+  query = paste0('SELECT s.id as person_id, ',cc,' from ',tb,' p left join ',join_surveyuser('p', 's'), j, where, sep='')
   if(debug) {
     cat(query, "\n")
   }
   r = dbQuery(query)
   if( is.data.frame(r) ) {
     n = names(r)
-    n = survey_aliases(n, def, revert=T)
+    n = survey_aliases(n, def, revert=TRUE)
     names(r) <- n
   }
   attr(r,'survey') <- survey
@@ -176,20 +176,60 @@ survey_load_results = function(survey, cols, geo=NULL, date=NULL, db.table=NULL,
   r
 }
 
+#' Create join clause to survey_surveyuser table for a survey
+#' @param survey_alias table alias name of the survey table
+#' @param user_alias table to use for the survey_user table
+join_surveyuser = function(survey_alias, user_alias) {
+  paste0(' survey_surveyuser ',user_alias,' on ',survey_alias,'.global_id=',user_alias,'.global_id ')
+}
+
+
 #' Get list of participant id (person_id = survey_user_id)
 #' List of participants registred in weekly at least once for a given season
-#' @param season season number to get
-#' @param use.season.dates restrict to season's starting & ending dates.
+#' @param season season number to get, if several seasons are given use min and max of seasons dates
+#' @param use.season.dates restrict to season's starting & ending dates. forced if single table model for weekly
+#' @param use.min us minimal date of the given season, if not use all before the end of the season (only for single table model)
+#' @param country country to restrict participant
 #' @family survey-load
 #' @export
-survey_participant_season = function(season, use.season.dates=F) {
-  h = season.def(season)
-  w = ''
-  if(use.season.dates) {
-    dates = lapply(h$dates, function(x) { if(!is.null(x)) { as.Date(x) } else { Sys.Date()} })
-    w = paste0("where \"timestamp\" >='", dates$start,"' and  \"timestamp\" <='", dates$end,"'")
+survey_participant_season = function(season, use.season.dates=FALSE, use.min=TRUE, country=NULL) {
+  # For use of dates if single table model
+  if(isTRUE(.Share$epiwork.tables$weekly$single.table)) {
+    use.season.dates = TRUE
+  } else {
+    if(use.min) {
+      rlang::warn("Use of `use.min` with multiple table cannot work ")
+    }
   }
-  query = paste0("SELECT distinct s.id as person_id from ",h$weekly," p left join survey_surveyuser s on p.global_id=s.global_id ",w)
+  h = season_definition(season)
+  min = NULL
+  max = NULL
+  if(use.season.dates) {
+    dates = get_season_dates(season)
+    if(use.min) {
+      min = dates$start
+    }
+    max = dates$end
+  }
+  w = c()
+  time.col = db_quote_var("timestamp")
+  if(!is.null(min)) {
+    w = c(w, paste0(time.col, " >=", db_quote_str(min) ))
+  }
+  if(!is.null(max)) {
+    w = c(w, paste0(time.col, " <=", db_quote_str(max) ))
+  }
+  if(can_use_country(country)) {
+    w = c(w, paste0("p.", db_quote_var("country"),"=",db_quote_str(country)))
+  }
+
+  if(length(w) > 0) {
+    w = paste(' where', paste(w, collapse = ' and ') )
+  } else {
+    w = ''
+  }
+
+  query = paste0("SELECT distinct s.id as person_id from ",h$weekly," p left join ",join_surveyuser("p","s"), w)
   p = dbQuery(query)
   p$person_id
 }
@@ -197,22 +237,54 @@ survey_participant_season = function(season, use.season.dates=F) {
 #' List of participants registred in weekly at least once in previous season (regarding given [season])
 #' @param season season year
 #' @param ids list of participants to keep
-#' @param use.season.dates if TRUE restrist weekly scan to the official date of each season (@see historical.tables)
-#' @param seasons list of seasons to scan, relatively to the given [season], for ex -1 = only previous
+#' @param use.season.dates if TRUE restrict weekly scan to the official date of each season \code{\link{get_historical_tables}}
+#' @param country country to use (only on european platform)
+#' @param from integer relative index of the oldest season to scan to (index relative to season, e.g. -1 = previous from given [season])
 #' @family survey-load
 #' @export
-survey_participant_previous_season = function(season, ids=NULL, use.season.dates=F, seasons=NULL) {
-  all.seasons = as.numeric(names(.Share$historical.tables))
-  if( is.null(seasons) ) {
+survey_participant_previous_season = function(season, ids=NULL, use.season.dates=F, from=NULL, country=NULL) {
+  season = parse_season(season)
+  if(!is.null(from) && length(from) > 1) {
+    rlang::warn("from has more than 1 element, only first will be used")
+    from = from[1]
+  }
+ if(isTRUE(.Share$epiwork.tables$weekly$single.table)) {
+    survey_participant_previous_season.single_table(season=season, ids=ids, from=from, country=country)
+  } else {
+    survey_participant_previous_season.multiple_table(season=season, ids=ids, use.season.dates=use.season.dates, from=from, country=country)
+  }
+}
+
+#' Get relative season numbers to a reference season number
+#' @param season int reference season
+#' @param from int vector of relative index to the reference season
+#' @keywords internal
+relative_seasons = function(season, from=NULL) {
+  all.seasons = as.integer(get_historical_seasons())
+  if( is.null(from) | is.na(from) ) {
     seasons = all.seasons
   } else {
-    seasons = season + seasons # seasons are relative index to [season]
+    index = as.integer(from)
+    min = -length(all.seasons)
+    if(is.na(index) | index < min | index >= 0) {
+      rlang::abort(paste0("`from` should be a negative integer value (min ",min,"), given ", from))
+    }
+    if(index > 0) {
+      rlang::abort("from should be a negative")
+    }
+    seasons = season + index # seasons are relative index to [season]
   }
   seasons = seasons[seasons < season] # exclude given
   seasons = seasons[seasons %in% all.seasons] # keep only valid seasons values
-  if(isTRUE(.Share$epiwork.tables$weekly$single.table)) {
-    use.season.dates = T
-  }
+  seasons
+}
+
+#' Implementation for multiple table data model
+#' we have to check season by season
+#' @rdname survey_participant_previous_season
+survey_participant_previous_season.multiple_table = function(season, ids=NULL, use.season.dates=F, from=NULL, country=NULL) {
+  message("survey_participant_previous_season: multiple table implementation")
+  seasons = relative_seasons(season, from=from)
   previous = c()
   for(s in seasons) {
     p = survey_participant_season(s, use.season.dates = use.season.dates)
@@ -223,6 +295,26 @@ survey_participant_previous_season = function(season, ids=NULL, use.season.dates
   }
   previous
 }
+
+#' Implementation for multiple table data model
+#' we have to check season by season
+#' @rdname survey_participant_previous_season
+survey_participant_previous_season.single_table = function(season, ids=NULL, from=NULL, country=NULL) {
+  message("survey_participant_previous_season: single table implementation")
+  if(is.null(from)) {
+    season = season - 1
+    # Only use the season as a maximum
+    previous = survey_participant_season(season, use.min = FALSE, use.season.dates = TRUE, country=country)
+  } else {
+    seasons = relative_seasons(season, from=from)
+    previous = survey_participant_season(seasons[1], use.min=TRUE, use.season.dates = TRUE, country=country)
+  }
+  if( !is.null(ids) ) {
+    previous = previous[ previous %in% ids]
+  }
+  previous
+}
+
 
 #' Load participants data
 #' @param active.account logical only active user account if TRUE

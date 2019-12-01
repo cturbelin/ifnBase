@@ -2,13 +2,31 @@
 % Please edit documentation in R/survey_load_data.R
 \name{survey_participant_previous_season}
 \alias{survey_participant_previous_season}
+\alias{survey_participant_previous_season.multiple_table}
+\alias{survey_participant_previous_season.single_table}
 \title{List of participants registred in weekly at least once in previous season (regarding given [season])}
 \usage{
 survey_participant_previous_season(
   season,
   ids = NULL,
   use.season.dates = F,
-  seasons = NULL
+  from = NULL,
+  country = NULL
+)
+
+survey_participant_previous_season.multiple_table(
+  season,
+  ids = NULL,
+  use.season.dates = F,
+  from = NULL,
+  country = NULL
+)
+
+survey_participant_previous_season.single_table(
+  season,
+  ids = NULL,
+  from = NULL,
+  country = NULL
 )
 }
 \arguments{
@@ -16,12 +34,20 @@ survey_participant_previous_season(
 
 \item{ids}{list of participants to keep}
 
-\item{use.season.dates}{if TRUE restrist weekly scan to the official date of each season (@see historical.tables)}
+\item{use.season.dates}{if TRUE restrict weekly scan to the official date of each season \code{\link{get_historical_tables}}}
 
-\item{seasons}{list of seasons to scan, relatively to the given [season], for ex -1 = only previous}
+\item{from}{integer relative index of the oldest season to scan to (index relative to season, e.g. -1 = previous from given [season])}
+
+\item{country}{country to use (only on european platform)}
 }
 \description{
 List of participants registred in weekly at least once in previous season (regarding given [season])
+
+Implementation for multiple table data model
+we have to check season by season
+
+Implementation for multiple table data model
+we have to check season by season
 }
 \seealso{
 Other survey-load: 

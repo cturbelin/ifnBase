@@ -171,7 +171,7 @@ load_results_for_incidence = function(season, age.categories, syndrome.from=list
         ss = -1
       }
       # Get list of previous seasons participants
-      previous = survey_participant_previous_season(season, ids=intake$person_id, seasons=ss)
+      previous = survey_participant_previous_season(season, ids=intake$person_id, from=ss, country=country)
       intake$first.season = !intake$person_id %in% previous # first is not in previous season
     }
     params$censor.season = censor.season

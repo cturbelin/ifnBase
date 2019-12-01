@@ -5,12 +5,21 @@
 \title{Get list of participant id (person_id = survey_user_id)
 List of participants registred in weekly at least once for a given season}
 \usage{
-survey_participant_season(season, use.season.dates = F)
+survey_participant_season(
+  season,
+  use.season.dates = FALSE,
+  use.min = TRUE,
+  country = NULL
+)
 }
 \arguments{
-\item{season}{season number to get}
+\item{season}{season number to get, if several seasons are given use min and max of seasons dates}
 
-\item{use.season.dates}{restrict to season's starting & ending dates.}
+\item{use.season.dates}{restrict to season's starting & ending dates. forced if single table model for weekly}
+
+\item{use.min}{us minimal date of the given season, if not use all before the end of the season (only for single table model)}
+
+\item{country}{country to restrict participant}
 }
 \description{
 Get list of participant id (person_id = survey_user_id)
