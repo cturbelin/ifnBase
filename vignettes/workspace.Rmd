@@ -1,8 +1,12 @@
 ---
 title: "Workspace organization"
 author: "Clément Turbelin"
-date: "27/2/2018"
-output: pdf_document
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Workspace organization}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include=FALSE}
@@ -12,6 +16,7 @@ knitr::opts_chunk$set(echo = TRUE)
 # Workspace organisation 
 
 ## Purpose
+
 The purpose of this workspace organization is to allow script running on different settings (platform, files organization,...).
 
 It also propose a project oriented organization of files to facilitate way of sharing scripts.
@@ -21,6 +26,7 @@ This way to organize script is not mandatory to use this package, but it provide
 The principle is to separate the running context (how machine is configured, what is the connexion to the DB and where the scripts are located on the computer !).
 
 A summary of the following:
+
  - All scripts **must never use absolute file path**.
  - Scripts are in subdirectory and they are run in their own directory as **working directory**
  - *location.R* must contains all workspace specific variables (path to file outside the workspace, db connexion,...) 
@@ -47,9 +53,8 @@ On the root of the workspace directory, there are 2 files:
  
  * location.R : This is the environment specific configuration file, containing all the local configurations. It's *not under version*. We defined here variables specific of the worspace (and machine if they are not defined in .Rprofile).
 
-## The "share" directory is shared by all the workspaces on all the platforms !
+## The "share" directory is shared by all projects !
 
- * system.r : the (tiny) core of the (micro)framework
  * lib/ can contains shared library of functions, that are not (yet) in a package.
  * data/ should contains some data files
  * platform/ contains platform specific configuration files and internationalization a subdirectory with the same name as the platform file could also contain platform specific library
@@ -74,6 +79,7 @@ By convention, all runable scripts must live in a project directory. If a file c
 ```
 
 ### Using "conf.R" file
+
 The recommended convention is to create a little file named "conf.r" in each project directory.
 
 This conf.R file will contain all the project-specific configuration.
@@ -106,9 +112,12 @@ Think that a project should not "know" that another project exists in the same w
  # BAD
 read.csv("/Users/User/Documents/very-important-data.csv") # It will never work on someone else's computer
  # GOOD
-read.csv(paste0(MY_FILE_LOCATION, 'very-important-data.csv')) # MY_FILE_LOCATION is defined in the location.R at the workspace root dir.
- # GOOD also
-read.csv( path_to_my_data('very-important-data.csv') ) # path_to_my_data() returns the path of a file in a location, it's defined in location.R
+read.csv(paste0(MY_FILE_LOCATION, 'very-important-data.csv')) 
+# MY_FILE_LOCATION is defined in the location.R at the workspace root dir.
+
+# GOOD also
+read.csv( path_to_my_data('very-important-data.csv') ) 
+# path_to_my_data() returns the path of a file in a location, it's defined in location.R
 
 ```
 
