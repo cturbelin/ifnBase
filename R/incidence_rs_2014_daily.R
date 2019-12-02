@@ -338,7 +338,7 @@ IncidenceDailyRS2014 = R6Class("IncidenceDailyRS2014", public = list(
     # Prepare data for all weeks (common part)
     if(verbose) {
       str(self$params)
-      cat("Preparing data...")
+      message("Preparing data...", appendLF = FALSE)
     } else {
       if( !is.null(progress) ) {
         cat('~')
@@ -350,7 +350,7 @@ IncidenceDailyRS2014 = R6Class("IncidenceDailyRS2014", public = list(
     self$prepare()
 
     if(verbose) {
-      cat("done.\n")
+      message("done.")
     }
 
 
@@ -371,7 +371,7 @@ IncidenceDailyRS2014 = R6Class("IncidenceDailyRS2014", public = list(
     for(i in seq_along(dates)) {
       date = dates[i]
       if(verbose) {
-        cat("Week", date,"\n")
+        message("Day", date,"\n")
       } else {
         if( use.progress ) {
           progress$tick()$print()
