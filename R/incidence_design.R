@@ -129,9 +129,13 @@ output_incidence = function(types, conf.int=T, adjust=T, ...) {
 #' @param type crude to create rate column name
 #' @param unit if rate need to be rescale
 calc.conf.int = function(inc, v, type='crude', unit=1) {
-  d = epitools::pois.exact(inc[, v], inc$active)
+  y = inc[[v]]
+  i = is.na(y)
+  y[i] = 0 # Fake 0 value will be replaced by NA
+  d = epitools::pois.exact(y, inc$active)
   cc = c('upper','lower')
   d = d[, cc]
+  d[i, cc] = NA
   d$upper = d$upper * unit
   d$lower = d$lower * unit
   names(d) <- paste(v, type, cc, sep='.')
