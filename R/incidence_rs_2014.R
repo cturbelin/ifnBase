@@ -279,12 +279,12 @@ IncidenceRS2014 = R6Class("IncidenceRS2014", public = list(
 
     # Should have at least one survey in a time window defined by active.week.after & active.week.before
     if( !is.na(active.week.after) ) {
-      active.last.week = iso_yearweek(monday_of_week(yw) + active.week.after * 7)
+      active.last.week = iso_yearweek(monday_of_week(yw) + active.week.after * 7L)
     } else {
       active.last.week = max(weekly$yw)
     }
     if( !is.na(active.week.before) ) {
-      active.first.week = iso_yearweek(monday_of_week(yw) - active.week.before * 7)
+      active.first.week = iso_yearweek(monday_of_week(yw) - active.week.before * 7L)
     } else {
       active.first.week = min(weekly$yw)
     }
@@ -310,10 +310,15 @@ IncidenceRS2014 = R6Class("IncidenceRS2014", public = list(
 
     track("final")
 
-    if(nrow(participant) == 0) {
+    empty_result = function(step) {
       r = list()
       attr(r, "select.count") <- select.count
-      return(r)
+      attr(r, "step") <- step
+      r
+    }
+
+    if(nrow(participant) == 0) {
+      return( empty_result("participant") )
     }
 
     strata = self$design$strata
@@ -321,20 +326,24 @@ IncidenceRS2014 = R6Class("IncidenceRS2014", public = list(
     if( is.null(strata) ) {
       # Use dummy strata column
       # It more costly than avoid aggregation but this garantees that the same procedure is used to compute regardless design
-      intake$dummy = 1
+      intake$dummy = 1L
       strata = 'dummy'
     }
 
-    participant$active = 1
+    participant$active = 1L
 
     # active participant = having at least one survey on 3 weeks
     participant = merge(participant, intake[, c('person_id', strata)], by='person_id', all.x=T) # get the geo code
     track_time("merge_intake")
 
-    # cat("Strata: ", paste(strata,collapse=','))
-
     active.week = aggregate(list(active=participant$active), participant[, strata, drop=FALSE], sum)
     track_time("active.week")
+
+    if(nrow(active.week) == 0) {
+      # In case of all intake are not matched with participants, because all strata are NA
+      rlang::warn(paste0("No active participant for week", yw))
+      return(empty_result("active.week"))
+    }
 
     # now calculate number of participant by health status for the current week
 
@@ -345,9 +354,7 @@ IncidenceRS2014 = R6Class("IncidenceRS2014", public = list(
     track("weekly_for_part", nrow(weekly))
 
     if(nrow(weekly) == 0) {
-      r = list()
-      attr(r, "select.count") = select.count
-      return(r)
+      return(empty_result("weekly"))
     }
 
     # Count number of syndromes by user and by week
@@ -360,17 +367,20 @@ IncidenceRS2014 = R6Class("IncidenceRS2014", public = list(
     # make syndromes exclusive in a week ?
     # nop now
 
-    count[, syndromes] = as.integer(count[, syndromes] > 0) # syndromes counted only once for each user
+    count[, syndromes] = as.integer(count[, syndromes] > 0L) # syndromes counted only once for each user
 
-    # aggregate by strata
-    count.week = aggregate(count[, syndromes, drop=FALSE], count[ , strata, drop=FALSE], sum)
+    count.week =  aggregate(count[, syndromes, drop=FALSE], count[ , strata, drop=FALSE], sum)
     track_time("count.week")
 
     # merge with active
     count.week = merge(active.week, count.week, by=strata, all.x=T)
+
+    # Cast to integer because if all strata are empty, generated NA are logical
+    count.week[, syndromes] = as.integer(count.week[, syndromes])
+
     track_time("merge.count.week")
 
-    if( !(length(self$output) == 1 && is.na(self$output) )) {
+    if( !(length(self$output) == 1L && is.na(self$output) )) {
       # Compute incidence from count data
       r = calc_adjusted_incidence(count.week, design=self$design, syndromes=syndromes, output=self$output)
       track_time("calc.incidence")
@@ -475,9 +485,8 @@ IncidenceRS2014 = R6Class("IncidenceRS2014", public = list(
       syndromes = self$syndromes
 
       verticalize = function(data, ids) {
-        verticalize_incidence(data,ids=ids, syndromes = syndromes, syndrome.column = syndrome.column)
+        verticalize_incidence(data, ids=ids, syndromes = syndromes, syndrome.column = syndrome.column)
       }
-
 
       if(!is.null(inc)) {
         inc = verticalize(inc, ids="yw" )
