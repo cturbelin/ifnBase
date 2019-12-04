@@ -261,9 +261,10 @@ survey_participant_previous_season = function(season, ids=NULL, use.season.dates
 #' @param season int reference season
 #' @param from int vector of relative index to the reference season
 #' @keywords internal
+#' @export
 relative_seasons = function(season, from=NULL) {
   all.seasons = as.integer(get_historical_seasons())
-  if( is.null(from) | is.na(from) ) {
+  if( is.null(from) || is.na(from) ) {
     seasons = all.seasons
   } else {
     index = as.integer(from)
@@ -304,7 +305,11 @@ survey_participant_previous_season.multiple_table = function(season, ids=NULL, u
 survey_participant_previous_season.single_table = function(season, ids=NULL, from=NULL, country=NULL) {
   message("survey_participant_previous_season: single table implementation")
   if(is.null(from)) {
-    season = season - 1
+    season = relative_seasons(season - 1)
+    if(length(season) == 0) {
+      return(ids)
+    }
+    season = min(season)
     # Only use the season as a maximum
     previous = survey_participant_season(season, use.min = FALSE, use.season.dates = TRUE, country=country)
   } else {
