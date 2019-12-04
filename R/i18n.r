@@ -18,9 +18,9 @@ i18n_load <- function(..., language=NULL, debug=F) {
  files = list(...)
  for(file in files) {
    if( grepl("/$",file) ) {
-    f = paste0(file, language,'.r')
+    f = swMisc::get_r_file(paste0(file, language))
    } else {
-     f = paste(file, language,'r', sep='.')
+     f = swMisc::get_r_file(paste(file, language, sep='.'))
    }
    if( !file.exists(f) ) {
      #f = paste(file, i18n_language, 'r', sep='.')
