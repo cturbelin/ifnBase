@@ -186,10 +186,15 @@ share.path = share_path
 #'
 #' @family path-functions
 #' @param file character file name to get in the 'platform' directory
+#' @param platform logical if TRUE add platform id to the path
 #'
 #' @return character path of the file in platform files location.
 #'
 #' @export
-platform_path = function(file='') {
-  paste0(get_option('platform.path'), file)
+platform_path = function(file='', platform=FALSE) {
+  path = get_option('platform.path')
+  if(platform) {
+    path = paste0(path, share.option("platform"), '/')
+  }
+  paste0(path, file)
 }

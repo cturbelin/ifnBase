@@ -4,10 +4,12 @@
 \alias{platform_path}
 \title{Path to platform definition files}
 \usage{
-platform_path(file = "")
+platform_path(file = "", platform = FALSE)
 }
 \arguments{
 \item{file}{character file name to get in the 'platform' directory}
+
+\item{platform}{logical if TRUE add platform id to the path}
 }
 \value{
 character path of the file in platform files location.
