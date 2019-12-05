@@ -32,6 +32,7 @@
 survey_load_results = function(survey, cols, geo=NULL, date=NULL, db.table=NULL, survey.users=NULL, debug=F, account=F, where=c(), season=NULL, channel=NULL, cols.sup=c(), gid=F, country=NULL) {
   def = survey_definition(survey)
   if( !is.null(season) ) {
+    season = parse_season(season, accept.several=FALSE)
     h = season_definition(season)
     if( is.null(db.table) ) {
       db.table = h[[survey]]
@@ -62,6 +63,9 @@ survey_load_results = function(survey, cols, geo=NULL, date=NULL, db.table=NULL,
         }
       }
     }
+    check_season = season
+  } else {
+    check_season = tail(get_historical_seasons(), n=1L)
   }
   msg = c()
   if( is.null(db.table) ) {
@@ -74,15 +78,16 @@ survey_load_results = function(survey, cols, geo=NULL, date=NULL, db.table=NULL,
   if( length(cols) == 1 && (cols == "*") ) {
     cc = "p.*"
   } else {
+    cols = survey_variable_available(cols, def, check_season)
     cols = survey_aliases(cols, def)
-    cc = paste('p."', cols, '"', sep='')
-    cc = c('p.id as id', cc)
+    cc = paste0('p."', cols, '"')
+    cc = c('p."id" as "id"', cc)
   }
   if(account) {
-    cc = c("s.user_id as account_id", cc)
+    cc = c('s."user_id" as "account_id"', cc)
   }
   if(gid) {
-    cc = c(cc, "p.global_id")
+    cc = c(cc, 'p."global_id"')
   }
   if( !is.null(geo) ) {
     if( is.null(def$geo.column) ) {
@@ -176,6 +181,43 @@ survey_load_results = function(survey, cols, geo=NULL, date=NULL, db.table=NULL,
   attr(r, 'db.table') <- db.table
   attr(r, 'season') <- ifelse(!is.null(season), season, NA) # If current season (or not requested) attribute set to NA
   r
+}
+
+#' Check if variables are available for a given season
+#'
+#' This function is conservative: only variable registred with an availability clause are checked
+#'
+#'
+#' @param variables character vector of name of variables (not db name)
+#' @param survey survey name or survey_definition from \code{\link{survey_definition}()}
+#' @return variables if they are available
+#' @export
+survey_variable_available <- function(variables, survey, season) {
+  if(!is(survey, "survey_definition")) {
+    survey = survey_definition(survey)
+  }
+  mapping = survey$aliases
+  available = sapply(variables, function(var) {
+      dv = mapping[[var]]
+      if(is.null(dv)) {
+        return(TRUE) # Some variable are not in the survey description, don't block it
+      }
+      av = attr(dv, "available")
+      if(is.null(av)) {
+        return(TRUE)
+      }
+      if(is.vector(av)) {
+        # List of season values
+        season %in% av
+      } else {
+        rlang::eval_tidy(av, data=list(season=season))
+      }
+  })
+  if(any(!available)) {
+    v = variables[!available]
+    rlang::warn(paste("Some variables are not available for season", season,":", paste(sQuote(v), collapse = ',')), variables=v, class="variable_not_available")
+  }
+  variables[available]
 }
 
 #' Create join clause to survey_surveyuser table for a survey

@@ -20,3 +20,25 @@ override = function(data) {
   attr(data, "allow_override") <- TRUE
   data
 }
+
+#' Define availability of variables
+#' @param value database name
+#' @param seasons either a vector of season or an rlang::quosure (see details)
+#'
+#' @details
+#' If seasons is a quosure it will be evalualted in the survey_load_results environment.
+#' It must be evaluate as a single logical result
+#' Especially the expression can evaluate the season
+#'
+#' @export
+variable_available = function(value, seasons) {
+  if(is.vector(seasons)) {
+    seasons = parse_season(seasons, accept.several=TRUE)
+  } else {
+    if(!rlang::is_quosure(seasons)) {
+      rlang::abort("seasons must be seasons number list or a rlang::quosure")
+    }
+  }
+  attr(value, "available") <- seasons
+  value
+}

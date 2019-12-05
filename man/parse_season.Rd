@@ -4,7 +4,7 @@
 \alias{parse_season}
 \title{Check if input is a season number}
 \usage{
-parse_season(season)
+parse_season(season, accept.several = FALSE)
 }
 \arguments{
 \item{season}{value to check (number or character)}

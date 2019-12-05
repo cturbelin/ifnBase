@@ -69,17 +69,23 @@ get_season_dates = function(season) {
 #' @param season value to check (number or character)
 #' @return integer value of season number
 #' @keywords internal
-parse_season = function(season) {
+parse_season = function(season, accept.several=FALSE) {
   s = as.integer(season)
-  if(is.na(s)) {
+  if(!accept.several && length(season) > 1) {
+    rlang::abort("Single season value expected")
+  }
+
+  if(any(is.na(s))) {
     rlang::abort("season must be a number")
   }
-  if(s < 2003) {
-    rlang::abort(paste0("season must be a year from 2000 to present year, given ",s))
+  ss = s < 2003
+  if(any(ss)) {
+    rlang::abort(paste0("season must be a year from 2000 to present year, given ",paste(s[ss], collapse = ',')))
   }
   max.season = calc_season(Sys.Date())
-  if(s > max.season) {
-    rlang::abort(paste0("season must be a year from 2000 to present year, given ",s))
+  ss = s > max.season
+  if(any(ss)) {
+    rlang::abort(paste0("season must be a year from 2000 to present year, given ",paste(s[ss], collapse = ',')))
   }
   s
 }
