@@ -112,6 +112,29 @@ db_quote_str = function(x) {
   paste0("'", x, "'")
 }
 
+#' Create an equal criteria
+#' @param field name of field (unquoted)
+#' @param value value to compare
+#' @param quote if TRUE quote the value, NA = detect
+#' @param several if TRUE accept to compare several values
+db_equal = function(field, value, quote=NA, several=FALSE) {
+  if(length(value) == 0) {
+    rlang::abort("No value to compare")
+  }
+  if(is.na(quote)) {
+    if(!is.numeric(value)) {
+      value = db_quote_str(value)
+    }
+  }
+  if(length(value) > 1) {
+    op = paste0(' in(', paste(value, collapse=','), ')')
+  } else {
+    op = paste0('=', value)
+  }
+  paste0(db_quote_var(field), op)
+}
+
+
 #' get database connexion handle
 #' @export
 get_db_handle = function() {
