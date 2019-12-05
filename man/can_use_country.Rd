@@ -7,7 +7,7 @@
 can_use_country(country)
 }
 \value{
-TRUE if country is definied and platform can use country
+TRUE if country is defined and platform can use country
 }
 \description{
 raise an error if the platform is not configured to use country value

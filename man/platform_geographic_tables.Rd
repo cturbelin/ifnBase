@@ -24,6 +24,8 @@ Create geographic tables description
   \item{table}{name of the table to use}
   \item{column}{name of the column in the table containing the area id of the level}
   \item{title}{name of the column containing label of the area}
+  \item{population_table}{name of the table containing population data for the level (if configured to use db)}
+  \item{population_age_table}{name of the table containing age-group population for the level}
 }
 }
 \seealso{

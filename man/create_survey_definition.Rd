@@ -36,6 +36,7 @@ This function is mainly used internally by [platform_define_survey()]. Unless yo
 \seealso{
 Other platform: 
 \code{\link{load_platform}()},
-\code{\link{platform_define_survey}()}
+\code{\link{platform_define_survey}()},
+\code{\link{platform_import}()}
 }
 \concept{platform}

@@ -84,12 +84,13 @@ One of common labels is "symptoms" in weekly survey definition, providing the li
 }
 
 \seealso{
-[survey_definition()]
+\code{\link{survey_definition}()}
 
 \code{\link{survey_recode}}
 
 Other platform: 
 \code{\link{create_survey_definition}()},
-\code{\link{load_platform}()}
+\code{\link{load_platform}()},
+\code{\link{platform_import}()}
 }
 \concept{platform}

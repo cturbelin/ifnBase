@@ -2,7 +2,7 @@
 % Please edit documentation in R/platform.R
 \name{platform_options}
 \alias{platform_options}
-\title{Define some platform options}
+\title{Define  platform options}
 \usage{
 platform_options(...)
 }
@@ -13,10 +13,15 @@ platform_options(...)
   \item{first.season.censored}{left censor first season participants for some countries}
   \item{health.status}{structure of the health.status table in case of single table model for weekly}
   \item{debug.query}{debug SQL queries}
+  \item{use.country}{If the platform handles country level in the database tables}
+  \item{population.age.loader}{Loader type for age-group population, either "db","file" or a function with \code{\link{load_population_age}()} interface}
+  \item{population.loader}{Loader type for overall population, either "db","file" or a function with \code{\link{load_population}()} interface}
+  \item{language}{Language code to use by default when loading i18n}
+  \item{complete.intake}{list defining intake completion strategy see \code{\link{complete_intake_strategy}()} }
 }}
 }
 \description{
-Define some platform options
+Define  platform options
 }
 \seealso{
 Other platfom: 

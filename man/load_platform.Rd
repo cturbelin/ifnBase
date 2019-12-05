@@ -14,6 +14,7 @@ options should have been provided using options(ifn=list(...)) before the packag
 \seealso{
 Other platform: 
 \code{\link{create_survey_definition}()},
-\code{\link{platform_define_survey}()}
+\code{\link{platform_define_survey}()},
+\code{\link{platform_import}()}
 }
 \concept{platform}

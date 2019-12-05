@@ -4,6 +4,7 @@
 #' List of not usable for data variable names in survey mapping
 #'
 PROTECTED_QUESTIONS = c('timestamp','channel','user')
+KNOWN_COUNTRIES =  c("BE", "CH", "DK",  "ES", "FR", "IE", "IT", "NL", "PT", "SE", "UK")
 
 #' Load platform file containing definitions and specific functions into .Share environment
 #'
@@ -15,23 +16,34 @@ PROTECTED_QUESTIONS = c('timestamp','channel','user')
 #' @export
 load_platform = function() {
 
-  path = get_option('platform.path')
   platform = get_option('platform')
-
-  if(is.null(path) ) {
-    rlang::abort("Platform path should be defined with share.option()")
-  }
 
   if(is.null(platform) ) {
     rlang::abort("platform id should be defined with share.option()")
   }
 
-  file = get_r_file(paste0(ending_slash(path), platform), should.exists = TRUE)
-
-  sys.source(file, envir=.Share)
+  platform_import(platform)
 
   validate_platform()
 }
+
+#' Import a file in the platform enviroment
+#' @family platform
+#' @param name relative name in the platform path without .R extension
+#' @seealso \link{concepts}
+platform_import = function(name) {
+  path = get_option('platform.path')
+
+  if(is.null(path) ) {
+    rlang::abort("Platform path should be defined with share.option()")
+  }
+
+  file = get_r_file(paste0(ending_slash(path), name), should.exists = TRUE)
+
+  sys.source(file, envir=.Share)
+
+}
+
 
 #' Describe a survey of a platform and register it
 #'
@@ -39,7 +51,7 @@ load_platform = function() {
 #' coding to R names & factor levels.
 #' A call to this function is needed to register a survey in the package before to use other survey functions.
 #' Usually it is done in the platform definition file, which is loaded by \code{\link{load_platform}()} function
-#' @seealso [survey_definition()]
+#' @seealso \code{\link{survey_definition}()}
 #' @family platform
 #' @param name unique name of the survey
 #' @param survey_id id of the survey in the database
@@ -227,6 +239,14 @@ create_survey_definition <- function( mapping, labels=NULL, codes=NULL, recodes=
     rlang::abort(paste0("Cannot define mapping to protected names : ", paste(n[n %in% PROTECTED_QUESTIONS ], collapse = ",")))
   }
 
+  if(is.null(labels)) {
+    labels = list()
+  }
+
+  if(is.null(mapping)) {
+    mapping = list()
+  }
+
   list(
     mapping = structure(mapping, class="survey_mapping"),
     labels = structure(labels, class="survey_labels"),
@@ -333,7 +353,7 @@ print.survey_error = function(x, ...) {
 #' @param x list() recode mapping
 #' @param ... extra parameters (print interface compatibility)
 #' @export
-print.survey_recode <-function(x, ...) {
+print.survey_recode <- function(x, ...) {
   inherited = attr(x, "inherited")
   cat("Variable recodings (label = db value):\n")
   Map(function(label, value) {
@@ -345,7 +365,7 @@ print.survey_recode <-function(x, ...) {
 #' @param x list() variable mapping
 #' @param ... extra parameters (print interface compatibility)
 #' @export
-print.survey_mapping <-function(x, ...) {
+print.survey_mapping <- function(x, ...) {
   inherited = attr(x, "inherited")
   cat("Variable mapping (variable = db name):\n")
   Map(function(label, value) {
@@ -357,7 +377,7 @@ print.survey_mapping <-function(x, ...) {
 #' @param x list() variable mapping
 #' @param ... extra parameters (print interface compatibility)
 #' @export
-print.survey_labels <-function(x, ...) {
+print.survey_labels <- function(x, ...) {
   inherited = attr(x, "inherited")
   cat("Labels :\n")
   Map(function(label, value) {
@@ -370,7 +390,7 @@ print.survey_labels <-function(x, ...) {
 #' @param x list() recode mapping
 #' @param ... extra parameters (print interface compatibility)
 #' @export
-print.survey_definition <-function(x, ...) {
+print.survey_definition <- function(x, ...) {
   cat("Survey", sQuote(x$name))
   if(!is.null(x$template_name)) {
     cat(" inherits survey template", sQuote(x$template_name))
@@ -562,6 +582,8 @@ platform_geographic_levels = function(levels,  level.base = NULL, table = 'geo_l
 #'   \item{table}{name of the table to use}
 #'   \item{column}{name of the column in the table containing the area id of the level}
 #'   \item{title}{name of the column containing label of the area}
+#'   \item{population_table}{name of the table containing population data for the level (if configured to use db)}
+#'   \item{population_age_table}{name of the table containing age-group population for the level}
 #' }
 #' @family platfom
 #'
@@ -658,13 +680,18 @@ platform_season_history <- function(season, dates, ...) {
   .Share$historical.tables[[as.character(season)]] <- def
 }
 
-#' Define some platform options
+#' Define  platform options
 #' @param ... list of options to set
 #'
 #' \describe{
 #'   \item{first.season.censored}{left censor first season participants for some countries}
 #'   \item{health.status}{structure of the health.status table in case of single table model for weekly}
 #'   \item{debug.query}{debug SQL queries}
+#'   \item{use.country}{If the platform handles country level in the database tables}
+#'   \item{population.age.loader}{Loader type for age-group population, either "db","file" or a function with \code{\link{load_population_age}()} interface}
+#'   \item{population.loader}{Loader type for overall population, either "db","file" or a function with \code{\link{load_population}()} interface}
+#'   \item{language}{Language code to use by default when loading i18n}
+#'   \item{complete.intake}{list defining intake completion strategy see \code{\link{complete_intake_strategy}()} }
 #' }
 #' @family platfom
 #' @export
@@ -672,9 +699,13 @@ platform_options = function(...) {
 
   oo = list(...)
 
+  has = function(name) {
+    hasName(oo, name)
+  }
+
   # Import true/false single value
   import_flag = function(name) {
-    if(hasName(oo, name) ) {
+    if( has(name) ) {
       v = oo[[name]]
       if(!is.logical(v)) {
         rlang::abort(paste0(sQuote(name)," should be logical value"))
@@ -692,14 +723,51 @@ platform_options = function(...) {
   }
 
   # Health status table option (in case of single table model)
-  if(!is.null(oo$health.status)) {
+  if(!has('health.status')) {
     # list(default="name of healt status table", id="name of column containing weekly id")
     .Share$health.status = oo$health.status
   }
 
-  if(!is.null(oo$complete.intake) ) {
+  if(has('complete.intake') ) {
     .Share$complete.intake = oo$complete.intake
   }
+
+  if(has('population.age.loader')) {
+    loader = oo$population.age.loader
+    if(is.character(loader)) {
+      if(!loader %in% c("db", "file",'country_file')) {
+        rlang::abort(paste0("'population.age.loader' must be either 'db', 'file', 'country_file' or a function"))
+      }
+
+    } else {
+      if(!is.function(loader)) {
+        rlang::abort(paste0("'population.age.loader' must be either 'db', 'file', 'country_file' or a function"))
+      }
+    }
+    .Share$population.age.loader = loader
+  }
+
+  if(has('population.loader')) {
+    loader = oo$population.loader
+    if(is.character(loader)) {
+      if(!loader %in% c("db", "age")) {
+        rlang::abort(paste0("'population.age.loader' must be either 'db', 'age' or a function"))
+      }
+    } else {
+      if(!is.function(loader)) {
+        rlang::abort(paste0("'population.age.loader' must be either 'db', 'age' or a function"))
+      }
+    }
+    .Share$population.loader = loader
+  }
+
+ if(has('country')) {
+    country = toupper(oo$country)
+    if(!country %in% KNOWN_COUNTRIES) {
+      rlang::abort(paste0("platform variabel 'country' contains an unknown country code ",sQuote(country) ))
+    }
+    .Share$country = country
+ }
 
 }
 
@@ -720,13 +788,29 @@ platform_env <- function(name=NULL) {
   }
 }
 
+
 #' Post loading function to validate platform info
 #' @keywords internal
 validate_platform =function() {
 
+  has = function(name) {
+    r = get0(name, envir=.Share, ifnotfound = NULL)
+    !is.null(r)
+  }
+
+
   if(isTRUE(.Share$first.season.censored)) {
-    if(is.null(.Share$get_first_season_country)) {
+    if(!has('get_first_season_country')) {
       rlang::abort("get_first_season_country() should be defined with the platform option `first.season.censored`. Please define this function in first.season.censored ")
+    }
+  }
+
+  if(is.character(.Share$population.age.loader)) {
+    loader = .Share$population.age.loader
+    if(loader == "country_file") {
+      if(!has('country')) {
+        rlang::abort("population.age.loader with 'country_file' requires the 'country' variable to be defined in the platform file")
+      }
     }
   }
 
@@ -736,7 +820,7 @@ validate_platform =function() {
 #'
 #' raise an error if the platform is not configured to use country value
 #'
-#' @return TRUE if country is definied and platform can use country
+#' @return TRUE if country is defined and platform can use country
 can_use_country = function(country) {
   if(!is.null(country)) {
     if( !isTRUE(platform_env("use.country")) ) {
