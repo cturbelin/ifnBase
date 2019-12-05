@@ -14,5 +14,9 @@ complete_intake_strategy(data, intake, ...)
 \item{...}{other parameters to pass to \code{\link{complete_intake}}}
 }
 \description{
-Complete intake according to platform's strategy
+The completion strategy is defined as a list of parameters under the `complete.intake` name in the platform options (see \code{\link{platform_options}})
+This list is :
+\describe{
+ \item{max.year}{integer, maximum number of season to load to get a intake from the previous season}
+}
 }

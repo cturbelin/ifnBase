@@ -271,6 +271,13 @@ compute_weekly_syndromes <- function(intake, weekly, health.status=TRUE, keep.st
 }
 
 #' Complete intake according to platform's strategy
+#'
+#' The completion strategy is defined as a list of parameters under the `complete.intake` name in the platform options (see \code{\link{platform_options}})
+#' This list is :
+#' \describe{
+#'  \item{max.year}{integer, maximum number of season to load to get a intake from the previous season}
+#' }
+#'
 #' @export
 #' @param data data.frame() survey data with all participants (typically weekly), see \code{\link{complete_intake}}
 #' @param intake data.frame() intake data loaded on same period as data
