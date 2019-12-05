@@ -836,7 +836,7 @@ validate_platform =function() {
 #' Check if the platform is allowed to use "country" value
 #'
 #' raise an error if the platform is not configured to use country value
-#'
+#' @param country country to test
 #' @return TRUE if country is defined and platform can use country
 can_use_country = function(country) {
   if(!is.null(country)) {

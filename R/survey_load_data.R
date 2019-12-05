@@ -190,6 +190,7 @@ survey_load_results = function(survey, cols, geo=NULL, date=NULL, db.table=NULL,
 #'
 #' @param variables character vector of name of variables (not db name)
 #' @param survey survey name or survey_definition from \code{\link{survey_definition}()}
+#' @param season season to check of variable availability
 #' @return variables if they are available
 #' @export
 survey_variable_available <- function(variables, survey, season) {

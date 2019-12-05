@@ -10,6 +10,8 @@ survey_variable_available(variables, survey, season)
 \item{variables}{character vector of name of variables (not db name)}
 
 \item{survey}{survey name or survey_definition from \code{\link{survey_definition}()}}
+
+\item{season}{season to check of variable availability}
 }
 \value{
 variables if they are available

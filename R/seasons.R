@@ -53,6 +53,7 @@ get_historical_tables <- function() {
 }
 
 #' Get dates of the season
+#' @param season int season to get dates from
 #' @family seasons
 #' @export
 get_season_dates = function(season) {

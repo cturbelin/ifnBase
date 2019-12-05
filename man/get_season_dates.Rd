@@ -6,6 +6,9 @@
 \usage{
 get_season_dates(season)
 }
+\arguments{
+\item{season}{int season to get dates from}
+}
 \description{
 Get dates of the season
 }

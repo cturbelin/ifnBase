@@ -326,7 +326,8 @@ aggregate_pop_age = function(pop, year, geo, age.breaks=NULL, type=NULL, col_geo
 #' Load Population by age
 #' @inherit load_population_age
 #' @param loader_type type of loader to use
-#'
+#' @param country country to get population (only for platform handling country column, see \code{\link{platform_options}})
+#' @param type feature of geographic zone to test using \code{\link{geo_is_type}()}
 #' @details
 #' 3 loaders are availables :
 #' \describe{

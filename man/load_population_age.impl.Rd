@@ -23,6 +23,10 @@ load_population_age.impl(
 
 \item{age.breaks}{used to create age categories (from 5-year categories)}
 
+\item{type}{feature of geographic zone to test using \code{\link{geo_is_type}()}}
+
+\item{country}{country to get population (only for platform handling country column, see \code{\link{platform_options}})}
+
 \item{...}{extra parameter}
 }
 \value{

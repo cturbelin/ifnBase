@@ -6,6 +6,9 @@
 \usage{
 can_use_country(country)
 }
+\arguments{
+\item{country}{country to test}
+}
 \value{
 TRUE if country is defined and platform can use country
 }
