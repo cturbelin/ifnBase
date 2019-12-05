@@ -2,14 +2,22 @@
 % Please edit documentation in R/geography.r
 \name{load_population}
 \alias{load_population}
+\alias{load_population.db}
+\alias{load_population.age}
 \title{Load global population for a geographic level and a census year}
 \usage{
-load_population(geo, year)
+load_population(geo, year, country = NULL)
+
+load_population.db(geo, year, country)
+
+load_population.age(geo, year, country)
 }
 \arguments{
 \item{geo}{geographic level}
 
 \item{year}{year of the population (estimation of the population for the year)}
+
+\item{country}{country (only on country enabled platform)}
 }
 \description{
 Population table should follow the structure described in geography vignette

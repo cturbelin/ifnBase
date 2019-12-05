@@ -151,7 +151,10 @@ geo_level_nav <- function(geo, side, hierarchy=NULL) {
 load_geo_zone <- function(geo, type="metro", columns=c()) {
  def = geo_level_table(geo)
  if( is.null(def) ) {
-	stop("Unknown geograpic level, update 'geo.tables' list to define them")
+	stop("Unknown geograpic level, use platform_geographic_tables to define them")
+ }
+ if(is.null(def[['table']])) {
+   rlang::abort(paste0("level", sQuote(geo),' is not associated with a table'))
  }
  col.geo = geo_column(geo)
  if( is.null(col.geo) ) {
@@ -185,9 +188,53 @@ load_geo_zone <- function(geo, type="metro", columns=c()) {
 #'
 #' @param geo geographic level
 #' @param year year of the population (estimation of the population for the year)
+#' @param country country (only on country enabled platform)
 #' @export
-load_population <- function(geo, year) {
- dbQuery('select * from pop_', geo, ' where year=',year)
+load_population <- function(geo, year, country=NULL) {
+  loader = .Share$population.loader
+  if( !is.null(.Share$load_population) ) {
+    loader = .Share$load_population
+  } else {
+    if( is.character(loader) ) {
+      loader = switch(loader,
+        db = load_population.db,
+        age= load_population.age,
+        rlang::abort(paste0("unknown population loader type ", sQuote(loader)))
+      )
+    }
+  }
+
+  if(!is.function(loader)) {
+    rlang::abort("Paste population loader is not a function", loader=loader)
+  }
+  loader(geo, year, country)
+}
+
+#' Load population database implementation
+#' @rdname load_population
+load_population.db = function(geo, year, country) {
+  def = geo_level_table(geo)
+  if( is.null(def) ) {
+    rlang::abort(paste0("Unknwon geographic level ", sQuote(geo)))
+  }
+  if( is.null(def[['population_table']] )) {
+    table = paste0("pop_", geo)
+  } else {
+    table = def$population_table
+  }
+  dbQuery('select * from ', table, ' where "year"=', year)
+}
+
+#' Load population using by sex & age-group population
+#' @rdname load_population
+load_population.age = function(geo, year, country) {
+  pop = load_population_age(geo, year, country=country)
+  col_geo = geo_column(geo)
+  groups = c('year', col_geo)
+  if(!is.null(country)) {
+    groups = c(groups,'country')
+  }
+  pop = aggregate(list(population=pop$all), pop[, groups], sum)
 }
 
 #' Allow to define "type" of geographic levels & area
@@ -221,8 +268,153 @@ geo_is_type = function(geo, type, code) {
 #' @return data.frame('all','male','female','age.cat') for the given year
 #' @export
 load_population_age <- function(geo, year, age.breaks=NULL, version=NULL, ...) {
-  if( is.null(.Share$load_population_age) ) {
-    stop("Not implemented for this platfrom, please add this function in platform definition file")
+  loader = .Share$population.age.loader
+  if( !is.null(.Share$load_population_age) ) {
+    loader = .Share$load_population_age
   }
-  .Share$load_population_age(geo=geo, year=year, age.breaks = age.breaks, version=version, ...)
+  if(!is.null(loader)) {
+    if(is.character(loader)) {
+      loader_type = loader
+      loader = function(...) {
+        load_population_age.impl(loader_type = loader_type, ...)
+      }
+    }
+
+    if(!is.function(loader)) {
+      rlang::abort("Population loader must be a function", loader=loader)
+    }
+    loader(geo=geo, year=year, age.breaks = age.breaks, version=version, ...)
+  } else {
+    rlang::abort("No age-group population loader found for this platform")
+  }
+}
+
+#'
+#' Aggregate population by age-group after data are loaded
+#' @inheritParams load_population_age
+#' @param pop loader population
+#' @param col_geo geographic column containing the geographic level code
+#' @param overall logical compute overall population (population by age, at the uppest geo level)
+#'
+#' @noRd
+aggregate_pop_age = function(pop, year, geo, age.breaks=NULL, type=NULL, col_geo, overall) {
+  # Restrict on type if necessary
+  if( !is.null(type) ) {
+    pop = pop[ geo_is_type(geo, type, pop[, col_geo]), ]
+  }
+
+  if( !is.null(age.breaks) ) {
+    pop$age.max[is.na(pop$age.max)] = pop$age.min[is.na(pop$age.max)]
+    pop$cat.min = ifnBase::cut_age(pop$age.min, age.breaks)
+    pop$cat.max = ifnBase::cut_age(pop$age.max, age.breaks)
+    stopifnot( all(pop$cat.min == pop$cat.max))
+    pop = swMisc::replace_names(pop, "age.cat"="cat.min")
+    pop = aggregate(as.list(pop[, c('all','male','female')]), as.list(pop[,c('age.cat', col_geo)]),  sum)
+  }
+
+  if( overall ) {
+    if(is.null(age.breaks)) {
+      column = 'age.min'
+    } else {
+      column = 'age.cat'
+    }
+    pop = aggregate(as.list(pop[, c('all','male','female')]), pop[ , column, drop=FALSE],  sum)
+  }
+  pop
+}
+
+#' Load Population by age
+#' @inherit load_population_age
+#' @param loader_type type of loader to use
+#'
+#' @details
+#' 3 loaders are availables :
+#' \describe{
+#'  \item{db}{Database loader}
+#'  \item{file}{File for all the platform}
+#'  \item{country_file}{File by country, this require the platform variable "country" to be defined to the country to use}
+#' }
+#'
+load_population_age.impl <- function(loader_type, geo, year, age.breaks=NULL, type=NULL, country=NULL,...) {
+
+  overall = F # if true make the overall sum by age (used when geo is null)
+  if( is.null(geo) ) {
+    ll = geo_hierarchy()
+    geo = ll[length(ll)] # consider the last upper level
+    overall = T
+  }
+
+  col_geo = geo_column(geo)
+
+  if(!loader_type %in% c('db','file','country_file')) {
+    rlang::abort(paste0("Unknown age population loader ", sQuote(loader_type)))
+  }
+
+  # Check if country param can be used for this platform
+  # Only when the platform handles in its table an extra "country" column
+  # This is only for the european database.
+  use.country = can_use_country(country)
+
+  if(loader_type == "db") {
+    query = paste0('select "',col_geo,'", "age_min" as "age.min", "age_max" as "age.max", "all","male","female" from pop_age5_',geo,' where "year"=',year)
+    if(use.country) {
+      query = paste0(query, ' and ', db_equal("country", country))
+    }
+    pop = dbQuery(query)
+  }
+
+  if(loader_type %in% c('file', "country_file")) {
+    if(loader_type == "file") {
+      file = paste0('pop/pop_age5_', geo)
+    } else {
+      if(!is.null(country)) {
+        rlang::abort("country param is not useable with country_file as loader for age-group population")
+      }
+
+      # By default population files will be in
+      # share/data/pop/ and name [country]_pop_age5_[level]
+      # country
+      country = .Share$country
+      if(is.null(country)) {
+        rlang::abort("country_file as population loader requires `country` to de defined in platform file")
+      }
+
+      file = paste0('pop/',country,'_pop_age5_', geo)
+
+     }
+
+    file = share.data.path(paste0(file, '.csv'))
+    if(!file.exists(file)) {
+      rlang::abort(paste0("File ", sQuote(file)," doesnt exists"))
+    }
+
+    pop = read.csv2(file)
+
+    pop = pop[ pop$year %in% year, ]
+
+
+    if(nrow(pop) > 0) {
+
+      if(loader_type == "country_file") {
+        if(geo == "country") {
+          # In country file the "country" column is missing
+          pop[[col_geo]] = country
+        }
+        if(hasName(pop, "age_min")) {
+          pop = swMisc::replace_names(pop, "age.min"="age_min")
+        }
+      }
+    }
+
+
+
+  }
+
+  if(nrow(pop) == 0) {
+    rlang::warn(paste("No population for year", year,"at", geo, " level"))
+    return(pop)
+  }
+
+  aggregate_pop_age(pop, geo=geo, year=year, age.breaks=age.breaks, type=type, col_geo=col_geo, overall = overall)
+
 }
