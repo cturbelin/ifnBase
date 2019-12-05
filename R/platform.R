@@ -274,20 +274,28 @@ check_unique = function(x) {
 #' @param new vector or list of values
 #' @param old vector or list of values
 merge_by_value = function(new, old) {
-  if( is.list(new) ) {
-    new = unlist(new)
-  }
-  if( is.list(old) ) {
-    old = unlist(old)
-  }
-  old = old[!old %in% new]
-  new = c(new, old)
-  new = as.list(new)
+
+  v_new = unlist(new)
+  v_old = unlist(old)
+
+  keep_old = !v_old %in% v_new
+
+  old = old[keep_old]
+
   if(length(old) > 0) {
-    attr(new, "inherited") = names(old)
+    # Concatenate element of old in new
+    # But preserving names of both
+    nn = names(new)
+    no = names(old)
+    for(i in seq_along(old)) {
+      new[[length(new) + 1]] = old[[i]]
+    }
+    names(new) = c(nn, no)
+    attr(new, "inherited") = no
   }
-  new
+  as.list(new)
 }
+
 
 #' Check if a survey definition is compatible with a survey template
 #' @param template template name
@@ -369,7 +377,16 @@ print.survey_mapping <- function(x, ...) {
   inherited = attr(x, "inherited")
   cat("Variable mapping (variable = db name):\n")
   Map(function(label, value) {
-    cat(" - ", sQuote(label),'=',sQuote(value), if(label %in% inherited) " (inherited)", "\n")
+    cat(" - ", sQuote(label),'=',sQuote(value))
+    if(label %in% inherited) cat(" (inherited)")
+    available = attr(value, "available")
+    if(!is.null(available)) {
+      if(rlang::is_quosure(available)) {
+        available = paste("~", rlang::as_label(available))
+      }
+      cat(" [", available,"]")
+    }
+    cat("\n")
   }, names(x), as.vector(x))
 }
 

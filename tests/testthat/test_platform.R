@@ -27,6 +27,35 @@ test_that("Check list mapping error override", {
     expect_equal(err$problem, "conflict")
 })
 
+test_that("merge_by_value", {
+  m = ifnBase:::merge_by_value
+
+  r = m(list(v1="Q1", v2="Q2"), list(v1="Q1", v2="Q2"))
+  expect_mapequal(r, list(v1="Q1", v2="Q2"))
+
+  r = m(list(v1="Q1", v2="Q2"), list(v1="Q1", v2="Q3"))
+  a = list(v1='Q1',v2='Q2',v2='Q3')
+  attr(a, "inherited") <- "v2"
+  expect_equal(r, a)
+
+  r = m(list(v1="Q1", v2="Q2"), list(v1="Q1", v3="Q3"))
+  a = list(v1='Q1',v2='Q2',v3='Q3')
+  attr(a, "inherited") <- "v3"
+  expect_equal(r, a)
+
+  r = m(list(v1="Q1", v2="Q2"), list(v1="Q1", v3=override("Q3")))
+  a = list(v1='Q1',v2='Q2',v3=override('Q3'))
+  attr(a, "inherited") <- "v3"
+  expect_equal(r, a)
+
+  r = m(list(v1=override("Q1"), v2="Q2"), list(v1="Q1", v3="Q3"))
+  a = list(v1=override('Q1'),v2='Q2',v3='Q3')
+  attr(a, "inherited") <- "v3"
+  expect_equal(r, a)
+
+
+})
+
 
 test_that("Check list mapping error duplicate", {
   rr = raiser()
