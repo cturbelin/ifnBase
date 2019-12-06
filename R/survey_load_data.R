@@ -38,30 +38,7 @@ survey_load_results = function(survey, cols, geo=NULL, date=NULL, db.table=NULL,
       db.table = h[[survey]]
     }
     if( isTRUE(def$single.table) ) {
-      # All seasons data are in one single table
-      # Use "dates" of the season to load data, or use limits from "date" parameter if defined (and requested dates included in the season's ones)
-      # end date could be null (during the current season) & is replaced by the current data & time
-      d = lapply(h$dates, function(x) { if(!is.null(x)) { as.POSIXct(x) } else { Sys.time() } })
-      if( is.null(date) ) {
-        date = list(min=d$start, max=d$end)
-      } else {
-        # Check that the requested data are included
-        date = lapply(date, as.POSIXct)
-        if(!is.null(date$min)) {
-          if( !( date$min >= d$start && date$min <= d$end )) {
-            rlang::abort(paste("Requested minimum date", date$min," is not included in the season period (", d$start,"-", d$end,")"))
-          }
-        } else {
-          date$min = d$start
-        }
-        if( !is.null(date$max) ) {
-          if( !( date$max >= d$start && date$max <= d$end )) {
-            rlang::abort(paste("Requested minimum date", date$min," is not included in the season period (", d$start,"-", d$end,")"))
-          }
-        } else {
-          date$max = d$end
-        }
-      }
+      date = check_season_dates(h, date)
     }
     check_season = season
   } else {
@@ -182,6 +159,37 @@ survey_load_results = function(survey, cols, geo=NULL, date=NULL, db.table=NULL,
   attr(r, 'season') <- ifelse(!is.null(season), season, NA) # If current season (or not requested) attribute set to NA
   r
 }
+
+#' @param def season definition
+#' @param date list() list of min, max requested dates
+check_season_dates = function(def, date) {
+  # All seasons data are in one single table
+  # Use "dates" of the season to load data, or use limits from "date" parameter if defined (and requested dates included in the season's ones)
+  # end date could be null (during the current season) & is replaced by the current data & time
+  d = lapply(def$dates, function(x) { if(!is.null(x)) { as.POSIXct(x) } else { Sys.time() } })
+  if( is.null(date) ) {
+    date = list(min=d$start, max=d$end)
+  } else {
+    # Check that the requested data are included
+    date = lapply(date, as.POSIXct)
+    if(!is.null(date$min)) {
+      if( !( date$min >= d$start && date$min <= d$end )) {
+        rlang::abort(paste("Requested minimum date", date$min," is not included in the season period (", d$start,"-", d$end,")"))
+      }
+    } else {
+      date$min = d$start
+    }
+    if( !is.null(date$max) ) {
+      if( !( date$max >= d$start && date$max <= d$end )) {
+        rlang::abort(paste("Requested minimum date", date$min," is not included in the season period (", d$start,"-", d$end,")"))
+      }
+    } else {
+      date$max = d$end
+    }
+  }
+  date
+}
+
 
 #' Check if variables are available for a given season
 #'
