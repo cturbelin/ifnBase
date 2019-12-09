@@ -1,4 +1,13 @@
 # ifnBase 0.4.1.9000
+* 
+* add `variable_available()` helper to define by season availability of variables
+* `platform_define_survey()` now preserves inherited attributes of variables
+* add file based age group population loader & config in platform_options()
+* i18n_file now handles both .r and .R files
+* add ggplot2 theme_with() helper function
+* fix `complete_intake()` if not intake is available
+* Refactor `survey_participant_previous_season()` to better handler single table model
+* Internal: add db helpers function `db_quote_str()`, `db_quote_var()`, `db_equal()`
 * improve documentation, add several vignettes surveys, 
 * fix recode_alias()
 * add print S3 methods for survey_definition
