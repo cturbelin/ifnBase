@@ -367,7 +367,9 @@ IncidenceRS2014 = R6Class("IncidenceRS2014", public = list(
     # make syndromes exclusive in a week ?
     # nop now
 
-    count[, syndromes] = as.integer(count[, syndromes] > 0L) # syndromes counted only once for each user
+    #count[, syndromes] = as.integer(count[, syndromes] > 0L) # syndromes counted only once for each user
+    count = mutate_at(count, syndromes, ~as.integer(. > 0L))
+
 
     count.week =  aggregate(count[, syndromes, drop=FALSE], count[ , strata, drop=FALSE], sum)
     track_time("count.week")
@@ -376,7 +378,8 @@ IncidenceRS2014 = R6Class("IncidenceRS2014", public = list(
     count.week = merge(active.week, count.week, by=strata, all.x=T)
 
     # Cast to integer because if all strata are empty, generated NA are logical
-    count.week[, syndromes] = as.integer(count.week[, syndromes])
+    count.week = mutate_at(count.week, syndromes, as.integer)
+    #count.week[, syndromes] = as.integer(count.week[, syndromes])
 
     track_time("merge.count.week")
 
