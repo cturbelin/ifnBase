@@ -168,18 +168,19 @@ IncidenceRS2014 = R6Class("IncidenceRS2014", public = list(
       track("first.date")
     }
 
-    # Now aggregate to the week and person
-    weekly = aggregate(as.list(weekly[, syndromes, drop=FALSE]), list(person_id=weekly$person_id, yw=weekly$yw), sum, na.rm=T)
+    weekly = aggregate(as.list(weekly[, syndromes, drop=FALSE]), list(person_id=weekly$person_id, yw=weekly$yw), sum, na.rm=TRUE)
     track("syndrom-agg")
 
     weekly[, syndromes] = weekly[, syndromes] > 0 # Only one syndrom report by participant by week
     track("syndrom")
 
     weekly = weekly[ order(weekly$person_id, weekly$yw), ]
-    weekly$delay.previous = calc_weekly_delay(weekly, time.col='yw')
+    #weekly$delay.previous = calc_weekly_delay(weekly, time.col='yw')
     track("delay.previous")
 
-    participant = aggregate(list(yw.first=weekly$yw), list(person_id=weekly$person_id), min)
+    #participant = aggregate(list(yw.first=weekly$yw), list(person_id=weekly$person_id), min)
+    participant = weekly %>% dplyr::group_by(person_id) %>% dplyr::summarize(yw.first=min(yw), yw.last=max(yw))
+
     track("participant")
 
     if( !is.na(ignore.first.delay) ) {
@@ -195,8 +196,8 @@ IncidenceRS2014 = R6Class("IncidenceRS2014", public = list(
       track("ignore.first")
     }
 
-    participant = merge(participant, aggregate(list(yw.last=weekly$yw), list(person_id=weekly$person_id), max), by='person_id')
-    track("yw.last")
+    #participant = merge(participant, aggregate(list(yw.last=weekly$yw), list(person_id=weekly$person_id), max), by='person_id')
+    #track("yw.last")
 
     if( !is.na(active.min.surveys) ) {
       weekly$nb = 1
@@ -205,7 +206,12 @@ IncidenceRS2014 = R6Class("IncidenceRS2014", public = list(
     }
 
     if(!is.na(active.max.freq)) {
-      participant = merge(participant, aggregate(delay.previous ~ person_id, data=weekly, max, na.rm=T), by='person_id')
+      dd = weekly %>%
+        dplyr::group_by(person_id) %>%
+        dplyr::mutate(monday=monday_of_week(yw), delay.previous=(monday - dplyr::lag(monday))/7L) %>%
+        dplyr::summarize(delay.previous=ifelse(dplyr::n() > 1L, max(delay.previous, na.rm=TRUE), Inf))
+
+      participant = merge(participant, dd, by='person_id')
       track("min.suveys")
     }
 
@@ -367,7 +373,8 @@ IncidenceRS2014 = R6Class("IncidenceRS2014", public = list(
     # make syndromes exclusive in a week ?
     # nop now
 
-    count[, syndromes] = as.integer(count[, syndromes] > 0L) # syndromes counted only once for each user
+    #count[, syndromes] = as.integer(count[, syndromes] > 0L) # syndromes counted only once for each user
+    count = dplyr::mutate_at(count, syndromes, ~as.integer(. > 0L))
 
     count.week =  aggregate(count[, syndromes, drop=FALSE], count[ , strata, drop=FALSE], sum)
     track_time("count.week")
@@ -376,7 +383,8 @@ IncidenceRS2014 = R6Class("IncidenceRS2014", public = list(
     count.week = merge(active.week, count.week, by=strata, all.x=T)
 
     # Cast to integer because if all strata are empty, generated NA are logical
-    count.week[, syndromes] = as.integer(count.week[, syndromes])
+    count.week = dplyr::mutate_at(count.week, syndromes, as.integer)
+    #count.week[, syndromes] = as.integer(count.week[, syndromes])
 
     track_time("merge.count.week")
 

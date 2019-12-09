@@ -282,7 +282,7 @@ survey_participant_season = function(season, use.season.dates=FALSE, use.min=TRU
     w = ''
   }
 
-  query = paste0("SELECT distinct s.id as person_id from ",h$weekly," p left join ",join_surveyuser("p","s"), w)
+  query = paste0("SELECT distinct s.id as person_id from ", h$weekly," p left join ", join_surveyuser("p","s"), w)
   p = dbQuery(query)
   p$person_id
 }
@@ -341,7 +341,7 @@ survey_participant_previous_season.multiple_table = function(season, ids=NULL, u
   seasons = relative_seasons(season, from=from)
   previous = c()
   for(s in seasons) {
-    p = survey_participant_season(s, use.season.dates = use.season.dates)
+    p = survey_participant_season(s, use.season.dates = use.season.dates, use.min = FALSE)
     previous = unique(c(previous, p))
   }
   if( !is.null(ids) ) {
