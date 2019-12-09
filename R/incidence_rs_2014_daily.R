@@ -113,8 +113,8 @@ IncidenceDailyRS2014 = R6Class("IncidenceDailyRS2014", public = list(
       same = !is.na(weekly$same.episode) & weekly$same.episode == YES  & (is.na(weekly$delay.date) | weekly$delay.date <= exlude.same.delay) # recoded value !
       for(ss in syndromes) {
         # Cancel a syndrom report if flagged as same episode as previous
-        i = !is.na(weekly[, ss]) & weekly[, ss] > 0
-        weekly[ same & i, ss ] = 0
+        i = !is.na(weekly[, ss]) & weekly[, ss] > 0L
+        weekly[ same & i, ss ] = 0L
       }
     }
 
@@ -127,8 +127,8 @@ IncidenceDailyRS2014 = R6Class("IncidenceDailyRS2014", public = list(
     # Depending on params the participant will be counted as active or not
 
     # Now aggregate to the week and person
-    weekly = aggregate(as.list(weekly[, syndromes]), list(person_id=weekly$person_id, onset=weekly$onset), sum, na.rm=T)
-    weekly[, syndromes] = weekly[, syndromes] > 0 # Only one syndrom report by participant by day
+    weekly = aggregate(as.list(weekly[, syndromes]), list(person_id=weekly$person_id, onset=weekly$onset), sum, na.rm=TRUE)
+    weekly[, syndromes] = weekly[, syndromes] > 0L # Only one syndrom report by participant by day
 
     weekly = weekly[ order(weekly$person_id, weekly$onset), ]
 
@@ -143,7 +143,7 @@ IncidenceDailyRS2014 = R6Class("IncidenceDailyRS2014", public = list(
         if( is.null(self$intake$first.season) ) {
           stop("ignore.first.only.new option requires intake to have a 'first.season' column indicating if participant is new for the season")
         }
-        participant = merge(participant, self$intake[, c('person_id', 'first.season')], by='person_id', all.x=T)
+        participant = merge(participant, self$intake[, c('person_id', 'first.season')], by='person_id', all.x=TRUE)
       }
     }
 
@@ -152,13 +152,13 @@ IncidenceDailyRS2014 = R6Class("IncidenceDailyRS2014", public = list(
     participant = merge(participant, date.last, by='person_id')
 
     if( !is.na(active.min.surveys) ) {
-      weekly$nb = 1
+      weekly$nb = 1L
       nb.survey = weekly %>% dplyr::group_by(person_id) %>% dplyr::summarise(nb=sum(nb))
       participant = merge(participant, nb.survey, by='person_id')
     }
 
     if(!is.na(active.max.freq)) {
-      dd = weekly %>% dplyr::group_by(person_id) %>% dplyr::summarise(delay.previous=max(delay.previous, na.rm=T))
+      dd = weekly %>% dplyr::group_by(person_id) %>% dplyr::summarise(delay.previous=max(delay.previous, na.rm=TRUE))
       participant = merge(participant, dd, by='person_id')
     }
 
@@ -246,7 +246,7 @@ IncidenceDailyRS2014 = R6Class("IncidenceDailyRS2014", public = list(
 
     track$add("final", nrow(participant))
 
-    if(nrow(participant) == 0) {
+    if(nrow(participant) == 0L) {
       r = list()
       attr(r, "select.count") <- track$get_steps()
       return(r)
@@ -257,11 +257,11 @@ IncidenceDailyRS2014 = R6Class("IncidenceDailyRS2014", public = list(
     if( is.null(strata) ) {
       # Use dummy strata column
       # It more costly than avoid aggregation but this garantees that the same procedure is used to compute regardless design
-      self$intake$dummy = 1
+      self$intake$dummy = 1L
       strata = 'dummy'
     }
 
-    participant$active = 1
+    participant$active = 1L
 
     # active participant = having at least one survey on 3 weeks
     participant = merge(participant, self$intake[, c('person_id', strata)], by='person_id', all.x=T) # get the geo code
@@ -270,12 +270,12 @@ IncidenceDailyRS2014 = R6Class("IncidenceDailyRS2014", public = list(
 
     active = aggregate(list(active=participant$active), participant[, strata, drop=FALSE], sum)
 
-    if(nrow(active) == 0) {
+    if(nrow(active) == 0L) {
       return(structure(list(), "select.count"=track$get_steps()))
     }
 
     if(active.use.mean) {
-      w = 1 + sum(active.day.after, active.day.before, na.rm=T)
+      w = 1 + sum(active.day.after, active.day.before, na.rm=TRUE)
       active$active = active$active / w # Use mean of participants seen on window size
     }
 
@@ -287,7 +287,7 @@ IncidenceDailyRS2014 = R6Class("IncidenceDailyRS2014", public = list(
 
     track$add("weekly_for_part", nrow(weekly))
 
-    if(nrow(weekly) == 0) {
+    if(nrow(weekly) == 0L) {
       r = list()
       attr(r, "select.count") = track$get_steps()
       return(r)
@@ -300,13 +300,13 @@ IncidenceDailyRS2014 = R6Class("IncidenceDailyRS2014", public = list(
 
     # make syndrom exclusive in a date ?
     # nop now
-
-    count[, syndromes] = as.integer(count[, syndromes] > 0) # syndrom counted only once for each user
+    count = dplyr::mutate_at(count, syndromes, ~as.integer(. > 0L))
+    #count[, syndromes] = as.integer(count[, syndromes] > 0L) # syndrom counted only once for each user
 
     # aggregate by strata
     count.strata = aggregate( count[, syndromes, drop=F], count[, strata, drop=F], sum, na.rm=T)
 
-    if( nrow(count.strata) == 0 ) {
+    if( nrow(count.strata) == 0L ) {
       count.strata = active
       count.strata[, syndromes] = as.numeric(NA)
     } else {
