@@ -1,4 +1,4 @@
-# ifnBase 0.4.1.9000
+# ifnBase 0.4.3
 * 
 * add `variable_available()` helper to define by season availability of variables
 * `platform_define_survey()` now preserves inherited attributes of variables
