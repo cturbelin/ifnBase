@@ -13,15 +13,71 @@ setup({
 
 })
 
-
 tests = list(
   # Une liste de ce type pour chaque test
-  list(
-    # Weekly indiquer les valeurs, les symptomes non indiqués seront mis à FALSE
+  # Weekly indiquer les valeurs, les symptomes non indiqués seront mis à FALSE
+  list( # Test with no.sympt
     weekly = list(no.sympt = TRUE, fever.sudden = NA, highest.temp =0, sympt.sudden = NA),
     age = 5,
     expected = list(ari.ecdc=FALSE)
+  ),
+  list( # Test ari.ecdc with fever.sudden, minimal sympt
+    weekly = list(fever = TRUE, fever.sudden = TRUE, highest.temp =0, sympt.sudden = NA, cough=TRUE),
+    age = 5,
+    expected = list(ari.ecdc=TRUE)
+  ),
+  # Test ari.ecdc with fever.sudden
+  list(
+    weekly = list(fever = TRUE, fever.sudden = NA, highest.temp =0, sympt.sudden = TRUE, cough=TRUE),
+    age = 5,
+    expected = list(ari.ecdc=TRUE)
+  ),
+  list( # Test cough = FALSE
+    weekly = list(fever = TRUE, fever.sudden = TRUE, highest.temp =0, sympt.sudden = NA, cough=FALSE),
+    age = 5,
+    expected = list(ari.ecdc=FALSE)
+  ),
+  list( # Test dyspnea
+    weekly = list(fever = TRUE, fever.sudden = NA, highest.temp =0, sympt.sudden = TRUE, dyspnea=TRUE),
+    age = 5,
+    expected = list(ari.ecdc=TRUE)
+  ),
+  list( # Test dyspnea
+    weekly = list(fever = TRUE, fever.sudden = NA, highest.temp =0, sympt.sudden = TRUE, dyspnea=FALSE),
+    age = 5,
+    expected = list(ari.ecdc=FALSE)
+  ),
+  list( # Test sorethroat
+    weekly = list(fever = TRUE, fever.sudden = NA, highest.temp =0, sympt.sudden = TRUE, sorethroat=TRUE),
+    age = 5,
+    expected = list(ari.ecdc=TRUE)
+  ),
+  list( # Chills
+    weekly = list(chills = TRUE, fever.sudden = NA, highest.temp =0, sympt.sudden = TRUE, cough=TRUE),
+    age = 20,
+    expected = list(ari.ecdc=TRUE)
+  ),
+  list( # asthenia
+    weekly = list(asthenia = TRUE, fever.sudden = NA, highest.temp =0, sympt.sudden = TRUE, cough=TRUE),
+    age = 20,
+    expected = list(ari.ecdc=TRUE)
+  ),
+  list( # asthenia=FALSE, fever=T
+    weekly = list(asthenia = FALSE, fever=TRUE, fever.sudden = NA, highest.temp =0, sympt.sudden = TRUE, cough=TRUE),
+    age = 20,
+    expected = list(ari.ecdc=TRUE)
+  ),
+  list( # Pain is not counted for <= 5, so no general sympt
+    weekly = list(pain = TRUE, fever.sudden = NA, highest.temp =0, sympt.sudden = TRUE, cough=TRUE),
+    age = 5,
+    expected = list(ari.ecdc=FALSE)
+  ),
+  list( # Pain with age > 5
+    weekly = list(pain = TRUE, fever.sudden = NA, highest.temp =0, sympt.sudden = TRUE, cough=TRUE),
+    age = 20,
+    expected = list(ari.ecdc=TRUE, ari=TRUE)
   )
+
 )
 
 test_that("Syndrome provider", {
