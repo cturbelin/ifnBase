@@ -4,12 +4,19 @@
 \alias{recode_weekly}
 \title{Apply common recoding for weekly data}
 \usage{
-recode_weekly(weekly, health.status = TRUE)
+recode_weekly(
+  weekly,
+  health.status = TRUE,
+  recode.temp = FALSE,
+  all.variables = FALSE
+)
 }
 \arguments{
 \item{weekly}{data.frame weekly data (return by survey_load_results)}
 
 \item{health.status}{if TRUE try to get the health status for each row as stored in the db.}
+
+\item{recode.temp}{recode temperature variable (need to be false for incidence), if TRUE recode temperature variable}
 }
 \value{
 weekly data.frame with recoded values & extra column

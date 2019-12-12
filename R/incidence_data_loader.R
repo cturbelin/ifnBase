@@ -80,7 +80,7 @@ load_results_for_incidence = function(season, age.categories, syndrome.from=list
   rm(i)
 
   # Load InfluenzaNet default health status
-  weekly = recode_weekly(weekly, health.status=isTRUE(syndrome.from$health.status))
+  weekly = recode_weekly(weekly, health.status=isTRUE(syndrome.from$health.status), recode.temp=FALSE)
 
   # Number of the weekly by participant
   weekly = calc_weekly_order(weekly)
