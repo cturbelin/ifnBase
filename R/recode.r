@@ -167,10 +167,11 @@ survey_load_health_status = function(weekly, health.table=NULL) {
 #'
 #' @param weekly data.frame weekly data (return by survey_load_results)
 #' @param health.status if TRUE try to get the health status for each row as stored in the db.
+#' @param recode.temp recode temperature variable (need to be false for incidence), if TRUE recode temperature variable
 #' @return weekly data.frame with recoded values & extra column
 #' @seealso \code{\link{survey_load_health_status}}
 #' @export
-recode_weekly <- function(weekly, health.status=TRUE) {
+recode_weekly <- function(weekly, health.status=TRUE, recode.temp=FALSE, all.variables=FALSE) {
 
   need_recode <- function(name) {
     if(!hasName(weekly, name)) {
@@ -183,8 +184,11 @@ recode_weekly <- function(weekly, health.status=TRUE) {
     TRUE
   }
 
+  recoded = c()
+
   if(need_recode("sympt.sudden")) {
     weekly$sympt.sudden = recode_ynp(weekly$sympt.sudden)
+    recoded = c(recoded, "sympt.sudden")
   }
 
   if(need_recode("same.episode")) {
@@ -192,38 +196,115 @@ recode_weekly <- function(weekly, health.status=TRUE) {
 
     # Same episode is coded with 0 as Yes level, recoding it to human readable levels
     weekly$same.episode = factor(weekly$same.episode, 0:2, YES_NO_DNK)
+    recoded = c(recoded, "same.episode")
   }
 
   if(need_recode("fever.sudden")) {
     weekly$fever.sudden = recode_ynp(weekly$fever.sudden)
+    recoded = c(recoded, "fever.sudden")
   }
 
   if(need_recode("sympt.when.end")) {
-    weekly$sympt.when.end = survey_recode(weekly$sympt.when.end, question = "sympt.when.end", survey="weekly")
+    weekly$sympt.when.end = survey_recode(weekly$sympt.when.end, variable = "sympt.when.end", survey="weekly")
+    recoded = c(recoded, "sympt.when.end")
   }
 
-  weekly$highest.temp[ weekly$highest.temp == 6] <- NA
+  if(hasName(weekly, "highest.temp") && is.numeric(weekly$highest.temp)) {
+    weekly$highest.temp[ weekly$highest.temp == 6] <- NA
+    if(!hasName(weekly, "moderate.fever")) {
+      weekly$moderate.fever = !is.na(weekly$highest.temp) & weekly$highest.temp == 3 # fever >= 38 & < 39
+    }
 
-  weekly$moderate.fever = !is.na(weekly$highest.temp) & weekly$highest.temp == 3 # fever >= 38 & < 39
-  weekly$high.fever = !is.na(weekly$highest.temp) & weekly$highest.temp > 3 # fever over 39deg
+    if(!hasName(weekly, "high.fever")) {
+      weekly$high.fever = !is.na(weekly$highest.temp) & weekly$highest.temp > 3 # fever over 39deg
+    }
+  }
+
+  if(recode.temp & need_recode("highest.temp")) {
+    survey_recode(weekly$highest.temp, variable = "highest.temp", survey="weekly")
+    recoded = c(recoded, "highest.temp")
+  }
 
   # Ensure symptomes are encoded as boolean
-  n = Filter(function(x) !is.logical(weekly[[x]]), get_symptoms_aliases())
-  weekly[, n] = weekly[, n] > 0
+  ss = function(x) {
+    hasName(weekly, x) && is.numeric(weekly[[x]])
+  }
+  n = Filter(ss, get_symptoms_aliases())
+  if(length(n) > 0) {
+    weekly[, n] = weekly[, n] > 0
+  }
 
   if(health.status) {
     weekly = survey_load_health_status(weekly)
   }
 
-  weekly$date = as.Date(trunc(weekly$timestamp, "day")) # date
-  weekly$yw = iso_yearweek(weekly$date)
+  if(!hasName(weekly, "date")) {
+    weekly$date = as.Date(trunc(weekly$timestamp, "day")) # date
+  }
+
+  if(!hasName(weekly, "yw")) {
+    weekly$yw = iso_yearweek(weekly$date)
+  }
 
   weekly = recode_weekly_date(weekly)
 
-  attr(weekly, "recode_weekly") <- TRUE
+  if(all.variables) {
+    recodes = survey_recodings("weekly")
+    nn = names(recodes)
+    nn = nn[!nn %in% recoded]
+    for(name in nn) {
+      if(need_recode(name)) {
+        mapping = recodes[[name]]
+        weekly[[name]] <- recode_var(weekly[[name]], mapping, translate=FALSE)
+        recoded <- c(recoded, name)
+      }
+    }
+  }
 
+  attr(weekly, "recode_weekly") <- TRUE
+  attr(weekly, "recoded_columns") <- recoded
   weekly
 }
+
+#' Recode all known variables in survey data
+#'
+#' @param data data.frame with weekly data
+#' @param survey survey name (as it is registered in \code{\link{platform_define_survey}})
+#' @return data with recoded variable (to factor)
+#' @export
+survey_recode_all  <- function(data, survey, warn=FALSE) {
+  need_recode <- function(name) {
+    if(!hasName(data, name)) {
+      return(FALSE)
+    }
+    if(is.factor(data[[name]])) {
+      if(warn) {
+          warning(paste0("column ", sQuote(name)," already in factor, not recoded"))
+      }
+      return(FALSE)
+    }
+    TRUE
+  }
+  recoded = c()
+  recodes = survey_recodings(survey)
+  for(name in names(recodes)) {
+    if(need_recode(name)) {
+      mapping = recodes[[name]]
+      data[[name]] <- recode_var(data[[name]], mapping)
+      recoded <- c(recoded, name)
+    }
+  }
+  r = attr(data, "recoded_columns")
+  if(is.null(r)) {
+    r = recoded
+  } else {
+    r = c(r, recoded)
+  }
+  attr(data, "recoded_columns") <- r
+  data
+
+}
+
 
 #' Recode weekly dates
 #' Recode weekly dates

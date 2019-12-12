@@ -231,14 +231,16 @@ not_pregnant = intake %>% filter(pregnant == NO)
 ```
 
 ### recode_weekly(), recode_intake()
-For weekly and intake the package provides 2 dedicated function. They will recode categorical variables to factor using labels mapping in the corresponding survey definition.
+For weekly and intake the package provides 2 dedicated function. They will recode categorical variables to factor using labels mapping in the corresponding survey definition. They also recode some other variables (like date) and check for some inconsistencies.
+They are more specialized than `survey_recode_all()`.
 
 ```{r, eval=FALSE}
 intake = survey_load_results("intake", "*") # Load all intake data for the current season
 intake = recode_intake(intake) # Recode all variables
 
 weekly = survey_load_results("weekly", "*") # Load all intake data for the current season
-weekly = recode_weekly(weekly)
+weekly = recode_weekly(weekly, all.variables = FALSE) # Recode only some specific variables
+weekly = recode_weekly(weekly, all.variables = TRUE) # Recode all known variables available in weekly data.
 
 ```
 These two functions are useable with data loaded from database or stored in a Rdata file. If some variables are already recoded (in factor) they will not be recoded.
@@ -252,6 +254,19 @@ x = c(0, 1, 0, 0, 1)
 x = survey_recode(x, variable="pregnant", survey="intake") # Recode using the mapping of the "pregnant" variable of intake survey
 print(x)
 ```
+
+## survey_recode_all(data, survey)
+This function recode all known variable in `data` using recoding from the survey name `survey`
+Caution, they are
+```{r, eval=FALSE}
+
+weekly = survey_recode_all(weekly, survey="weekly") # Recode all variables in weekly data
+
+# If another survey is registred for example, you have defined a survey called "my-study"
+data = survey_recode_all(data, survey="my-study")
+
+```
+
 
 ## `survey_variable_recoding()`
 Get the mapping to recode a given variable of a survey
