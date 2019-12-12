@@ -13,6 +13,25 @@ setup({
 
 })
 
+# Provide a default values except for the category in test
+test_ari = function(test, ...) {
+  r = list(...)
+  provides = c('general','respi','sudden')
+  provides = provides[ !provides %in% test]
+  if("general" %in% provides) {
+    r$fever = TRUE
+  }
+  if("respi" %in% provides) {
+    r$cough = TRUE
+  }
+  if("sudden" %in% provides) {
+    r$fever.sudden = TRUE
+    r$sympt.sudden = TRUE
+  }
+  r
+}
+
+
 tests = list(
   # Une liste de ce type pour chaque test
   # Weekly indiquer les valeurs, les symptomes non indiqués seront mis à FALSE
@@ -22,58 +41,63 @@ tests = list(
     expected = list(ari.ecdc=FALSE)
   ),
   list( # Test ari.ecdc with fever.sudden, minimal sympt
-    weekly = list(fever = TRUE, fever.sudden = TRUE, highest.temp =0, sympt.sudden = NA, cough=TRUE),
+    weekly = test_ari("sudden", fever.sudden=TRUE, sympt.sudden = NA),
     age = 5,
     expected = list(ari.ecdc=TRUE)
   ),
   # Test ari.ecdc with fever.sudden
   list(
-    weekly = list(fever = TRUE, fever.sudden = NA, highest.temp =0, sympt.sudden = TRUE, cough=TRUE),
+    weekly = test_ari("sudden", fever.sudden=NA, sympt.sudden = TRUE),
     age = 5,
     expected = list(ari.ecdc=TRUE)
   ),
   list( # Test cough = FALSE
-    weekly = list(fever = TRUE, fever.sudden = TRUE, highest.temp =0, sympt.sudden = NA, cough=FALSE),
+    weekly = test_ari("respi", cough=FALSE),
     age = 5,
     expected = list(ari.ecdc=FALSE)
   ),
-  list( # Test dyspnea
-    weekly = list(fever = TRUE, fever.sudden = NA, highest.temp =0, sympt.sudden = TRUE, dyspnea=TRUE),
+  list( # Test cough
+    weekly = test_ari("respi", cough=TRUE),
     age = 5,
     expected = list(ari.ecdc=TRUE)
   ),
   list( # Test dyspnea
-    weekly = list(fever = TRUE, fever.sudden = NA, highest.temp =0, sympt.sudden = TRUE, dyspnea=FALSE),
+    weekly =  test_ari("respi", dyspnea=TRUE),
+    age = 5,
+    expected = list(ari.ecdc=TRUE)
+  ),
+  list( # Test dyspnea
+    weekly = test_ari("respi", dyspnea=FALSE),
     age = 5,
     expected = list(ari.ecdc=FALSE)
   ),
   list( # Test sorethroat
-    weekly = list(fever = TRUE, fever.sudden = NA, highest.temp =0, sympt.sudden = TRUE, sorethroat=TRUE),
+    weekly = test_ari("respi", sorethroat=TRUE),
     age = 5,
     expected = list(ari.ecdc=TRUE)
   ),
   list( # Chills
-    weekly = list(chills = TRUE, fever.sudden = NA, highest.temp =0, sympt.sudden = TRUE, cough=TRUE),
+    weekly = test_ari("general", chills=TRUE),
     age = 20,
     expected = list(ari.ecdc=TRUE)
   ),
   list( # asthenia
-    weekly = list(asthenia = TRUE, fever.sudden = NA, highest.temp =0, sympt.sudden = TRUE, cough=TRUE),
+    weekly = test_ari("general", asthenia=TRUE),
     age = 20,
     expected = list(ari.ecdc=TRUE)
   ),
   list( # asthenia=FALSE, fever=T
-    weekly = list(asthenia = FALSE, fever=TRUE, fever.sudden = NA, highest.temp =0, sympt.sudden = TRUE, cough=TRUE),
+    weekly = test_ari("general", asthenia = FALSE, fever=TRUE),
     age = 20,
     expected = list(ari.ecdc=TRUE)
   ),
   list( # Pain is not counted for <= 5, so no general sympt
-    weekly = list(pain = TRUE, fever.sudden = NA, highest.temp =0, sympt.sudden = TRUE, cough=TRUE),
+    weekly = test_ari("general", pain=TRUE),
     age = 5,
     expected = list(ari.ecdc=FALSE)
   ),
   list( # Pain with age > 5
-    weekly = list(pain = TRUE, fever.sudden = NA, highest.temp =0, sympt.sudden = TRUE, cough=TRUE),
+    weekly =test_ari("general", pain=TRUE),
     age = 20,
     expected = list(ari.ecdc=TRUE, ari=TRUE)
   )
@@ -85,7 +109,8 @@ test_that("Syndrome provider", {
   symptomes = get_symptoms_aliases()
   provider = SyndromeProviderRS2019$new(pain.age.limit = 5)
 
-  for(test in tests) {
+  for(i in seq_along(tests)) {
+    test = tests[[i]]
     weekly = data.frame(test$weekly, person_id=1L, id=1L)
     intake = data.frame(person_id=1L, age=test$age)
 
@@ -97,7 +122,7 @@ test_that("Syndrome provider", {
 
     r = provider$compute(weekly=weekly, intake=intake)
     for(sd in names(test$expected)) {
-      expect_equal(test$expected[[sd]], r[[sd]])
+      expect_equal(test$expected[[sd]], r[[sd]], info=i)
     }
   }
 })
