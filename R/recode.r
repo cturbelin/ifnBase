@@ -168,6 +168,7 @@ survey_load_health_status = function(weekly, health.table=NULL) {
 #' @param weekly data.frame weekly data (return by survey_load_results)
 #' @param health.status if TRUE try to get the health status for each row as stored in the db.
 #' @param recode.temp recode temperature variable (need to be false for incidence), if TRUE recode temperature variable
+#' @param all.variables if TRUE all known variables will be recoded
 #' @return weekly data.frame with recoded values & extra column
 #' @seealso \code{\link{survey_load_health_status}}
 #' @export
@@ -270,6 +271,7 @@ recode_weekly <- function(weekly, health.status=TRUE, recode.temp=FALSE, all.var
 #'
 #' @param data data.frame with weekly data
 #' @param survey survey name (as it is registered in \code{\link{platform_define_survey}})
+#' @param warn if TRUE show warning if a variable is already recoded, default is FALSE
 #' @return data with recoded variable (to factor)
 #' @export
 survey_recode_all  <- function(data, survey, warn=FALSE) {
