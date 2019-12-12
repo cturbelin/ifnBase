@@ -48,8 +48,23 @@ public = list(
 
     weekly = self$compute_age(weekly, intake)
 
-    fever_level_38 = 3
-    fever_level_39 = 4
+    codes_fever_level_38 = c(3, 4, 5)
+    codes_fever_level_39 = c(4, 5)
+
+    if(is.factor(weekly$highest.temp)) {
+      lev = levels(weekly$highest.temp)
+      if(all(lev %in% FEVER.CODES)) {
+        lev = lev[!lev %in% FEVER.CODES]
+        rlang::abort(paste("highest.temp doesnt has the right levels", paste(sQuote(lev), collapse = ',')))
+      }
+
+      fever_level_38 = names(FEVER.CODES %in% codes_fever_level_38)
+      fever_level_39 = names(FEVER.CODES %in% codes_fever_level_39)
+
+    } else {
+      fever_level_38 = codes_fever_level_38
+      fever_level_39 = codes_fever_level_39
+    }
 
     pain.age.limit = self$pain.age.limit
 
@@ -58,12 +73,12 @@ public = list(
     }
 
     fever_or_level = function(r, level) {
-      has_level = (!is.na(r$highest.temp) & r$highest.temp >= level)
+      has_level = (!is.na(r$highest.temp) & r$highest.temp %in% level)
       r$fever | has_level
     }
 
     fever_with_level = function(r, level) {
-      (!is.na(r$highest.temp) & r$highest.temp >= level)
+      (!is.na(r$highest.temp) & r$highest.temp %in% level)
     }
 
     any_of = function(r, cols) {
