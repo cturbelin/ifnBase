@@ -1,5 +1,11 @@
-# ifnBase 0.4.3
-* 
+# infBase 0.4.3
+
+* add `survey_recode_all()`
+* `recode_weekly()` can recode all variables, and check for already recoded highest.temp
+* add test for episodes & syndrome
+
+# ifnBase 0.4.2
+
 * add `variable_available()` helper to define by season availability of variables
 * `platform_define_survey()` now preserves inherited attributes of variables
 * add file based age group population loader & config in platform_options()
