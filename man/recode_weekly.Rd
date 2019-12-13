@@ -17,6 +17,8 @@ recode_weekly(
 \item{health.status}{if TRUE try to get the health status for each row as stored in the db.}
 
 \item{recode.temp}{recode temperature variable (need to be false for incidence), if TRUE recode temperature variable}
+
+\item{all.variables}{if TRUE all known variables will be recoded}
 }
 \value{
 weekly data.frame with recoded values & extra column

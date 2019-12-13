@@ -10,6 +10,8 @@ survey_recode_all(data, survey, warn = FALSE)
 \item{data}{data.frame with weekly data}
 
 \item{survey}{survey name (as it is registered in \code{\link{platform_define_survey}})}
+
+\item{warn}{if TRUE show warning if a variable is already recoded, default is FALSE}
 }
 \value{
 data with recoded variable (to factor)
