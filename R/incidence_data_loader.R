@@ -10,6 +10,7 @@
 #' @param first.season list of first season participants handling parameters (see details)
 #' @param columns list() extra columns to load in each survey data (see details)
 #' @param onset onset_design quosure expression used to compute onset date, see \code{\link{compute_onset}}, by default use \code{\link{base_onset_design}}
+#' @param verbose show verbose messages if TRUE
 #' @details syndrome.from:
 #' syndrome parameter will indicate how to create syndrome columns in weekly. A syndrome column is just a logical value column indicating if a weekly survey match a syndrome definition
 #' This list will be used as arguments to call \code{\link{compute_weekly_syndromes}}
@@ -42,7 +43,7 @@
 #'
 #' @export
 #' @return list() with intake, weekly, syndromes (vector of name of syndrome columns)
-load_results_for_incidence = function(season, age.categories, syndrome.from=list(), geo=NULL, country=NULL, first.season=NULL, columns=list(), onset=NULL) {
+load_results_for_incidence = function(season, age.categories, syndrome.from=list(), geo=NULL, country=NULL, first.season=NULL, columns=list(), onset=NULL, verbose=TRUE) {
 
   # We will need this packages
   requireNamespace("dplyr")
@@ -158,11 +159,10 @@ load_results_for_incidence = function(season, age.categories, syndrome.from=list
     }
 
     if(censor.season) {
-
       # Cannot known if the participant are in first season for the given season
       # So assume that it is not the first season for all participants
       # This will deactivate the criteria based on the first survey's delay (ignore.first.delay)
-      message("First season is censored all participant are not in first season")
+      message(paste0("First season is censored all participant are in state first.season=", first.season$censored_value))
       intake$first.season = first.season$censored_value
     } else {
       message("First season is not censored, fetching participants data")
@@ -171,7 +171,7 @@ load_results_for_incidence = function(season, age.categories, syndrome.from=list
         ss = -1
       }
       # Get list of previous seasons participants
-      previous = survey_participant_previous_season(season, ids=intake$person_id, from=ss, country=country)
+      previous = survey_participant_previous_season(season, ids=intake$person_id, from=ss, country=country, verbose=verbose)
       intake$first.season = !intake$person_id %in% previous # first is not in previous season
     }
     params$censor.season = censor.season

@@ -4,12 +4,15 @@
 \alias{relative_seasons}
 \title{Get relative season numbers to a reference season number}
 \usage{
-relative_seasons(season, from = NULL)
+relative_seasons(season, index = NULL, .all = NULL)
 }
 \arguments{
 \item{season}{int reference season}
 
-\item{from}{int vector of relative index to the reference season}
+\item{index}{int vector of relative index to the reference season, if NA or NULL get all previous}
+}
+\value{
+vector of season numbers matching the index relative to season reference
 }
 \description{
 Get relative season numbers to a reference season number

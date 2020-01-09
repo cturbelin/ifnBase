@@ -281,7 +281,7 @@ survey_participant_season = function(season, use.season.dates=FALSE, use.min=TRU
   } else {
     w = ''
   }
-
+  #print(w)
   query = paste0("SELECT distinct s.id as person_id from ", h$weekly," p left join ", join_surveyuser("p","s"), w)
   p = dbQuery(query)
   p$person_id
@@ -293,35 +293,40 @@ survey_participant_season = function(season, use.season.dates=FALSE, use.min=TRU
 #' @param use.season.dates if TRUE restrict weekly scan to the official date of each season \code{\link{get_historical_tables}}
 #' @param country country to use (only on european platform)
 #' @param from integer relative index of the oldest season to scan to (index relative to season, e.g. -1 = previous from given [season])
+#' @param verbose show verbose messages
 #' @family survey-load
 #' @export
-survey_participant_previous_season = function(season, ids=NULL, use.season.dates=F, from=NULL, country=NULL) {
+survey_participant_previous_season = function(season, ids=NULL, use.season.dates=F, from=NULL, country=NULL, verbose=FALSE) {
   season = parse_season(season)
   if(!is.null(from) && length(from) > 1) {
     rlang::warn("from has more than 1 element, only first will be used")
     from = from[1]
   }
  if(isTRUE(.Share$epiwork.tables$weekly$single.table)) {
-    survey_participant_previous_season.single_table(season=season, ids=ids, from=from, country=country)
+    survey_participant_previous_season.single_table(season=season, ids=ids, from=from, country=country, verbose=verbose)
   } else {
-    survey_participant_previous_season.multiple_table(season=season, ids=ids, use.season.dates=use.season.dates, from=from, country=country)
+    survey_participant_previous_season.multiple_table(season=season, ids=ids, use.season.dates=use.season.dates, from=from, country=country, verbose=verbose)
   }
 }
 
 #' Get relative season numbers to a reference season number
+#'
 #' @param season int reference season
-#' @param from int vector of relative index to the reference season
+#' @param index int vector of relative index to the reference season, if NA or NULL get all previous
 #' @keywords internal
+#' @return vector of season numbers matching the index relative to season reference
 #' @export
-relative_seasons = function(season, from=NULL) {
-  all.seasons = as.integer(get_historical_seasons())
-  if( is.null(from) || is.na(from) ) {
+relative_seasons = function(season, index=NULL, .all=NULL) {
+  if(is.null(.all)) {
+    all.seasons = as.integer(get_historical_seasons())
+  }
+  if( is.null(index) || is.na(index) ) {
     seasons = all.seasons
   } else {
-    index = as.integer(from)
+    index = as.integer(index)
     min = -length(all.seasons)
     if(is.na(index) | index < min | index >= 0) {
-      rlang::abort(paste0("`from` should be a negative integer value (min ",min,"), given ", from))
+      rlang::abort(paste0("`from` should be a negative integer value (min ",min,"), given ", index))
     }
     if(index > 0) {
       rlang::abort("from should be a negative")
@@ -336,9 +341,9 @@ relative_seasons = function(season, from=NULL) {
 #' Implementation for multiple table data model
 #' we have to check season by season
 #' @rdname survey_participant_previous_season
-survey_participant_previous_season.multiple_table = function(season, ids=NULL, use.season.dates=F, from=NULL, country=NULL) {
-  message("survey_participant_previous_season: multiple table implementation")
-  seasons = relative_seasons(season, from=from)
+survey_participant_previous_season.multiple_table = function(season, ids=NULL, use.season.dates=F, from=NULL, country=NULL, verbose=TRUE) {
+  message(paste0("survey_participant_previous_season: multiple table for ", season, "use.date=", use.season.dates, " from:",from, " country:", country))
+  seasons = relative_seasons(season, index=from)
   previous = c()
   for(s in seasons) {
     p = survey_participant_season(s, use.season.dates = use.season.dates, use.min = FALSE)
@@ -353,19 +358,25 @@ survey_participant_previous_season.multiple_table = function(season, ids=NULL, u
 #' Implementation for multiple table data model
 #' we have to check season by season
 #' @rdname survey_participant_previous_season
-survey_participant_previous_season.single_table = function(season, ids=NULL, from=NULL, country=NULL) {
-  message("survey_participant_previous_season: single table implementation")
+survey_participant_previous_season.single_table = function(season, ids=NULL, from=NULL, country=NULL, verbose=TRUE) {
+  message(paste0("survey_participant_previous_season: single table for ",season," from=", from," in country ", country))
   if(is.null(from)) {
-    season = relative_seasons(season - 1)
-    if(length(season) == 0) {
+    prev.season = relative_seasons(season, index=-1L) # get just previous season
+    if(verbose) {
+      message("previous season =", prev.season)
+    }
+    if(length(prev.season) == 0L) {
+      if(verbose) {
+        message("no previous season =", season)
+      }
       return(ids)
     }
-    season = min(season)
+    prev.season = min(prev.season)
     # Only use the season as a maximum
-    previous = survey_participant_season(season, use.min = FALSE, use.season.dates = TRUE, country=country)
+    previous = survey_participant_season(prev.season, use.min = FALSE, use.season.dates = TRUE, country=country)
   } else {
-    seasons = relative_seasons(season, from=from)
-    previous = survey_participant_season(seasons[1], use.min=TRUE, use.season.dates = TRUE, country=country)
+    seasons = relative_seasons(season, index=from)
+    previous = survey_participant_season(seasons[1L], use.min=TRUE, use.season.dates = TRUE, country=country)
   }
   if( !is.null(ids) ) {
     previous = previous[ previous %in% ids]

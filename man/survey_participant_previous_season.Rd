@@ -11,7 +11,8 @@ survey_participant_previous_season(
   ids = NULL,
   use.season.dates = F,
   from = NULL,
-  country = NULL
+  country = NULL,
+  verbose = FALSE
 )
 
 survey_participant_previous_season.multiple_table(
@@ -19,14 +20,16 @@ survey_participant_previous_season.multiple_table(
   ids = NULL,
   use.season.dates = F,
   from = NULL,
-  country = NULL
+  country = NULL,
+  verbose = TRUE
 )
 
 survey_participant_previous_season.single_table(
   season,
   ids = NULL,
   from = NULL,
-  country = NULL
+  country = NULL,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -39,6 +42,8 @@ survey_participant_previous_season.single_table(
 \item{from}{integer relative index of the oldest season to scan to (index relative to season, e.g. -1 = previous from given [season])}
 
 \item{country}{country to use (only on european platform)}
+
+\item{verbose}{show verbose messages}
 }
 \description{
 List of participants registred in weekly at least once in previous season (regarding given [season])

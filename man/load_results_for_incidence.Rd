@@ -12,7 +12,8 @@ load_results_for_incidence(
   country = NULL,
   first.season = NULL,
   columns = list(),
-  onset = NULL
+  onset = NULL,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ load_results_for_incidence(
 \item{columns}{list() extra columns to load in each survey data (see details)}
 
 \item{onset}{onset_design quosure expression used to compute onset date, see \code{\link{compute_onset}}, by default use \code{\link{base_onset_design}}}
+
+\item{verbose}{show verbose messages if TRUE}
 }
 \value{
 list() with intake, weekly, syndromes (vector of name of syndrome columns)
