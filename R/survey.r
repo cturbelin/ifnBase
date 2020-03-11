@@ -178,6 +178,25 @@ survey_recodings <- function(survey) {
   return(def$recodes)
 }
 
+
+#' Rename columns to the survey variable names
+#'
+#' This function can be used
+#'
+#' @param survey character survey name
+#'
+#' @return list with question variable name in name, a mapping as value
+#' @family survey
+#' @export
+survey_rename_columns = function(data, survey) {
+  def = survey_definition(survey)
+  cols = names(data)
+  nn = survey_aliases(names(data), def=def, revert=TRUE)
+  names(cols) <- nn
+  data = replace_names(data, as.list(cols))
+  data
+}
+
 #' Returns TRUE if the survey's data are store using a single table model
 #' @return logical
 #' @param survey survey name
