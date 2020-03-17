@@ -10,7 +10,7 @@ dbConnect <- function() {
   driver = get_option('db_driver')
   dsn = get_option('db_dsn')
 
-  online = !is.null(driver) && !is.null(dsn) && driver %in% c('RPostgreSQL','RODBC')
+  online = !is.null(driver) && !is.null(dsn) && driver %in% c('RPostgreSQL','RODBC', 'RSQLite')
 
   if(online) {
     init_func = get(paste0("dbConnect.", driver), mode="function", envir = topenv())
@@ -39,7 +39,20 @@ dbConnect.RPostgreSQL <- function(dsn) {
     rlang::abort("RPostgreSQL needed to use this driver")
   }
   dbiConnect <- DBI::dbConnect
- .Share$dbHandle <- dbiConnect(RPostgreSQL::PostgreSQL(), user=dsn$user, password=dsn$password,host=dsn$host, dbname=dsn$dbname)
+
+  args = list(
+    RPostgreSQL::PostgreSQL(),
+    user=dsn$user,
+    password=dsn$password,
+    host=dsn$host,
+    dbname=dsn$dbname
+  )
+
+  for(n in names(dsn)) {
+    args[[n]] = dsn[[n]]
+  }
+
+ .Share$dbHandle <- do.call(dbiConnect, args)
  .Share$dbHandle
 }
 
@@ -58,6 +71,35 @@ dbQuery.RPostgreSQL <- function(..., show.errors = T, dbHandle=NULL) {
   # handle error
   .Share$dbLastError <- DBI::dbGetException(dbHandle)
   cat('PgSQL error', "\n")
+  cat('query : ', query, "\n")
+  str(.Share$dbLastError)
+  return(-1)
+}
+
+dbConnect.RSQLite <- function(dsn) {
+  if( !requireNamespace("RSQLite") ) {
+    rlang::abort("RSQLite needed to use this driver")
+  }
+  dbiConnect <- DBI::dbConnect
+  .Share$dbHandle <- dbiConnect(RSQLite::SQLite(), user=dsn$user, password=dsn$password, host=dsn$host, dbname=dsn$dbname)
+  .Share$dbHandle
+}
+
+dbQuery.RSQLite <- function(..., show.errors = T, dbHandle=NULL) {
+  if( is.null(dbHandle) ) {
+    dbHandle = .Share$dbHandle
+  }
+  query = paste0(...)
+  if(isTRUE(.Share$debug.query)) {
+    debug_query(query)
+  }
+  stm <- DBI::dbGetQuery(dbHandle, query)
+  if( is.data.frame(stm) || (is.logical(stm) && stm )) {
+    return( stm )
+  }
+  # handle error
+  .Share$dbLastError <- DBI::dbGetException(dbHandle)
+  cat('SQLite error', "\n")
   cat('query : ', query, "\n")
   str(.Share$dbLastError)
   return(-1)
