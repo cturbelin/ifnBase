@@ -1,3 +1,9 @@
+# ifnBase 0.4.5
+* `dbConnect()` now accepts port entry in dsn
+* new function `survey_rename_columns()` to rename columns from external source (csv)
+
+# ifnBase 0.4.4
+
 # infBase 0.4.3
 
 * add `survey_recode_all()`
