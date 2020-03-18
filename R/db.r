@@ -41,11 +41,7 @@ dbConnect.RPostgreSQL <- function(dsn) {
   dbiConnect <- DBI::dbConnect
 
   args = list(
-    RPostgreSQL::PostgreSQL(),
-    user=dsn$user,
-    password=dsn$password,
-    host=dsn$host,
-    dbname=dsn$dbname
+    RPostgreSQL::PostgreSQL()
   )
 
   for(n in names(dsn)) {
@@ -81,7 +77,16 @@ dbConnect.RSQLite <- function(dsn) {
     rlang::abort("RSQLite needed to use this driver")
   }
   dbiConnect <- DBI::dbConnect
-  .Share$dbHandle <- dbiConnect(RSQLite::SQLite(), user=dsn$user, password=dsn$password, host=dsn$host, dbname=dsn$dbname)
+
+  args = list(
+    RSQLite::SQLite()
+  )
+
+  for(n in names(dsn)) {
+    args[[n]] = dsn[[n]]
+  }
+
+  .Share$dbHandle <- do.call(dbiConnect, args)
   .Share$dbHandle
 }
 
