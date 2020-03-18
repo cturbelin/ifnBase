@@ -193,7 +193,7 @@ survey_rename_columns = function(data, survey) {
   cols = names(data)
   nn = survey_aliases(names(data), def=def, revert=TRUE)
   names(cols) <- nn
-  data = replace_names(data, as.list(cols))
+  data = swMisc::replace_names(data, as.list(cols))
   data
 }
 
