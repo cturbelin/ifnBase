@@ -230,7 +230,8 @@ load_results_for_incidence = function(season, age.categories, syndrome.from=list
 compute_weekly_syndromes <- function(intake, weekly, health.status=TRUE, keep.status=FALSE, regroup.syndromes=TRUE, provider=NULL) {
 
   # Use InfluenzaNet base health status
-  syndromes = c()
+  syndromes = c() # already provided syndroms, just used to check here
+  org.names = names(weekly)
   if(health.status) {
     if(regroup.syndromes) {
       if(keep.status) {
@@ -261,10 +262,25 @@ compute_weekly_syndromes <- function(intake, weekly, health.status=TRUE, keep.st
     }
     n = names(r)
     n = n[ n != 'id'] # remove id column, as it is not a syndrome name
-    weekly = merge(weekly, r, by='id', all.x=T)
+    # Check if names are not already in weekly
+    if(any(n %in% org.names)) {
+      nn = n[n %in% org.names]
+      rlang::abort(paste("Some syndrome names are already in use in weekly data, please rename ", paste(sQuote(nn), collapse = ',')))
+    }
+
+    # Merge with weekly if a syndrome is already in weekly, it will be suffixed
+    if(any(n %in% syndromes)) {
+      nn = n[n %in% syndromes]
+      rlang::warn(paste("Some syndromes are already used in weekly health status will be suffixed by .status :", paste(sQuote(nn), collapse = ',')))
+    }
+    weekly = merge(weekly, r, by='id', all.x=T, suffixes=c('.status',''))
     syndromes = c(syndromes, n)
     rm(r)
   }
+
+  # Get real syndromes names as they could have been renamed
+  nn = names(weekly)
+  syndromes = nn[ !nn %in% org.names]
 
   attr(weekly, "syndromes") <- syndromes
   weekly
