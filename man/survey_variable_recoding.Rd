@@ -26,6 +26,7 @@ Other survey:
 \code{\link{survey_labels}()},
 \code{\link{survey_recode}()},
 \code{\link{survey_recodings}()},
+\code{\link{survey_rename_columns}()},
 \code{\link{survey_variables_like}()}
 }
 \concept{survey}
