@@ -740,7 +740,7 @@ platform_options = function(...) {
   }
 
   # Health status table option (in case of single table model)
-  if(!has('health.status')) {
+  if(has('health.status')) {
     # list(default="name of healt status table", id="name of column containing weekly id")
     .Share$health.status = oo$health.status
   }
