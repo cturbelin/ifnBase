@@ -32,8 +32,9 @@ public = list(
   #' @param weekly weekly data
   #' @param intake intake data with at least 'person_id', 'age' column
   #' @param definitions character vector of definition to use
+  #' @param use.sudden logical if TRUE use is_sudden, otherwise consider it's always TRUE
   #' @return data.frame with each computed syndrome in column, and "id" column from weekly
-  compute = function(weekly, intake, definitions=NULL) {
+  compute = function(weekly, intake, definitions=NULL, use.sudden=TRUE) {
 
     available = c('ili', 'ili.f', 'ili.minus', 'ili.minus.fever','ili.who','ari.ecdc', 'ari.plus', 'ari')
 
@@ -93,7 +94,12 @@ public = list(
     pain = has_pain(r)
     # Always TRUE if child < pain.age.limit
     pain_or_headache = pain | r$headache
-    sudden = self$is_sudden(r)
+
+    if(use.sudden) {
+      sudden = self$is_sudden(r)
+    } else {
+      sudden = rep(TRUE, nrow(weekly))
+    }
 
     d = list()
 

@@ -70,7 +70,12 @@ instanciate object
 \subsection{Method \code{compute()}}{
 Compute definitions for all syndromes
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SyndromeProviderRS2019$compute(weekly, intake, definitions = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{SyndromeProviderRS2019$compute(
+  weekly,
+  intake,
+  definitions = NULL,
+  use.sudden = TRUE
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -81,6 +86,8 @@ Compute definitions for all syndromes
 \item{\code{intake}}{intake data with at least 'person_id', 'age' column}
 
 \item{\code{definitions}}{character vector of definition to use}
+
+\item{\code{use.sudden}}{logical if TRUE use is_sudden, otherwise consider it's always TRUE}
 }
 \if{html}{\out{</div>}}
 }
