@@ -1,3 +1,9 @@
+# ifnBase 0.4.6
+* `health.status` options was not handled correctly
+* `calc_age()` fixed to correctly handle month
+* `load_results_for_incidence()` rename ifn syndrome name if duplicate with a provider
+* `SyndromeProviderRS2019` can relax "sudden" criteria
+
 # ifnBase 0.4.5
 * `dbConnect()` now accepts port entry in dsn
 * new function `survey_rename_columns()` to rename columns from external source (csv)
