@@ -348,8 +348,8 @@ calc_age = function(ym, time) {
   m = as.numeric(as.character(substr(ym, 6, 7)))
   year = as.numeric(format(time, format="%Y"))
   month = as.numeric(format(time, format="%m"))
-  cur = (year + (month / 12) )
-  round(cur - y + (m / 12), 2)
+  cur = year + (month / 12)
+  round(cur - (y + (m / 12)), 2)
 }
 
 #' Cut age values into categories using breaks and defining pretty levels labels
