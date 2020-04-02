@@ -160,7 +160,9 @@ survey_load_results = function(survey, cols, geo=NULL, date=NULL, db.table=NULL,
   r
 }
 
-#' @param def season definition
+#' Check if provided date bounds are compatible with a season
+#'
+#' @param def season definition returned by \code{\link{season_definition}()}
 #' @param date list() list of min, max requested dates
 check_season_dates = function(def, date) {
   # All seasons data are in one single table
@@ -199,9 +201,10 @@ check_season_dates = function(def, date) {
 #' @param variables character vector of name of variables (not db name)
 #' @param survey survey name or survey_definition from \code{\link{survey_definition}()}
 #' @param season season to check of variable availability
+#' @param country country to check of variable availability (if platform accepts)
 #' @return variables if they are available
 #' @export
-survey_variable_available <- function(variables, survey, season) {
+survey_variable_available <- function(variables, survey, season, country=NULL) {
   if(!is(survey, "survey_definition")) {
     survey = survey_definition(survey)
   }
@@ -219,7 +222,7 @@ survey_variable_available <- function(variables, survey, season) {
         # List of season values
         season %in% av
       } else {
-        rlang::eval_tidy(av, data=list(season=season))
+        rlang::eval_tidy(av, data=list(season=season, country=country))
       }
   })
   if(any(!available)) {

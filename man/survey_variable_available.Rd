@@ -4,7 +4,7 @@
 \alias{survey_variable_available}
 \title{Check if variables are available for a given season}
 \usage{
-survey_variable_available(variables, survey, season)
+survey_variable_available(variables, survey, season, country = NULL)
 }
 \arguments{
 \item{variables}{character vector of name of variables (not db name)}
@@ -12,6 +12,8 @@ survey_variable_available(variables, survey, season)
 \item{survey}{survey name or survey_definition from \code{\link{survey_definition}()}}
 
 \item{season}{season to check of variable availability}
+
+\item{country}{country to check of variable availability (if platform accepts)}
 }
 \value{
 variables if they are available
