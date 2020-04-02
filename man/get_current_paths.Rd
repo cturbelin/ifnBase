@@ -12,6 +12,7 @@ Get the current paths defined by \code{\link{init.path}()} or \code{\link{add_pa
 \seealso{
 Other path-functions: 
 \code{\link{add_path_prefix}()},
+\code{\link{create_path}()},
 \code{\link{init.path}()},
 \code{\link{my.path}()},
 \code{\link{platform_path}()},

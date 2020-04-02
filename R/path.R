@@ -75,15 +75,41 @@ add_path_prefix = function(name, prefix) {
   }
 }
 
-#' Internal function create the path from the current paths prefix & suffix
-create_path = function() {
-  path = get_option('base.out.path')
-  if(length(.Share$path.prefix) > 0) {
-    path = paste0(path, paste0(.Share$path.prefix, collapse='/'))
+#' Generate a path with path components.
+#'
+#' This function build a path but do not change the current path components of the session
+#'
+#' @param base chr base output path, use session default if NULL
+#' @param prefixes list() replace some prefixes, only works if prefixes is already defined by \code{\link{add_path_prefix}()}
+#' @param suffix chr suffix to use, if NULL use default
+#' @family path-functions
+#' @export
+create_path = function(base=NULL, prefixes=list(), suffix=NULL) {
+  if(is.null(base)) {
+    path = get_option('base.out.path')
+  } else {
+    path = base
+  }
+  # Create prefixes
+  pp = .Share$path.prefix
+  if(length(pp) > 0) {
+    for(n in names(pp)) {
+      if(hasName(prefixes, n)) {
+        pp[[n]] = prefixes[[n]]
+      }
+    }
+  }
+
+  if(length(pp) > 0) {
+    path = paste0(path, paste0(pp, collapse='/'))
   }
   path = ending_slash(path)
-  if(length(.Share$path.suffix) > 0) {
-    path = paste0(path, .Share$path.suffix)
+  ps = .Share$path.suffix
+  if(!is.null(suffix)) {
+    ps = suffix
+  }
+  if(length(ps) > 0) {
+    path = paste0(path, ps)
   }
   path = ending_slash(path)
   path

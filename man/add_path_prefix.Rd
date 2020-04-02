@@ -31,6 +31,7 @@ my.path() # => '/my/path/my_project/output'
 }
 \seealso{
 Other path-functions: 
+\code{\link{create_path}()},
 \code{\link{get_current_paths}()},
 \code{\link{init.path}()},
 \code{\link{my.path}()},

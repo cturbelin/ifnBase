@@ -15,6 +15,7 @@ return the path of a file in cache files
 \seealso{
 Other path-functions: 
 \code{\link{add_path_prefix}()},
+\code{\link{create_path}()},
 \code{\link{get_current_paths}()},
 \code{\link{init.path}()},
 \code{\link{my.path}()},
