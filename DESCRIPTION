@@ -15,6 +15,7 @@ Suggests:
     RPostgreSQL,
     DBI,
     RODBC,
+    RSQLite,
     RColorBrewer,
     svglite,
     epitools,

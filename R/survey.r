@@ -181,8 +181,8 @@ survey_recodings <- function(survey) {
 
 #' Rename columns to the survey variable names
 #'
-#' This function can be used
-#'
+#' This function can be used when loading data stored in the database format (with db column names)
+#' @param data data.frame() containing columns using database column names
 #' @param survey character survey name
 #'
 #' @return list with question variable name in name, a mapping as value

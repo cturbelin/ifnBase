@@ -7,13 +7,15 @@
 survey_rename_columns(data, survey)
 }
 \arguments{
+\item{data}{data.frame() containing columns using database column names}
+
 \item{survey}{character survey name}
 }
 \value{
 list with question variable name in name, a mapping as value
 }
 \description{
-This function can be used
+This function can be used when loading data stored in the database format (with db column names)
 }
 \seealso{
 Other survey: 
