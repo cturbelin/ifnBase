@@ -30,6 +30,10 @@ To run need weekly with get_columns_for_incidence() column list
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
 \item{\code{pain.age.limit}}{age under which pain & headache will exluded from defintion}
+
+\item{\code{use.sudden}}{logical, use sudden feature to build the syndrome}
+
+\item{\code{definitions}}{character vector of definitions to output}
 }
 \if{html}{\out{</div>}}
 }
@@ -37,6 +41,7 @@ To run need weekly with get_columns_for_incidence() column list
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{SyndromeProviderRS2019$new()}}
+\item \href{#method-update_definitions}{\code{SyndromeProviderRS2019$update_definitions()}}
 \item \href{#method-compute}{\code{SyndromeProviderRS2019$compute()}}
 \item \href{#method-clone}{\code{SyndromeProviderRS2019$clone()}}
 }
@@ -54,16 +59,32 @@ To run need weekly with get_columns_for_incidence() column list
 \subsection{Method \code{new()}}{
 instanciate object
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SyndromeProviderRS2019$new(pain.age.limit = 5)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{SyndromeProviderRS2019$new(
+  pain.age.limit = 5,
+  definitions = NULL,
+  use.sudden = TRUE
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{pain.age.limit}}{age to take into account of pain & heacache}
+
+\item{\code{definitions}}{list of definitions to use}
+
+\item{\code{use.sudden}}{use sudden appearance of symptomes in the definitions, if FALSE will be considered as always sudden}
 }
 \if{html}{\out{</div>}}
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-update_definitions"></a>}}
+\subsection{Method \code{update_definitions()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{SyndromeProviderRS2019$update_definitions(definitions)}\if{html}{\out{</div>}}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-compute"></a>}}
@@ -74,7 +95,7 @@ Compute definitions for all syndromes
   weekly,
   intake,
   definitions = NULL,
-  use.sudden = TRUE
+  use.sudden = NULL
 )}\if{html}{\out{</div>}}
 }
 
