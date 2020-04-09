@@ -4,12 +4,14 @@
 \alias{graph_colors}
 \title{Return a list of n colors by the "best" color generator available}
 \usage{
-graph_colors(n, pal = NULL)
+graph_colors(n, pal = NULL, dark = FALSE)
 }
 \arguments{
 \item{n}{number of colors to get (caution, it can be fewer than expected for some palettes)}
 
 \item{pal}{name of the palette to use}
+
+\item{dark}{boolean try to use darkest palette}
 }
 \description{
 Try to use RColorBrewer if available, if not uses rainbow

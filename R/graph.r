@@ -165,27 +165,34 @@ graph.open <- function(file, width=NA, height=NA, type="png", pointsize=12, pitc
 #'
 #' @param n number of colors to get (caution, it can be fewer than expected for some palettes)
 #' @param pal name of the palette to use
+#' @param dark boolean try to use darkest palette
 #' @export
-graph_colors = function(n, pal=NULL) {
+graph_colors = function(n, pal=NULL, dark=FALSE) {
   if( is.null(.Share$graph.brewer) ) {
-    .Share$graph.brewer = requireNamespace("RColorBrewer", logical.return=T)
+    .Share$graph.brewer = requireNamespace("RColorBrewer")
   }
-  if(.Share$graph.brewer || isTRUE(pal == "rainbow")) {
+  use.brewer = .Share$graph.brewer && !isTRUE(pal == "rainbow")
+  cc = c()
+  if( use.brewer ) {
     if( is.null(pal) ) {
-      if(n < 3) {
-        pal = "Set1"
+      if(n > 9) {
+        pal = "Set3"
       } else {
-        pal = ifelse(n > 9, "Set3","Set1")
+        if(n < 9) {
+          pal = ifelse(dark, "Dark2", "Set1")
+        } else {
+          pal = "Set1"
+        }
       }
     }
     cc = RColorBrewer::brewer.pal(n, pal)
-    if(length(cc) > n) {
+    if(length(cc) >= n) {
       cc = cc[1:n]
+      return(cc)
     }
-    return(cc)
-  } else {
-    rainbow(n)
   }
+  # Failback
+  rainbow(n)
 }
 
 
