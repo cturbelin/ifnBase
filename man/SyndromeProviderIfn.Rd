@@ -18,6 +18,7 @@ Syndrome provider base class for historical Influenzanet syndromic classifier
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new"></a>}}
+\if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{SyndromeProviderIfn$new(version = 2012, regroup = TRUE)}\if{html}{\out{</div>}}
@@ -35,6 +36,7 @@ Syndrome provider base class for historical Influenzanet syndromic classifier
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-compute"></a>}}
+\if{latex}{\out{\hypertarget{method-compute}{}}}
 \subsection{Method \code{compute()}}{
 Compute syndrome
 \subsection{Usage}{
@@ -56,6 +58,7 @@ data.frame() with id column from weekly and extra column for each syndrome
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{
