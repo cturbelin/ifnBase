@@ -30,6 +30,7 @@ influenzanet base syndrome names : ili, cold, allergy, gastro )
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-compute"></a>}}
+\if{latex}{\out{\hypertarget{method-compute}{}}}
 \subsection{Method \code{compute()}}{
 Compute syndrome
 \subsection{Usage}{
@@ -51,6 +52,7 @@ data.frame() with id column from weekly and extra column for each syndrome
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-compute_age"></a>}}
+\if{latex}{\out{\hypertarget{method-compute_age}{}}}
 \subsection{Method \code{compute_age()}}{
 Compute age for each weekly using intake
 \subsection{Usage}{
@@ -70,6 +72,7 @@ Common function, compute sudden symptomes using both variables}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-is_sudden"></a>}}
+\if{latex}{\out{\hypertarget{method-is_sudden}{}}}
 \subsection{Method \code{is_sudden()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{SyndromeProvider$is_sudden(r)}\if{html}{\out{</div>}}
@@ -85,6 +88,7 @@ Common function, compute sudden symptomes using both variables}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

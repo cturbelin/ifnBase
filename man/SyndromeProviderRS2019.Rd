@@ -51,6 +51,7 @@ To run need weekly with get_columns_for_incidence() column list
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new"></a>}}
+\if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
 instanciate object
 \subsection{Usage}{
@@ -67,6 +68,7 @@ instanciate object
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-compute"></a>}}
+\if{latex}{\out{\hypertarget{method-compute}{}}}
 \subsection{Method \code{compute()}}{
 Compute definitions for all syndromes
 \subsection{Usage}{
@@ -97,6 +99,7 @@ data.frame with each computed syndrome in column, and "id" column from weekly
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

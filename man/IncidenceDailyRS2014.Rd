@@ -61,6 +61,7 @@ Parameters:
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new"></a>}}
+\if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
 instanciate object
 \subsection{Usage}{
@@ -96,6 +97,7 @@ instanciate object
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-prepare"></a>}}
+\if{latex}{\out{\hypertarget{method-prepare}{}}}
 \subsection{Method \code{prepare()}}{
 Prepare data before to compute
 Prepare participants data to be able to apply selection rules
@@ -106,6 +108,7 @@ Prepare participants data to be able to apply selection rules
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-compute_date"></a>}}
+\if{latex}{\out{\hypertarget{method-compute_date}{}}}
 \subsection{Method \code{compute_date()}}{
 Internal function
 Estimate incidence with rs2014 method for a given date
@@ -123,6 +126,7 @@ Estimate incidence with rs2014 method for a given date
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-compute"></a>}}
+\if{latex}{\out{\hypertarget{method-compute}{}}}
 \subsection{Method \code{compute()}}{
 Compute weekly incidence for all requested weeks
 Apply the full algorithm for rs2014 incidence computation
@@ -145,6 +149,7 @@ prepare data and then compute for each week by calling estimate_incidence_rs2014
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

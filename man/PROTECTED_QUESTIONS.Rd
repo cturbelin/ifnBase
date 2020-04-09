@@ -4,7 +4,9 @@
 \name{PROTECTED_QUESTIONS}
 \alias{PROTECTED_QUESTIONS}
 \title{List of not usable for data variable names in survey mapping}
-\format{An object of class \code{character} of length 3.}
+\format{
+An object of class \code{character} of length 3.
+}
 \usage{
 PROTECTED_QUESTIONS
 }

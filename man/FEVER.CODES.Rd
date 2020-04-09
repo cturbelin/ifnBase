@@ -5,7 +5,9 @@
 \alias{FEVER.CODES}
 \title{List of coded values for fever
 names are pretty labels, values coded}
-\format{An object of class \code{numeric} of length 6.}
+\format{
+An object of class \code{numeric} of length 6.
+}
 \usage{
 FEVER.CODES
 }

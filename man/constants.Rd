@@ -8,7 +8,15 @@
 \alias{DONTKNOW}
 \alias{YES_NO_DNK}
 \title{Constants values}
-\format{An object of class \code{character} of length 1.}
+\format{
+An object of class \code{character} of length 1.
+
+An object of class \code{character} of length 1.
+
+An object of class \code{character} of length 1.
+
+An object of class \code{character} of length 3.
+}
 \usage{
 YES
 
