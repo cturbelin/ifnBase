@@ -1,10 +1,22 @@
+# infBase 0.4.7 (RC)
+
+* add `create_path()`function to create path without changing the current
+* `survey_variable_available()`handles *country* parameter
+* *RSQLite* as suggested package (not tested yet)
+* *sympt.cause* is now loaded for incidence (needed to compute syndromic ifn)
+* add `SyndromeProviderIfn` class
+* SyndromeProviderRS2019 now expect parameters in constructor instead of `compute()`
+* fix `graph_colors()` to handle color brewer correctly, add rainbow failback and *dark* parameter
+
 # ifnBase 0.4.6
+
 * `health.status` options was not handled correctly
 * `calc_age()` fixed to correctly handle month
 * `load_results_for_incidence()` rename ifn syndrome name if duplicate with a provider
 * `SyndromeProviderRS2019` can relax "sudden" criteria
 
 # ifnBase 0.4.5
+
 * `dbConnect()` now accepts port entry in dsn
 * new function `survey_rename_columns()` to rename columns from external source (csv)
 
