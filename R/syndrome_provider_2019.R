@@ -13,29 +13,31 @@
 #' }
 #'
 #' @export
-SyndromeProviderRS2019 <- R6Class("SyndromeProviderRS2019", , inherit=SyndromeProvider,
+SyndromeProviderRS2019 <- R6Class("SyndromeProviderRS2019",  inherit=SyndromeProvider,
 
 public = list(
 
   #' @field pain.age.limit age under which pain & headache will exluded from defintion
   pain.age.limit = NULL,
 
+  #' @field use.sudden logical, use sudden feature to build the syndrome
+  use.sudden = TRUE,
+
+  #' @field definitions character vector of definitions to output
+  definitions = NULL,
+
   #' @description
   #' instanciate object
   #' @param pain.age.limit age to take into account of pain & heacache
-  initialize = function(pain.age.limit=5) {
+  #' @param definitions list of definitions to use
+  #' @param use.sudden use sudden appearance of symptomes in the definitions, if FALSE will be considered as always sudden
+  initialize = function(pain.age.limit=5, definitions=NULL, use.sudden=TRUE) {
     self$pain.age.limit = pain.age.limit
+    self$use.sudden = use.sudden
+    self$update_definitions(definitions)
   },
 
-  #' @description
-  #' Compute definitions for all syndromes
-  #' @param weekly weekly data
-  #' @param intake intake data with at least 'person_id', 'age' column
-  #' @param definitions character vector of definition to use
-  #' @param use.sudden logical if TRUE use is_sudden, otherwise consider it's always TRUE
-  #' @return data.frame with each computed syndrome in column, and "id" column from weekly
-  compute = function(weekly, intake, definitions=NULL, use.sudden=TRUE) {
-
+  update_definitions = function(definitions) {
     available = c('ili', 'ili.f', 'ili.minus', 'ili.minus.fever','ili.who','ari.ecdc', 'ari.plus', 'ari')
 
     if(is.null(definitions)) {
@@ -44,8 +46,36 @@ public = list(
 
     if(any(!definitions %in% available)) {
       n = definitions[!definitions %in% available]
-      stop(paste0("Unknown definition", paste(n, collapse = ",")))
+      rlang::abort(paste0("Unknown definition", paste(n, collapse = ",")))
     }
+
+    self$definitions = definitions
+
+  },
+
+
+  #' @description
+  #' Compute definitions for all syndromes
+  #' @param weekly weekly data
+  #' @param intake intake data with at least 'person_id', 'age' column
+  #' @param definitions character vector of definition to use
+  #' @param use.sudden logical if TRUE use is_sudden, otherwise consider it's always TRUE
+  #' @return data.frame with each computed syndrome in column, and "id" column from weekly
+  compute = function(weekly, intake, definitions=NULL, use.sudden=NULL) {
+
+    if(!is.null(definitions)) {
+      rlang::warn("Use definitions in constructor")
+      self$update_definitions(definitions)
+    }
+
+    definitions = self$definitions
+
+    if(!is.null(use.sudden)) {
+      rlang::warn("`use.sudden` should be used in constructor")
+      self$use.sudden = use.sudden
+    }
+
+    use.sudden = self$use.sudden
 
     weekly = self$compute_age(weekly, intake)
 

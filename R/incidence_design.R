@@ -24,7 +24,7 @@
 #' Returns list of columns needed of weekly survey to compute incidence
 #' @export
 get_columns_for_incidence = function() {
-  c('timestamp', get_symptoms_aliases(), 'fever.sudden','highest.temp','same.episode','sympt.start','fever.start','sympt.sudden')
+  c('timestamp', get_symptoms_aliases(), 'fever.sudden','highest.temp','same.episode','sympt.start','fever.start','sympt.sudden','sympt.cause')
 }
 
 #' Describe the stratification to use for incidence computation (parameter design)
