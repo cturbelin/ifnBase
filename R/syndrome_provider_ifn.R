@@ -2,8 +2,10 @@
 #' @export
 SyndromeProviderIfn <- R6Class("SyndromeProvider", public = list(
 
+  #' @field version of definition to use
   version = NULL,
 
+  #' @field regroup syndroms using prettier labels
   regroup = TRUE,
 
   #' @param version classifier version to use, default is 2012
@@ -25,6 +27,17 @@ SyndromeProviderIfn <- R6Class("SyndromeProvider", public = list(
   #' @param intake intake data
   #' @return data.frame() with id column from weekly and extra column for each syndrome
   compute = function(weekly, intake) {
+
+    requires.columns = c("sorethroat", "cough", "dyspnea", "diarrhea", "nausea", "vomiting",
+                         "abdopain", "rhino", "sneeze", "highest.temp", "wateryeye", "sympt.cause",
+                         "no.sympt", "sympt.sudden", "fever.sudden", "fever", "chills",
+                         "asthenia", "headache", "pain")
+
+    if(!all(hasName(weekly,requires.columns))) {
+      n = requires.columns[ !requires.columns %in% names(weekly), ]
+      rlang::abort("Missing columns to be able to compute definition ", paste(sQuote(n), collapse = ","))
+    }
+
     if(self$version == 2011) {
       r = syndromes_influenzanet_2011(weekly, as.levels=TRUE)
     }

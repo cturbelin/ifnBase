@@ -8,6 +8,15 @@ Syndrome provider base class for historical Influenzanet syndromic classifier
 
 Syndrome provider base class for historical Influenzanet syndromic classifier
 }
+\section{Public fields}{
+\if{html}{\out{<div class="r6-fields">}}
+\describe{
+\item{\code{version}}{of definition to use}
+
+\item{\code{regroup}}{syndroms using prettier labels}
+}
+\if{html}{\out{</div>}}
+}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{

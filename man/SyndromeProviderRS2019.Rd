@@ -83,10 +83,18 @@ instanciate object
 \if{html}{\out{<a id="method-update_definitions"></a>}}
 \if{latex}{\out{\hypertarget{method-update_definitions}{}}}
 \subsection{Method \code{update_definitions()}}{
+Update definitions list to compute
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{SyndromeProviderRS2019$update_definitions(definitions)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{definitions}}{character vector of definition name to compute}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-compute"></a>}}

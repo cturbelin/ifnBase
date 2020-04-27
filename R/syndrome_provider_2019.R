@@ -37,6 +37,9 @@ public = list(
     self$update_definitions(definitions)
   },
 
+  #' @description
+  #' Update definitions list to compute
+  #' @param definitions character vector of definition name to compute
   update_definitions = function(definitions) {
     available = c('ili', 'ili.f', 'ili.minus', 'ili.minus.fever','ili.who','ari.ecdc', 'ari.plus', 'ari')
 
