@@ -154,6 +154,11 @@ survey_load_results = function(survey, cols, geo=NULL, date=NULL, db.table=NULL,
     n = survey_aliases(n, def, revert=TRUE)
     names(r) <- n
   }
+
+  if(!is.null(geo)) {
+    r = geo_normalize(r, columns=gg)
+  }
+
   attr(r,'survey') <- survey
   attr(r, 'db.table') <- db.table
   attr(r, 'season') <- ifelse(!is.null(season), season, NA) # If current season (or not requested) attribute set to NA

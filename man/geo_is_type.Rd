@@ -24,3 +24,18 @@ The use of the function is not standardized yet.
 TODO: should be a more generic function allowing to query "feature" about
 Not exported currently, only to be used by platform defined functions by default returns TRUE for all queried area
 }
+\seealso{
+Other geography: 
+\code{\link{geo_base_level}()},
+\code{\link{geo_base_table}()},
+\code{\link{geo_definition}()},
+\code{\link{geo_hierarchy}()},
+\code{\link{geo_level_nav}()},
+\code{\link{geo_level_table}()},
+\code{\link{geo_level}()},
+\code{\link{get_geo_join}()},
+\code{\link{load_geo_zone}()},
+\code{\link{load_population_age}()},
+\code{\link{load_population}()}
+}
+\concept{geography}

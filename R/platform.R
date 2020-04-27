@@ -522,7 +522,11 @@ check_list_mapping = function(new, old, raise, only.errors=TRUE) {
  invisible()
 }
 
-#' Create structure defining an geographic table system
+#' Create structure defining an geographic table system.
+#'
+#' This function define all geographic levels available and their properties (tables, ...) for the platform.
+#'
+#' This function is intented to be used in a platform file see \code{vignette("platform-file", "ifnBase")} and \code{vignette("geopgrahy", "ifnBase")}
 #'
 #' @param levels list of levels with level name in names and column name in value, if it not a named vector, the use value as level
 #' @param level.base name of the base level (if null, first level is used)
@@ -532,9 +536,14 @@ check_list_mapping = function(new, old, raise, only.errors=TRUE) {
 #' @param default.hierarchy name of the default hierarchy to be used to get upper or lower column
 #' @param country handle country column
 #' @param define if TRUE set the geo.levels during the call, set to FALSE if you dont want to change configuration
+#' @param normalizers list() named list for level name with a normalizer function
+#'
+#' @seealso {geography}
+#'
+#'
 #' @family platfom
 #' @export
-platform_geographic_levels = function(levels,  level.base = NULL, table = 'geo_levels', columns = NULL, hierarchies=NULL, default.hierarchy='default', country=FALSE, define=TRUE) {
+platform_geographic_levels = function(levels,  level.base = NULL, table = 'geo_levels', columns = NULL, hierarchies=NULL, default.hierarchy='default', country=FALSE, define=TRUE, normalizers=list()) {
 
   lev = names(levels)
   if( is.null(lev) ) {
@@ -578,6 +587,7 @@ platform_geographic_levels = function(levels,  level.base = NULL, table = 'geo_l
     hierarchies = hierarchies,
     default.path = default.hierarchy,
     join.country = country,
+    normalizers=normalizers,
     class="geo_levels"
   )
 
@@ -847,3 +857,5 @@ can_use_country = function(country) {
   }
   return(FALSE)
 }
+
+

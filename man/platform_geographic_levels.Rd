@@ -2,7 +2,7 @@
 % Please edit documentation in R/platform.R
 \name{platform_geographic_levels}
 \alias{platform_geographic_levels}
-\title{Create structure defining an geographic table system}
+\title{Create structure defining an geographic table system.}
 \usage{
 platform_geographic_levels(
   levels,
@@ -12,7 +12,8 @@ platform_geographic_levels(
   hierarchies = NULL,
   default.hierarchy = "default",
   country = FALSE,
-  define = TRUE
+  define = TRUE,
+  normalizers = list()
 )
 }
 \arguments{
@@ -31,11 +32,18 @@ platform_geographic_levels(
 \item{country}{handle country column}
 
 \item{define}{if TRUE set the geo.levels during the call, set to FALSE if you dont want to change configuration}
+
+\item{normalizers}{list() named list for level name with a normalizer function}
 }
 \description{
-Create structure defining an geographic table system
+This function define all geographic levels available and their properties (tables, ...) for the platform.
+}
+\details{
+This function is intented to be used in a platform file see \code{vignette("platform-file", "ifnBase")} and \code{vignette("geopgrahy", "ifnBase")}
 }
 \seealso{
+{geography}
+
 Other platfom: 
 \code{\link{platform_env}()},
 \code{\link{platform_geographic_tables}()},

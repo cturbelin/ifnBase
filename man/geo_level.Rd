@@ -16,3 +16,18 @@ geo_level(level, hierarchy = NULL, ...)
 \description{
 The available levels depends on the platform configuration
 }
+\seealso{
+Other geography: 
+\code{\link{geo_base_level}()},
+\code{\link{geo_base_table}()},
+\code{\link{geo_definition}()},
+\code{\link{geo_hierarchy}()},
+\code{\link{geo_is_type}()},
+\code{\link{geo_level_nav}()},
+\code{\link{geo_level_table}()},
+\code{\link{get_geo_join}()},
+\code{\link{load_geo_zone}()},
+\code{\link{load_population_age}()},
+\code{\link{load_population}()}
+}
+\concept{geography}

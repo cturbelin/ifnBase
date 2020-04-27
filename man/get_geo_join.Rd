@@ -20,3 +20,18 @@ list()
 Get information needed to make a join with geo tables
 from base geographic level to any other level
 }
+\seealso{
+Other geography: 
+\code{\link{geo_base_level}()},
+\code{\link{geo_base_table}()},
+\code{\link{geo_definition}()},
+\code{\link{geo_hierarchy}()},
+\code{\link{geo_is_type}()},
+\code{\link{geo_level_nav}()},
+\code{\link{geo_level_table}()},
+\code{\link{geo_level}()},
+\code{\link{load_geo_zone}()},
+\code{\link{load_population_age}()},
+\code{\link{load_population}()}
+}
+\concept{geography}
