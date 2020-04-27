@@ -55,7 +55,7 @@ survey_load_results = function(survey, cols, geo=NULL, date=NULL, db.table=NULL,
   if( length(cols) == 1 && (cols == "*") ) {
     cc = "p.*"
   } else {
-    cols = survey_variable_available(cols, def, check_season)
+    cols = survey_variable_available(cols, def, check_season, country=country)
     cols = survey_aliases(cols, def)
     cc = paste0('p."', cols, '"')
     cc = c('p."id" as "id"', cc)
