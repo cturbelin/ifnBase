@@ -128,3 +128,12 @@ i18n_names = function(data) {
   names(data) <- i18n(names(data))
   data
 }
+
+i18n_set = function(...) {
+  r = rlang::dots_list(..., .ignore_empty = "all", .homonyms = "error")
+  trans = .Share$i18n
+  for(n in names(r)) {
+    trans[[n]] = r[[n]]
+  }
+  .Share$i18n = trans
+}
