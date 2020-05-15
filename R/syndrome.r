@@ -6,6 +6,12 @@
 #' names are pretty labels, values coded
 FEVER.CODES = c('<37'=0,'[37,37.5)'=1,'[37.5,38)'=2,'[38,39)'=3,'[39,40)'=4, '>40'=5)
 
+#' No symptome variable name
+#'
+#' To be used as a constant in the analysis
+#' @export
+NO_SYMPTOM = 'no.sympt'
+
 #' Regroup mixed syndromes to non-specific for the 2012's influezanet syndromes set
 #'
 #' Resulting levels are more pretty : "no.symptom", "ili", "cold", "gastro", "non.specific", "allergy"
