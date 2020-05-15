@@ -398,6 +398,7 @@ IncidenceRS2014 = R6Class("IncidenceRS2014", public = list(
     }
 
     attr(r, "select.count") <- select.count
+    attr(r, "participants") <- participant$person_id
 
     r
   },
@@ -430,6 +431,7 @@ IncidenceRS2014 = R6Class("IncidenceRS2014", public = list(
     inc.age = NULL
     count = NULL
     selection = NULL
+    participant = NULL
 
     if( is.null(weeks) ) {
       weeks = unique(self$weekly$yw)
@@ -477,6 +479,12 @@ IncidenceRS2014 = R6Class("IncidenceRS2014", public = list(
         ii$yw = w
         selection = dplyr::bind_rows(selection, ii)
       }
+      if("participant" %in% self$output) {
+        ii = attr(r, "participant")
+        ii = data.frame(person_id=ii)
+        ii$yw = w
+        participant = dplyr::bind_rows(participant, ii)
+      }
     }
 
     if(progress) {
@@ -516,7 +524,8 @@ IncidenceRS2014 = R6Class("IncidenceRS2014", public = list(
         inc.zlow=inc.zlow,
         inc.age=inc.age,
         count=count,
-        selection=selection
+        selection=selection,
+        participant=participant
       ),
       syndromes = self$syndromes,
       design=self$design,
