@@ -1,5 +1,8 @@
 # infBase 0.4.7 (RC)
-
+* `IncidenceRS2014` can now extract active participants for each week (with 'participant' in output)
+* add `i18n_set()` tod define translation directly
+* add `NO_SYMPTOM` constant for question weekly::Q1
+* add geographic code normalizer (mishandled by some db provider)
 * add `create_path()`function to create path without changing the current
 * `survey_variable_available()`handles *country* parameter
 * *RSQLite* as suggested package (not tested yet)
