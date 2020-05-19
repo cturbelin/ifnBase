@@ -93,6 +93,12 @@ IncidenceRS2014 = R6Class("IncidenceRS2014", public = list(
       active.min.surveys = NA # min number of surveys for each participant (not active if less)
     )
 
+    n = !hasName(def, names(params))
+    if(any(n)) {
+      n = names(params)[n]
+      rlang::stop(paste("Unknown params ", paste(sQuote(n), collapse = ',')))
+    }
+
     params = default.params(params, def)
 
     syndromes = as.vector(syndromes)
