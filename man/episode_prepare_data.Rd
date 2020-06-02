@@ -4,7 +4,13 @@
 \alias{episode_prepare_data}
 \title{Prepare data and select participants using given rules}
 \usage{
-episode_prepare_data(design, intake = NULL, weekly = NULL, env = NULL)
+episode_prepare_data(
+  design,
+  intake = NULL,
+  weekly = NULL,
+  env = NULL,
+  keep.onset = FALSE
+)
 }
 \arguments{
 \item{design}{episode design data structure (result of \code{\link{episode_design}})}
@@ -14,6 +20,8 @@ episode_prepare_data(design, intake = NULL, weekly = NULL, env = NULL)
 \item{weekly}{data.frame weekly data}
 
 \item{env}{environment with intake & weekly data (alternative to provide them directly in existing env)}
+
+\item{keep.onset}{keep onset column if already exists}
 }
 \value{
 environment environment containing selected data (weekly, intake, participants, selections)

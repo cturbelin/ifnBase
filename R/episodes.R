@@ -199,6 +199,7 @@ episode_select_participants = function(weekly, intake, rules) {
 #' @param intake data.frame intake data
 #' @param weekly data.frame weekly data
 #' @param env environment with intake & weekly data (alternative to provide them directly in existing env)
+#' @param keep.onset keep onset column if already exists
 #' @return environment environment containing selected data (weekly, intake, participants, selections)
 #'
 #' @details
@@ -212,7 +213,7 @@ episode_select_participants = function(weekly, intake, rules) {
 #'
 #' @family episodes
 #' @export
-episode_prepare_data = function(design, intake=NULL, weekly=NULL, env=NULL) {
+episode_prepare_data = function(design, intake=NULL, weekly=NULL, env=NULL, keep.onset=FALSE) {
 
   if( !is.null(env) ) {
     if(!is.null(intake) ) {
@@ -258,7 +259,9 @@ episode_prepare_data = function(design, intake=NULL, weekly=NULL, env=NULL) {
     stop("sympt.end must be encoded as a Date")
   }
 
-  weekly = compute_onset(weekly, design$onset)
+  if( !(hasName(weekly,"onset") && keep.onset)) {
+    weekly = compute_onset(weekly, design$onset)
+  }
 
   sym_person = rlang::sym("person_id")
 
