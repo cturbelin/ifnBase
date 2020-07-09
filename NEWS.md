@@ -1,4 +1,10 @@
+# ifnBase 0.4.8 
+
+* `design_incidence()` now accept `use.gender` argument
+* `calc_adjusted_incidence()` handles `use.gender` in strata design
+
 # infBase 0.4.7 (RC)
+
 * `IncidenceRS2014` can now extract active participants for each week (with 'participant' in output)
 * add `i18n_set()` tod define translation directly
 * add `NO_SYMPTOM` constant for question weekly::Q1

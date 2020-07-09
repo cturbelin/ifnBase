@@ -30,6 +30,7 @@
 #'  \item{keep.all}{if TRUE keep all column in weekly data, if FALSE only keep a restricted list}
 #'  \item{weekly}{Supplementary weekly columns to load see \code{\link{survey_load_results}}}
 #'  \item{intake}{Supplementary intake columns to load see \code{\link{survey_load_results}}}
+#'  \item{use.gender}{add gender as supplementary column and recode it}
 #'  \item{params}{list of parameters used as arguments but sometimes completed to an actual version, like onset if null is provided}
 #' }
 #'
@@ -89,7 +90,11 @@ load_results_for_incidence = function(season, age.categories, syndrome.from=list
   # get intake, only keep the last available intake
   # We should probably take the last intake available for each week
   intake.def = survey_definition("intake")
-  intake.columns = unique(c('timestamp', 'date.birth',  intake.def$geo.column, columns$intake))
+  intake.columns = c('timestamp', 'date.birth',  intake.def$geo.column, columns$intake)
+  if(isTRUE(columns$use.gender)) {
+    intake.columns = c(intake.columns, 'gender')
+  }
+  intake.columns = unique(intake.columns)
   intake = survey_load_results("intake", intake.columns , geo=geo, season=season, country=country)
 
   params$intake.columns = intake.columns
@@ -114,6 +119,11 @@ load_results_for_incidence = function(season, age.categories, syndrome.from=list
 
   if( !is.null(age.categories) ) {
     intake$age.cat = cut_age(intake$age, age.categories)
+  }
+
+  if(isTRUE(columns$use.gender)) {
+    # Recode intake to male,female
+    intake$gender = survey_recode(intake$gender, "gender", survey = "intake")
   }
 
   params$censor.season = NA

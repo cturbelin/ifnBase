@@ -40,10 +40,11 @@ get_columns_for_incidence = function() {
 #' @param geo geographic level id (see geography & geo.levels in platform config.). could be character or structure return by geo_level function
 #' @param geo_column name of the geographic column  (value return by strata.call), geo_level's column name by default
 #' @param geo_area id of geographic area to keep at the geographic level
+#' @param use.gender use gender as strata
 #' @param ... other parameters to include in the design
 #' @return design.incidence object
 #' @export
-design_incidence = function(age.categories, year.pop, geo, geo_column=NULL, geo_area=NULL, ...) {
+design_incidence = function(age.categories, year.pop, geo, geo_column=NULL, geo_area=NULL, use.gender=FALSE, ...) {
 
   if( is.null(geo_column) ) {
     geo_column = geo_column(geo)
@@ -70,6 +71,7 @@ design_incidence = function(age.categories, year.pop, geo, geo_column=NULL, geo_
       pop = load_population(geo=geo, year=year.pop)
     }
   }
+
   if( !is.null(pop) ) {
     n = names(pop)
     n[ n == 'all' ] <- 'population'
@@ -81,14 +83,20 @@ design_incidence = function(age.categories, year.pop, geo, geo_column=NULL, geo_
 
   }
 
+  if(use.gender) {
+    strata = c(strata, 'gender')
+  }
+
   data = list(
     age.categories = age.categories,
     population = pop, # population  at geographic level for stratification
     strata = strata,
     geo_level = geo,
     geo_column=geo_column,
-    year.pop = year.pop
+    year.pop = year.pop,
+    use.gender = use.gender
   )
+
   l = list(...)
   if(length(l) > 0) {
     for(n in names(l)) {
@@ -286,11 +294,26 @@ calc_adjusted_incidence = function(count.week, design, syndromes, output) {
   # population by age-group at the geo level
   population = design$population
 
+  if(design$use.gender) {
+    # Population is provided with gender in extra columns, we need to use them instead of population
+    population = population %>% select(-population)
+    genders = c('male','female')
+    # Pivot to longer format with gender as extra column
+    population = bind_rows(lapply(genders, function(g) {
+      cols = names(population)
+      cols = c(cols[ !cols %in% genders], g) # only keep non gender columns and add the currrent one
+      population %>%
+        select(!!!syms(cols)) %>%
+        rename(population := !!sym(g)) %>%
+        mutate(gender=!!g)
+    }))
+  }
+
   pop.total = sum(population$population)
 
   population$prop.pop.all = population$population / pop.total # Proportion of a given age-group in overall population (i.e  (prop pop in geo levels) * (pop age-group in each level) )
 
-  count.week = merge(count.week, population[, c(strata,'prop.pop.all', 'population')], by=strata, all=T)
+  count.week = merge(count.week, population[, c(strata, 'prop.pop.all', 'population')], by=strata, all=T)
 
   # Incidence calculation by strata with adjustment
   # count = count data.frame (syndrome + active), column.strata = strata column, column.prop= column with adjustment factor

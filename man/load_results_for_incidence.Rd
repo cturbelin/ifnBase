@@ -61,6 +61,7 @@ Several extra parameters can be provided:
  \item{keep.all}{if TRUE keep all column in weekly data, if FALSE only keep a restricted list}
  \item{weekly}{Supplementary weekly columns to load see \code{\link{survey_load_results}}}
  \item{intake}{Supplementary intake columns to load see \code{\link{survey_load_results}}}
+ \item{use.gender}{add gender as supplementary column and recode it}
  \item{params}{list of parameters used as arguments but sometimes completed to an actual version, like onset if null is provided}
 }
 

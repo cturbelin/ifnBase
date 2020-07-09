@@ -10,6 +10,7 @@ design_incidence(
   geo,
   geo_column = NULL,
   geo_area = NULL,
+  use.gender = FALSE,
   ...
 )
 }
@@ -23,6 +24,8 @@ design_incidence(
 \item{geo_column}{name of the geographic column  (value return by strata.call), geo_level's column name by default}
 
 \item{geo_area}{id of geographic area to keep at the geographic level}
+
+\item{use.gender}{use gender as strata}
 
 \item{...}{other parameters to include in the design}
 }
