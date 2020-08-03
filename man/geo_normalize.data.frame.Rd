@@ -4,7 +4,7 @@
 \alias{geo_normalize.data.frame}
 \title{Normalize with geographic codes for a level after it has been loaded by the database.}
 \usage{
-\method{geo_normalize}{data.frame}(data, columns = NULL, levels = NULL)
+\method{geo_normalize}{data.frame}(data, columns = NULL, levels = NULL, ...)
 }
 \arguments{
 \item{data}{data to normalize}
@@ -12,6 +12,8 @@
 \item{columns}{columns to normalize, named vector with level name as name for each column if levels is null}
 
 \item{levels}{corresponding level for each column. if NULL will use names of `columns` parameter}
+
+\item{...}{extra parameters for specific methods}
 }
 \description{
 Some database driver coerce column data to another type (char to int) which is can cause problems

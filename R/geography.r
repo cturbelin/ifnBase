@@ -188,7 +188,7 @@ geo_check_level = function(level, error=TRUE) {
 #' @inherit geo_normalize
 #' @param level character corresponding level name for the data
 #' @export
-geo_normalize.default <- function(data, level) {
+geo_normalize.default <- function(data, level, ...) {
   normalizers = geo_definition("normalizers")
   geo_check_level(level)
   if(length(normalizers) == 0) {
@@ -206,7 +206,7 @@ geo_normalize.default <- function(data, level) {
 #' @param columns columns to normalize, named vector with level name as name for each column if levels is null
 #' @param levels corresponding level for each column. if NULL will use names of `columns` parameter
 #' @export
-geo_normalize.data.frame = function(data, columns=NULL, levels=NULL) {
+geo_normalize.data.frame = function(data, columns=NULL, levels=NULL, ...) {
   normalizers = geo_definition("normalizers")
   if(length(normalizers) == 0) {
     # Nothing to do

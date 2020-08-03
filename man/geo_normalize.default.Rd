@@ -4,12 +4,14 @@
 \alias{geo_normalize.default}
 \title{Normalize with geographic codes for a level after it has been loaded by the database.}
 \usage{
-\method{geo_normalize}{default}(data, level)
+\method{geo_normalize}{default}(data, level, ...)
 }
 \arguments{
 \item{data}{data to normalize}
 
 \item{level}{character corresponding level name for the data}
+
+\item{...}{extra parameters for specific methods}
 }
 \description{
 Some database driver coerce column data to another type (char to int) which is can cause problems
