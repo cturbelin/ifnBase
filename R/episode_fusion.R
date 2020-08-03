@@ -376,7 +376,7 @@ episode_fusion_strategy = function(weekly, design, episode.column="episode") {
   for(i in seq_along(design$strategies)) {
     strategy = design$strategies[[i]]
     fusion = episode_fusion(strategy, weekly, episode.column=episode.column)
-    episodes = merge(episodes, fusion, by=c('person_id','episode'), all=T)
+    episodes = merge(episodes, fusion, by=c('person_id', episode.column), all=T)
   }
 
   episodes
