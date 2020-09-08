@@ -30,7 +30,7 @@ public = list(
   #' instanciate object
   #' @param pain.age.limit age to take into account of pain & heacache
   #' @param definitions list of definitions to use
-  #' @param use.sudden use sudden appearance of symptomes in the definitions, if FALSE will be considered as always sudden
+  #' @param use.sudden use sudden appearance of symptoms in the definitions, if FALSE will be considered as always sudden
   initialize = function(pain.age.limit=5, definitions=NULL, use.sudden=TRUE) {
     self$pain.age.limit = pain.age.limit
     self$use.sudden = use.sudden
@@ -139,7 +139,7 @@ public = list(
     d$id = weekly$id # As the weekly has been merged, rows are not in the same order.
 
     if('ili' %in% definitions) {
-      d$ili = sudden & fever_with_level(r, fever_level_39) & pain & respi_nose
+      d$ili = sudden & fever_with_level(r, fever_level_38) & pain & respi_nose
     }
 
     if('ili.f' %in% definitions) {
