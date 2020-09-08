@@ -1,9 +1,14 @@
+# ifnBase 0.4.9 
+
+* `SyndromeProviderRS2019` fix fever level for 'ili' syndrome
+* `episode_fusion_strategy` fix parameter episode.column
+
 # ifnBase 0.4.8 
 
 * `design_incidence()` now accept `use.gender` argument
 * `calc_adjusted_incidence()` handles `use.gender` in strata design
 
-# infBase 0.4.7 (RC)
+# infBase 0.4.7
 
 * `IncidenceRS2014` can now extract active participants for each week (with 'participant' in output)
 * add `i18n_set()` tod define translation directly
