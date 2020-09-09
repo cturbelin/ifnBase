@@ -41,7 +41,7 @@ public = list(
   #' Update definitions list to compute
   #' @param definitions character vector of definition name to compute
   update_definitions = function(definitions) {
-    available = c('ili', 'ili.f', 'ili.minus', 'ili.minus.fever','ili.who','ari.ecdc', 'ari.plus', 'ari')
+    available = c('ili.rs', 'ili.f', 'ili.minus', 'ili.minus.fever','ili.who','ili.ecdc', 'ari.plus', 'ari')
 
     if(is.null(definitions)) {
       definitions = available
@@ -138,8 +138,8 @@ public = list(
 
     d$id = weekly$id # As the weekly has been merged, rows are not in the same order.
 
-    if('ili' %in% definitions) {
-      d$ili = sudden & fever_with_level(r, fever_level_38) & pain & respi_nose
+    if('ili.rs' %in% definitions) {
+      d$ili.rs = sudden & fever_with_level(r, fever_level_39) & pain & respi_nose
     }
 
     if('ili.f' %in% definitions) {
@@ -162,8 +162,9 @@ public = list(
     # So pain and Headache are not evaluated if age under pain.age.limit
     general_ari = r$fever | r$chills | r$asthenia | ifelse( !is.na(r$age) & r$age <= pain.age.limit, FALSE, r$pain | r$headache)
 
-    if('ari.ecdc' %in% definitions) {
-      d$ari.ecdc = sudden & general_ari & respi_short
+    # ILI proposed by ECDC (close to ARI)
+    if('ili.ecdc' %in% definitions) {
+      d$ili.ecdc = sudden & general_ari & respi_short
     }
 
     if('ari.plus' %in% definitions) {

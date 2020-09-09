@@ -1,3 +1,7 @@
+# ifnBase 0.4.10 
+
+* `SyndromeProviderRS2019` rename 'ili' to 'ili.rs' and revert fever level, 'ari.ecdc' will now 'ili.ecdc'
+
 # ifnBase 0.4.9 
 
 * `SyndromeProviderRS2019` fix fever level for 'ili' syndrome
