@@ -23,7 +23,7 @@
 * *RSQLite* as suggested package (not tested yet)
 * *sympt.cause* is now loaded for incidence (needed to compute syndromic ifn)
 * add `SyndromeProviderIfn` class
-* SyndromeProviderRS2019 now expect parameters in constructor instead of `compute()`
+* `SyndromeProviderRS2019` now expect parameters in constructor instead of `compute()`
 * fix `graph_colors()` to handle color brewer correctly, add rainbow failback and *dark* parameter
 
 # ifnBase 0.4.6
