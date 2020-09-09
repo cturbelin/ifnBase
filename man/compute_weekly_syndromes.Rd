@@ -24,7 +24,7 @@ compute_weekly_syndromes(
 
 \item{regroup.syndromes}{bool use syndrome grouping (recode syndrome list for Influenzanet's health status list) to a simplier list}
 
-\item{provider}{function(weekly,intake) returning a data.frame to be merged into weekly (using "id" weekly's column as merge key), useable to compute custom syndromes}
+\item{provider}{function(weekly,intake) returning a data.frame to be merged into weekly (using "id" weekly's column as merge key), usable to compute custom syndromes}
 }
 \description{
 This function use syndrome classifier (called provider)

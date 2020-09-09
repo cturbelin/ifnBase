@@ -74,7 +74,7 @@ instanciate object
 
 \item{\code{definitions}}{list of definitions to use}
 
-\item{\code{use.sudden}}{use sudden appearance of symptomes in the definitions, if FALSE will be considered as always sudden}
+\item{\code{use.sudden}}{use sudden appearance of symptoms in the definitions, if FALSE will be considered as always sudden}
 }
 \if{html}{\out{</div>}}
 }

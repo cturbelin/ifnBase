@@ -235,12 +235,12 @@ load_results_for_incidence = function(season, age.categories, syndrome.from=list
 #' @param health.status bool use the default health status computed using InfluenzaNet default strategy (used in the website)
 #' @param regroup.syndromes bool use syndrome grouping (recode syndrome list for Influenzanet's health status list) to a simplier list
 #' @param keep.status bool keep the original health status (from InfluenzaNet view), renamed to "status.old"
-#' @param provider function(weekly,intake) returning a data.frame to be merged into weekly (using "id" weekly's column as merge key), useable to compute custom syndromes
+#' @param provider function(weekly,intake) returning a data.frame to be merged into weekly (using "id" weekly's column as merge key), usable to compute custom syndromes
 #' @export
 compute_weekly_syndromes <- function(intake, weekly, health.status=TRUE, keep.status=FALSE, regroup.syndromes=TRUE, provider=NULL) {
 
   # Use InfluenzaNet base health status
-  syndromes = c() # already provided syndroms, just used to check here
+  syndromes = c() # already provided syndromes, just used to check here
   org.names = names(weekly)
   if(health.status) {
     if(regroup.syndromes) {
@@ -272,6 +272,7 @@ compute_weekly_syndromes <- function(intake, weekly, health.status=TRUE, keep.st
     }
     n = names(r)
     n = n[ n != 'id'] # remove id column, as it is not a syndrome name
+
     # Check if names are not already in weekly
     if(any(n %in% org.names)) {
       nn = n[n %in% org.names]
