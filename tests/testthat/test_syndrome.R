@@ -38,68 +38,68 @@ tests = list(
   list( # Test with no.sympt
     weekly = list(no.sympt = TRUE, fever.sudden = NA, highest.temp =0, sympt.sudden = NA),
     age = 5,
-    expected = list(ari.ecdc=FALSE)
+    expected = list(ili.ecdc=FALSE)
   ),
-  list( # Test ari.ecdc with fever.sudden, minimal sympt
+  list( # Test ili.ecdc with fever.sudden, minimal sympt
     weekly = test_ari("sudden", fever.sudden=TRUE, sympt.sudden = NA),
     age = 5,
-    expected = list(ari.ecdc=TRUE)
+    expected = list(ili.ecdc=TRUE)
   ),
-  # Test ari.ecdc with fever.sudden
+  # Test ili.ecdc with fever.sudden
   list(
     weekly = test_ari("sudden", fever.sudden=NA, sympt.sudden = TRUE),
     age = 5,
-    expected = list(ari.ecdc=TRUE)
+    expected = list(ili.ecdc=TRUE)
   ),
   list( # Test cough = FALSE
     weekly = test_ari("respi", cough=FALSE),
     age = 5,
-    expected = list(ari.ecdc=FALSE)
+    expected = list(ili.ecdc=FALSE)
   ),
   list( # Test cough
     weekly = test_ari("respi", cough=TRUE),
     age = 5,
-    expected = list(ari.ecdc=TRUE)
+    expected = list(ili.ecdc=TRUE)
   ),
   list( # Test dyspnea
     weekly =  test_ari("respi", dyspnea=TRUE),
     age = 5,
-    expected = list(ari.ecdc=TRUE)
+    expected = list(ili.ecdc=TRUE)
   ),
   list( # Test dyspnea
     weekly = test_ari("respi", dyspnea=FALSE),
     age = 5,
-    expected = list(ari.ecdc=FALSE)
+    expected = list(ili.ecdc=FALSE)
   ),
   list( # Test sorethroat
     weekly = test_ari("respi", sorethroat=TRUE),
     age = 5,
-    expected = list(ari.ecdc=TRUE)
+    expected = list(ili.ecdc=TRUE)
   ),
   list( # Chills
     weekly = test_ari("general", chills=TRUE),
     age = 20,
-    expected = list(ari.ecdc=TRUE)
+    expected = list(ili.ecdc=TRUE)
   ),
   list( # asthenia
     weekly = test_ari("general", asthenia=TRUE),
     age = 20,
-    expected = list(ari.ecdc=TRUE)
+    expected = list(ili.ecdc=TRUE)
   ),
   list( # asthenia=FALSE, fever=T
     weekly = test_ari("general", asthenia = FALSE, fever=TRUE),
     age = 20,
-    expected = list(ari.ecdc=TRUE)
+    expected = list(ili.ecdc=TRUE)
   ),
   list( # Pain is not counted for <= 5, so no general sympt
     weekly = test_ari("general", pain=TRUE),
     age = 5,
-    expected = list(ari.ecdc=FALSE)
+    expected = list(ili.ecdc=FALSE)
   ),
   list( # Pain with age > 5
     weekly =test_ari("general", pain=TRUE),
     age = 20,
-    expected = list(ari.ecdc=TRUE, ari=TRUE)
+    expected = list(ili.ecdc=TRUE, ari=TRUE)
   )
 
 )
