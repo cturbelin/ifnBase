@@ -6,4 +6,4 @@ cache: packages
 versions:
   - 3.6
 repos:
- sw: https://cran.sentiweb/fr
+ sw: https://cran.sentiweb.fr
