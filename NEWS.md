@@ -1,3 +1,7 @@
+# ifnBase 0.4.11 
+
+* `SyndromeProviderCovid` added to compute covid-like syndrome definitions
+
 # ifnBase 0.4.10 
 
 * `SyndromeProviderRS2019` rename 'ili' to 'ili.rs' and revert fever level, 'ari.ecdc' will now 'ili.ecdc'
