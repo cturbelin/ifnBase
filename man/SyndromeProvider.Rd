@@ -25,6 +25,7 @@ influenzanet base syndrome names : ili, cold, allergy, gastro )
 \item \href{#method-compute}{\code{SyndromeProvider$compute()}}
 \item \href{#method-compute_age}{\code{SyndromeProvider$compute_age()}}
 \item \href{#method-is_sudden}{\code{SyndromeProvider$is_sudden()}}
+\item \href{#method-syndromes}{\code{SyndromeProvider$syndromes()}}
 \item \href{#method-clone}{\code{SyndromeProvider$clone()}}
 }
 }
@@ -84,6 +85,19 @@ Common function, compute sudden symptomes using both variables}
 \item{\code{r}}{weekly data}
 }
 \if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-syndromes"></a>}}
+\if{latex}{\out{\hypertarget{method-syndromes}{}}}
+\subsection{Method \code{syndromes()}}{
+Get available syndromes names
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{SyndromeProvider$syndromes()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+character()
 }
 }
 \if{html}{\out{<hr>}}

@@ -41,6 +41,7 @@ Syndrome Provider
 \itemize{
 \item \out{<span class="pkg-link" data-pkg="ifnBase" data-topic="SyndromeProvider" data-id="compute_age">}\href{../../ifnBase/html/SyndromeProvider.html#method-compute_age}{\code{ifnBase::SyndromeProvider$compute_age()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="ifnBase" data-topic="SyndromeProvider" data-id="is_sudden">}\href{../../ifnBase/html/SyndromeProvider.html#method-is_sudden}{\code{ifnBase::SyndromeProvider$is_sudden()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="ifnBase" data-topic="SyndromeProvider" data-id="syndromes">}\href{../../ifnBase/html/SyndromeProvider.html#method-syndromes}{\code{ifnBase::SyndromeProvider$syndromes()}}\out{</span>}
 }
 \out{</details>}
 }
