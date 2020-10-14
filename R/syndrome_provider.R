@@ -38,6 +38,13 @@ SyndromeProvider <- R6Class("SyndromeProvider", public = list(
   #' @param r weekly data
   is_sudden = function(r) {
       (!is.na(r$sympt.sudden) & r$sympt.sudden) | (!is.na(r$fever.sudden) & r$fever.sudden)
+  },
+
+  #' @description
+  #' Get available syndromes names
+  #' @return character()
+  syndromes = function() {
+
   }
 
  ) # public
