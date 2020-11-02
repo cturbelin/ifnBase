@@ -294,18 +294,20 @@ calc_adjusted_incidence = function(count.week, design, syndromes, output) {
   # population by age-group at the geo level
   population = design$population
 
+  `%>%` <- dplyr::`%>%`
+
   if(design$use.gender) {
     # Population is provided with gender in extra columns, we need to use them instead of population
-    population = population %>% select(-population)
+    population = population %>% dplyr::select(-population)
     genders = c('male','female')
     # Pivot to longer format with gender as extra column
-    population = bind_rows(lapply(genders, function(g) {
+    population = dplyr::bind_rows(lapply(genders, function(g) {
       cols = names(population)
       cols = c(cols[ !cols %in% genders], g) # only keep non gender columns and add the currrent one
       population %>%
-        select(!!!syms(cols)) %>%
-        rename(population := !!sym(g)) %>%
-        mutate(gender=!!g)
+        dplyr::select(!!!syms(cols)) %>%
+        dplyr::rename(population := !!sym(g)) %>%
+        dplyr::mutate(gender=!!g)
     }))
   }
 
