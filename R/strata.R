@@ -1,13 +1,21 @@
-#' Strata stats helpers
-#'
+# Strata stats helpers
 
 #' Define participants weight from general population to compute adjusted frequency
+#'
+#' Weights can be stratified and grouped : weights are computed by strata over each group
+#' For example : strata=age, gender and group= week, will allow to compute weekly frequency adjusted by age and gender
+#'
+#' Strata can be either 'age.cat' or 'gender', since provided population are by age and gender. To have more strata will need to have
+#' general population data for each strata.
+#'
 #' @param age.categories age breaks vector (strictly increasing and unique values)
 #' @param year.pop year of the population to load
 #' @param groups list of weekly column to use as weight group
 #' @param strata list of intake columns to use as stratification to compute weight.. Must be one of pop (age.cat or gender)
 #' @param weekly weekly data
 #' @param intake intake data
+#' @return data.frame() with columns (person_id, `groups...`, `strata...`, weight)
+#' @export
 create_participant_weight = function(age.categories, year.pop, groups, strata, weekly , intake) {
 
   requireNamespace("tidyr")
@@ -54,22 +62,42 @@ create_participant_weight = function(age.categories, year.pop, groups, strata, w
   part.weight
 }
 
+#' Create a design for adjustment computation
+#' @param data dataset to adjust on
+#' @param col_weight name of the column containing weight
+#' @return survey::svydesign object
+#' @export
 design_weight = function(data, col_weight="weight") {
   requireNamespace("survey")
   survey::svydesign(~1, data=data[!is.na(data[[col_weight]]), ], weights=stats::as.formula(paste("~", col_weight)))
 }
 
-
-#' Compute weighted proportion by group
-#' @param design survey design survey::svydesign()
-#' @param var variable on which to compute frequency
-#' @param by group variable name to compute total
-prop_by_weighted = function(design, var, by) {
+#' Compute weighted proportion by group for a logical variable
+#' @param design survey design [survey::svydesign()], see [design_weight()]
+#' @param var variable on which to compute frequency, must be a logical variable
+#' @param by grouping variable name to compute total on
+#' @param ci.method method to use to compute adjusted proportion confidence interval
+#' @return data.frame()
+#'    with columns
+#'    \describe{
+#'     \item{by...}{group name of this column is the passed value to the `by` parameter}
+#'     \item{n_adj}{Count of true values in each group}
+#'     \item{n_weight}{Weight sum of the true value in the group}
+#'     \item{total_weight}{Total weight in the group}
+#'     \item{total_adj}{Total count of non missing value in the group}
+#'     \item{prop_adj}{Adjusted proportion on strata}
+#'     \item{prop_adj_low}{Adjusted proportion lower bound of CI95\%}
+#'     \item{prop_adj_up}{Adjusted proportion upper bound of CI95\%}
+#'     \item{variable}{Variable name}
+#'    }
+#'
+#' @export
+prop_by_weighted = function(design, var, by, ci.method="beta") {
   i = !is.na(design$variables[[var]])
   if(sum(i) == 0) {
     return(NULL)
   }
-  dd = survey::svyby(as.formula(paste("~", var)), as.formula(paste("~", by)), design=design[i], survey::svyciprop, vartype="ci",method="beta")
+  dd = survey::svyby(as.formula(paste("~", var)), as.formula(paste("~", by)), design=design[i], survey::svyciprop, vartype="ci", method=ci.method)
   names(dd) <- c(by, 'prop_adj', 'prop_adj_low', 'prop_adj_up')
   dd$variable = var
 
@@ -105,6 +133,7 @@ prop_by_weighted = function(design, var, by) {
 #'     \item{prop_raw}{Proportion of the level}
 #'     \item{group...}{One column of each group, with the value of the current group}
 #'   }
+#' @export
 freq_var_by = function(data, variable, by='yw', complete=TRUE) {
   # How group data at the lowest level (week + adjusting strata)
   groups = c(by)
@@ -169,6 +198,7 @@ freq_var_by = function(data, variable, by='yw', complete=TRUE) {
 #'     \item{group...}{One column of each group, with the value of the current group}
 #'   }
 #'   An attribute "missing" contains missing count for each variable by group
+#' @export
 freq_vars_by = function(data, vars, by) {
   names(vars) <- vars
   missing = NULL
@@ -188,10 +218,12 @@ freq_vars_by = function(data, vars, by) {
 }
 
 #' Compute frequency of a set of logical variables by group
+#' Adjusted frequency can be computed by providing a design object with computed weights
 #' @param data data.frame containing data
 #' @param vars list of variable names to compute frequency on. They must be logical
 #' @param by grouping variable
-#' @param design svydesign object, if provided will compute adjusted frequency using the design (data should contains the weight column as described in design)
+#' @param design `svydesign` object, if provided will compute adjusted frequency using the design (data should contains the weight column as described in design)
+#' @export
 freq_bool_by = function(data, vars, by, design=NULL) {
   ff = freq_vars_by(data, vars, by)
   missing = attr(ff, "missing")

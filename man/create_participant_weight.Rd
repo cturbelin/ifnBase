@@ -2,7 +2,7 @@
 % Please edit documentation in R/strata.R
 \name{create_participant_weight}
 \alias{create_participant_weight}
-\title{Strata stats helpers}
+\title{Define participants weight from general population to compute adjusted frequency}
 \usage{
 create_participant_weight(
   age.categories,
@@ -26,6 +26,14 @@ create_participant_weight(
 
 \item{intake}{intake data}
 }
+\value{
+data.frame() with columns (person_id, [groups...], [strata...], weight)
+}
 \description{
-Define participants weight from general population to compute adjusted frequency
+Weights can be stratified and grouped : weights are computed by strata over each group
+For example : strata=[age, gender] and group = week, will allow to compute weekly frequency adjusted by age and gender
+}
+\details{
+Strata can be either 'age.cat' or 'gender', since provided population are by age and gender. To have more strata will need to have
+general population data for each strata.
 }

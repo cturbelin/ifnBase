@@ -9,11 +9,11 @@ freq_var_by(data, variable, by = "yw", complete = TRUE)
 \arguments{
 \item{data}{data.frame()}
 
+\item{variable}{variable to compute frequency on (for each level)}
+
 \item{by}{grouping variables (final output)}
 
 \item{complete}{if TRUE missing levels in groups will be completed with zero frequency}
-
-\item{var}{variable to compute frequency on (for each level)}
 }
 \value{
 data.frame()
