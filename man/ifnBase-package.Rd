@@ -6,7 +6,7 @@
 \alias{ifnBase-package}
 \title{InfluenzaNet Data Analysis Base Package}
 \description{
-This package provides base set of function to help & standardize analaysis of an
+This package provides base set of function to help & standardize analysis of an
 InfluezaNet database.
 It can be used to produce online data analysis or for research projects.
 }
