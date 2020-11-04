@@ -1,17 +1,18 @@
 #' InfluenzaNet Data Analysis Base Package
 #'
-#' This package provides base set of function to help & standardize analaysis of an
+#' This package provides base set of function to help & standardize analysis of an
 #' InfluezaNet database.
 #' It can be used to produce online data analysis or for research projects.
 #'
 #' @importFrom grDevices dev.off rainbow png postscript
 #' @importFrom graphics axTicks axis polygon rect segments points
 #' @importFrom methods is
-#' @importFrom stats aggregate
+#' @importFrom stats aggregate as.formula
 #' @importFrom utils glob2rx str tail hasName
 #' @importFrom swMisc merge_list ending_slash get_r_file
-#' @importFrom rlang abort
+#' @importFrom rlang abort `:=`
 #' @importFrom R6 R6Class
+#' @import dplyr
 #' @import ggplot2
 "_PACKAGE"
 
@@ -89,4 +90,5 @@ share.option <- function(...) {
   base::options("ifn" = oo)
 }
 
+utils::globalVariables(c('person_id'))
 

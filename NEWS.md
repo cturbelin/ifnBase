@@ -1,3 +1,8 @@
+# ifnBase 0.5
+
+* `dplyr` 1.0 as import dependency
+* Add strata functions to manage participant weight and adjusted frequency computation
+
 # ifnBase 0.4.11 
 
 * `SyndromeProviderCovid` added to compute covid-like syndrome definitions
@@ -19,7 +24,7 @@
 # infBase 0.4.7
 
 * `IncidenceRS2014` can now extract active participants for each week (with 'participant' in output)
-* add `i18n_set()` tod define translation directly
+* add `i18n_set()` to define translation directly
 * add `NO_SYMPTOM` constant for question weekly::Q1
 * add geographic code normalizer (mishandled by some db provider)
 * add `create_path()`function to create path without changing the current
