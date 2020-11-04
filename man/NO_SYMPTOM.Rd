@@ -3,7 +3,7 @@
 \docType{data}
 \name{NO_SYMPTOM}
 \alias{NO_SYMPTOM}
-\title{Symptoms}
+\title{No symptome variable name}
 \format{
 An object of class \code{character} of length 1.
 }
@@ -11,9 +11,6 @@ An object of class \code{character} of length 1.
 NO_SYMPTOM
 }
 \description{
-No symptome variable name
-}
-\details{
 To be used as a constant in the analysis
 }
 \keyword{datasets}
