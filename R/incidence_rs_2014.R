@@ -488,7 +488,7 @@ IncidenceRS2014 = R6Class("IncidenceRS2014", public = list(
       if("participant" %in% self$output) {
         ii = attr(r, "participant")
         ii = data.frame(person_id=ii)
-        ii$yw = w
+        ii = ii %>% dplyr::mutate(yw=w)
         participant = dplyr::bind_rows(participant, ii)
       }
     }
