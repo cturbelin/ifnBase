@@ -71,7 +71,7 @@ An object of class \code{character} of length 1.
 
 An object of class \code{character} of length 1.
 
-An object of class \code{NULL} of length 0.
+An object of class \code{character} of length 22.
 }
 \usage{
 SYMPT_FEVER

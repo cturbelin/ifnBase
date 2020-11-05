@@ -27,11 +27,11 @@ create_participant_weight(
 \item{intake}{intake data}
 }
 \value{
-data.frame() with columns (person_id, [groups...], [strata...], weight)
+data.frame() with columns (person_id, `groups...`, `strata...`, weight)
 }
 \description{
 Weights can be stratified and grouped : weights are computed by strata over each group
-For example : strata=[age, gender] and group = week, will allow to compute weekly frequency adjusted by age and gender
+For example : strata=age, gender and group= week, will allow to compute weekly frequency adjusted by age and gender
 }
 \details{
 Strata can be either 'age.cat' or 'gender', since provided population are by age and gender. To have more strata will need to have

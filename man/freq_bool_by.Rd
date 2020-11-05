@@ -2,7 +2,8 @@
 % Please edit documentation in R/strata.R
 \name{freq_bool_by}
 \alias{freq_bool_by}
-\title{Compute frequency of a set of logical variables by group}
+\title{Compute frequency of a set of logical variables by group
+Adjusted frequency can be computed by providing a design object with computed weights}
 \usage{
 freq_bool_by(data, vars, by, design = NULL)
 }
@@ -13,8 +14,9 @@ freq_bool_by(data, vars, by, design = NULL)
 
 \item{by}{grouping variable}
 
-\item{design}{svydesign object, if provided will compute adjusted frequency using the design (data should contains the weight column as described in design)}
+\item{design}{`svydesign` object, if provided will compute adjusted frequency using the design (data should contains the weight column as described in design)}
 }
 \description{
 Compute frequency of a set of logical variables by group
+Adjusted frequency can be computed by providing a design object with computed weights
 }
