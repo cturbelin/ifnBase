@@ -2,6 +2,7 @@
 
 * `dplyr` 1.0 as import dependency
 * Add strata functions to manage participant weight and adjusted frequency computation
+* fix  `IncidenceRS2014` error when there is no participant for a week
 
 # ifnBase 0.4.11 
 
