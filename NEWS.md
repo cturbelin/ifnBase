@@ -1,3 +1,8 @@
+# ifnBase 0.5.1
+
+* fix x_vertical direction
+* `freq_bool_by()` accepts design as `data` argument
+
 # ifnBase 0.5
 
 * `dplyr` 1.0 as import dependency
