@@ -227,7 +227,8 @@ freq_vars_by = function(data, vars, by) {
 freq_bool_by = function(data, vars, by, design=NULL) {
 
   if(is.null(design) && is(data, "survey.design")) {
-    design = data$variables
+    design = data
+    data = data$variables
   }
 
   ff = freq_vars_by(data, vars, by)
