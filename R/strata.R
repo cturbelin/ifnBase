@@ -225,6 +225,11 @@ freq_vars_by = function(data, vars, by) {
 #' @param design `svydesign` object, if provided will compute adjusted frequency using the design (data should contains the weight column as described in design)
 #' @export
 freq_bool_by = function(data, vars, by, design=NULL) {
+
+  if(is.null(design) && is(data, "survey.design")) {
+    design = data$variables
+  }
+
   ff = freq_vars_by(data, vars, by)
   missing = attr(ff, "missing")
   ff = ff %>% dplyr::filter(!is.na(level) & level == "TRUE")
@@ -234,8 +239,9 @@ freq_bool_by = function(data, vars, by, design=NULL) {
     adj = dplyr::bind_rows(lapply(vars, function(var) {
       prop_by_weighted(design=design, var=var, by=by)
     }))
-
-    ff = merge(ff, adj, by=c(by, "variable"), all.x=TRUE)
+    if(nrow(adj) > 0) {
+      ff = merge(ff, adj, by=c(by, "variable"), all.x=TRUE)
+    }
   }
   if(!is.null(missing) && nrow(missing) > 0) {
     missing = dplyr::rename(missing, n_missing=n) %>% dplyr::select(!!sym(by), "variable", "n_missing")
