@@ -46,7 +46,7 @@ with_ggplot = function(theme=NULL) {
 #' Set axis to vertical
 #' @return theme
 x_axis_vertical = function() {
-  theme(axis.text.x=element_text(angle=-90, vjust=.5))
+  theme(axis.text.x=element_text(angle=90, vjust=.5))
 }
 
 #' Remove axis from plot
