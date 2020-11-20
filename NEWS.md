@@ -1,3 +1,7 @@
+# ifnBase 0.5.2
+
+* Add new symptom as standard (was handled locally now all platforms have them)
+
 # ifnBase 0.5.1
 
 * fix x_vertical direction

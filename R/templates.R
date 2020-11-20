@@ -290,6 +290,9 @@ survey_templates[["eu:weekly"]] = list(
     'diarrhea'='Q1_17',
     'abdopain'='Q1_18',
     'sympt.other'='Q1_19',
+    "loss.smell"=variable_available("Q1_23", rlang::quo(season >= 2019)),
+    "loss.taste"=variable_available("Q1_21", rlang::quo(season >= 2019)),
+    "nose.bleed"=variable_available("Q1_22", rlang::quo(season >= 2019)),
 
     # About the symptoms
     "same.episode"="Q2",
@@ -385,7 +388,7 @@ survey_templates[["eu:weekly"]] = list(
    # antiviro = c("antiviro.med", "antiviro.home"),
     # Specials labels
     symptoms= c('no.sympt', 'fever', 'chills','rhino', 'sneeze', 'sorethroat', 'cough', 'dyspnea', 'headache', 'pain', 'chestpain', 'asthenia',
-                'anorexia', 'sputum', 'wateryeye', 'nausea', 'vomiting', 'diarrhea', 'abdopain', 'sympt.other')
+                'anorexia', 'sputum', 'wateryeye', 'nausea', 'vomiting', 'diarrhea', 'abdopain', "loss.smell", 'loss.taste','nose.bleed', 'sympt.other')
   ),
   recodes = list(
     sympt.cause = c(
