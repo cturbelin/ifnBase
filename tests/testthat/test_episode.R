@@ -55,7 +55,7 @@ for(i in seq_along(tests$sets)) {
   test_that(paste0("episode_fusion.worst_strategy:",i), {
 
       v = rlang::list2(!!test$name := test$values)
-      data = data.frame(list(person_id=i), episode=1, v)
+      data = data.frame(list(person_id=i), episode=1, v, stringsAsFactors = TRUE)
 
       strategy.def = tests$strategies[[test$name]]
       v$type = "worst"
