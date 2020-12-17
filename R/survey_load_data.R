@@ -227,7 +227,11 @@ survey_variable_available <- function(variables, survey, season, country=NULL) {
         # List of season values
         season %in% av
       } else {
-        rlang::eval_tidy(av, data=list(season=season, country=country))
+        r = rlang::eval_tidy(av, data=list(season=season, country=country))
+        if(!is.logical(r) && length(r) == 1) {
+          rlang::abort("Error in survey definition for variable ", sQuote(var)," available condition must return logical of length 1")
+        }
+        r
       }
   })
   if(any(!available)) {
@@ -249,7 +253,7 @@ join_surveyuser = function(survey_alias, user_alias) {
 #' List of participants registred in weekly at least once for a given season
 #' @param season season number to get, if several seasons are given use min and max of seasons dates
 #' @param use.season.dates restrict to season's starting & ending dates. forced if single table model for weekly
-#' @param use.min us minimal date of the given season, if not use all before the end of the season (only for single table model)
+#' @param use.min us minimal date of the given season, if FALSE use all before the end of the season (only for single table model)
 #' @param country country to restrict participant
 #' @family survey-load
 #' @export
@@ -306,9 +310,13 @@ survey_participant_season = function(season, use.season.dates=FALSE, use.min=TRU
 #' @export
 survey_participant_previous_season = function(season, ids=NULL, use.season.dates=F, from=NULL, country=NULL, verbose=FALSE) {
   season = parse_season(season)
-  if(!is.null(from) && length(from) > 1) {
-    rlang::warn("from has more than 1 element, only first will be used")
-    from = from[1]
+  if(!is.null(from)) {
+    if(!is.integer(from)) {
+      rlang::abort("from must be integer vector")
+    }
+    if(any(from >= 0)) {
+      rlang::abort("from must be a vector of negative integers")
+    }
   }
  if(isTRUE(.Share$epiwork.tables$weekly$single.table)) {
     survey_participant_previous_season.single_table(season=season, ids=ids, from=from, country=country, verbose=verbose)
@@ -321,22 +329,24 @@ survey_participant_previous_season = function(season, ids=NULL, use.season.dates
 #'
 #' @param season int reference season
 #' @param index int vector of relative index to the reference season, if NA or NULL get all previous
+#' @param .all int[] only select on this seasons, if not NULL
 #' @keywords internal
 #' @return vector of season numbers matching the index relative to season reference
 #' @export
 relative_seasons = function(season, index=NULL, .all=NULL) {
-  if(is.null(.all)) {
-    all.seasons = as.integer(get_historical_seasons())
+  all.seasons = as.integer(get_historical_seasons())
+  if(!is.null(.all)) {
+    all.seasons = all.seasons[all.seasons %in% .all]
   }
   if( is.null(index) || is.na(index) ) {
     seasons = all.seasons
   } else {
     index = as.integer(index)
     min = -length(all.seasons)
-    if(is.na(index) | index < min | index >= 0) {
+    if(any(is.na(index) | index < min | index >= 0)) {
       rlang::abort(paste0("`from` should be a negative integer value (min ",min,"), given ", index))
     }
-    if(index > 0) {
+    if(any(index > 0)) {
       rlang::abort("from should be a negative")
     }
     seasons = season + index # seasons are relative index to [season]
@@ -369,7 +379,7 @@ survey_participant_previous_season.multiple_table = function(season, ids=NULL, u
 survey_participant_previous_season.single_table = function(season, ids=NULL, from=NULL, country=NULL, verbose=TRUE) {
   message(paste0("survey_participant_previous_season: single table for ",season," from=", from," in country ", country))
   if(is.null(from)) {
-    prev.season = relative_seasons(season, index=-1L) # get just previous season
+    prev.season = relative_seasons(season, index=-1L) # get just previous season because we use it as max date
     if(verbose) {
       message("previous season =", prev.season)
     }
@@ -383,7 +393,7 @@ survey_participant_previous_season.single_table = function(season, ids=NULL, fro
     # Only use the season as a maximum
     previous = survey_participant_season(prev.season, use.min = FALSE, use.season.dates = TRUE, country=country)
   } else {
-    seasons = relative_seasons(season, index=from)
+    seasons = min(relative_seasons(season, index=from))
     previous = survey_participant_season(seasons[1L], use.min=TRUE, use.season.dates = TRUE, country=country)
   }
   if( !is.null(ids) ) {
@@ -522,3 +532,4 @@ survey_load_participations = function(ids, years=NULL) {
   }
   participations
 }
+

@@ -10,6 +10,8 @@ relative_seasons(season, index = NULL, .all = NULL)
 \item{season}{int reference season}
 
 \item{index}{int vector of relative index to the reference season, if NA or NULL get all previous}
+
+\item{.all}{int[] only select on this seasons, if not NULL}
 }
 \value{
 vector of season numbers matching the index relative to season reference

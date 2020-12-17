@@ -38,6 +38,10 @@ variable_available = function(value, seasons) {
     if(!rlang::is_quosure(seasons)) {
       rlang::abort("seasons must be seasons number list or a rlang::quosure")
     }
+    r = rlang::eval_tidy(seasons, data=list(season=2012, country="FR"))
+    if(!is.logical(r) && length(r) == 1) {
+      rlang::abort(paste("variable_available  for ",sQuote(value),"must be evaluated as ONE logical value"))
+    }
   }
   attr(value, "available") <- seasons
   value

@@ -17,7 +17,7 @@ survey_participant_season(
 
 \item{use.season.dates}{restrict to season's starting & ending dates. forced if single table model for weekly}
 
-\item{use.min}{us minimal date of the given season, if not use all before the end of the season (only for single table model)}
+\item{use.min}{us minimal date of the given season, if FALSE use all before the end of the season (only for single table model)}
 
 \item{country}{country to restrict participant}
 }
