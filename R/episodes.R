@@ -47,6 +47,27 @@ episode_design = function(delay_episode=15, max_episode_duration=11, median_epis
 
 }
 
+print.episode_design = function(x) {
+  cat("Episode Design\n")
+  cat("Computation parameters:\n")
+  cat(" - Method : ", x$method,"\n")
+  cat(" - Delay between two surveys  (delay_episode) :", x$delay_episode_max,"\n")
+  cat(" - Maximum duration of an episode to imputed ending :", x$max_episode_duration,"\n")
+  cat(" - Median duration of an episode to imputed ending :", x$median_episode_duration,"\n")
+  cat(" - Onset computation \n")
+  cat(paste("     ", deparse(x$onset)), "\n")
+  if(length(x$strategies) > 0) {
+    cat("Registered fusion strategies:\n")
+    print(x$strategies)
+  }
+  if(length(x$participants) > 0) {
+    cat("Registered participants selection steps:\n")
+    print(x$participants)
+  }
+  invisible(x)
+}
+
+
 #' Select participants based on a list of rules
 #' @param weekly weekly data.frame weekly data
 #' @param intake intake data.frame intake data
