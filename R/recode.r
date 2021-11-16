@@ -274,7 +274,7 @@ recode_weekly <- function(weekly, health.status=TRUE, recode.temp=FALSE, all.var
 #' @param warn if TRUE show warning if a variable is already recoded, default is FALSE
 #' @return data with recoded variable (to factor)
 #' @export
-survey_recode_all  <- function(data, survey, warn=FALSE) {
+survey_recode_all  <- function(data, survey, warn=FALSE, check_mapping=NULL) {
   need_recode <- function(name) {
     if(!hasName(data, name)) {
       return(FALSE)
