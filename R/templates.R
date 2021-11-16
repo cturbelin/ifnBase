@@ -128,6 +128,7 @@ survey_templates[["eu:intake"]] = list(
     "vacc.reason.miss"="Q10c_7", # I don't want to miss work/school
     "vacc.reason.always"="Q10c_8", # I always get the vaccine
     "vacc.reason.other"="Q10c_9", # I always get the vaccine
+    "vacc.reason.covid19"=variable_available("Q10c_12", quo(season > 2020)),
 
     # "notvacc.reason"="Q10d",
     "notvac.reason.plan"="Q10d_0",
@@ -154,6 +155,7 @@ survey_templates[["eu:intake"]] = list(
     "condition.heart"="Q11_4",
     "condition.kidney"="Q11_5",
     "condition.immune"="Q11_6",
+#    "condition.noanwser"="Q11_7", # only in some countries
 
     # Q12 Pregnant
     "pregnant"="Q12",
@@ -319,7 +321,7 @@ survey_templates[["eu:weekly"]] = list(
 
    # "website"="Q8c",
 
-   # "hospitalization"="Q14",
+   "hospitalization"="Q14",
 
     # visits
    "visit.no"="Q7_0",
@@ -362,8 +364,8 @@ survey_templates[["eu:weekly"]] = list(
 
     "sympt.cause"="Q11",
 
-    "household.flu"="Q12_multi_row1_col1", # All columns
-    "household.meet"="Q13_multi_row1_col1"
+#    "household.flu"="Q12_multi_row1_col1", # Not in standard
+#    "household.meet"="Q13_multi_row1_col1" # Not in standard
   ),
 
   labels = list(
