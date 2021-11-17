@@ -362,7 +362,7 @@ survey_templates[["eu:weekly"]] = list(
 
     "off.workdelay"="Q10c",
 
-    "sympt.cause"="Q11",
+    "sympt.cause"="Q11"
 
 #    "household.flu"="Q12_multi_row1_col1", # Not in standard
 #    "household.meet"="Q13_multi_row1_col1" # Not in standard
