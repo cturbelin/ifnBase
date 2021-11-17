@@ -1,3 +1,8 @@
+# ifnBase 0.5.3
+
+* fix tests for R 4
+* check variable_available quosure to ensure result is a single logical 
+
 # ifnBase 0.5.2
 
 * Add new symptom as standard (was handled locally now all platforms have them)
