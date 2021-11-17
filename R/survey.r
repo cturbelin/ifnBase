@@ -64,8 +64,13 @@ survey_labels <- function(survey, question) {
 	labels = def$labels[[question]]
 	if(length(labels) == 1) {
 	  pattern = glob2rx(labels)
+	  exclude = attr(labels, "exclude")
 	  n = names(def$aliases)
 	  labels = n[ grep(pattern,n) ]
+
+    if(!is.null(exclude)) {
+      labels = labels[ !labels %in% exclude ]
+    }
 	}
 	labels
 }
