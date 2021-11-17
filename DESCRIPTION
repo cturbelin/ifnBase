@@ -18,7 +18,7 @@ Suggests:
     survey (>= 4.0),
     RPostgreSQL,
     DBI,
-    RODBC (<= 1.3-16),
+    RODBC,
     RSQLite,
     RColorBrewer,
     svglite,
