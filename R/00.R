@@ -90,5 +90,5 @@ share.option <- function(...) {
   base::options("ifn" = oo)
 }
 
-utils::globalVariables(c('person_id'))
+utils::globalVariables(c('person_id', 'timestamp'))
 

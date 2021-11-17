@@ -272,6 +272,7 @@ recode_weekly <- function(weekly, health.status=TRUE, recode.temp=FALSE, all.var
 #' @param data data.frame with weekly data
 #' @param survey survey name (as it is registered in \code{\link{platform_define_survey}})
 #' @param warn if TRUE show warning if a variable is already recoded, default is FALSE
+#' @param check_mapping check mapping completeness see \code{\link{recode_var}}
 #' @return data with recoded variable (to factor)
 #' @export
 survey_recode_all  <- function(data, survey, warn=FALSE, check_mapping=NULL) {

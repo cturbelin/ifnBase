@@ -503,7 +503,7 @@ load_population_age.impl <- function(loader_type, geo, year, age.breaks=NULL, ty
       rlang::abort(paste0("File ", sQuote(file)," doesnt exists"))
     }
 
-    pop = read.csv2(file)
+    pop = utils::read.csv2(file)
 
     pop = pop[ pop$year %in% year, ]
 
