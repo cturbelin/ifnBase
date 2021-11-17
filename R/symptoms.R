@@ -67,7 +67,7 @@ SYMPT_NAUSEA = 'nausea'
 
 #' @export
 #' @rdname symptoms
-SYMPT_VOMITING = 'vomiting'='Q1_16'
+SYMPT_VOMITING = 'vomiting'
 
 #' @export
 #' @rdname symptoms
@@ -145,4 +145,15 @@ SYMPTOMS = c(
   SYMPT_NOSEBLEED
 )
 
+#' Symptoms grouped by topics
+#' @export
+SYMPTOMS_TOPICS = list(
+  other= SYMPT_OTHER,
+  sensorial=c(SYMPT_SMELL, SYMPT_TASTE, SYMPT_NOSEBLEED),
+  abdo=c(SYMPT_NAUSEA, SYMPT_VOMITING, SYMPT_DIARRHEA, SYMPT_ABDOPAIN),
+  upper=c(SYMPT_RHINO, SYMPT_SNEEZE, SYMPT_SORETHROAT, SYMPT_WATERYEYE),
+  lower=c(SYMPT_COUGH, SYMPT_DYSPNEA, SYMPT_SPUTUM, SYMPT_CHESTPAIN),
+  fever=c(SYMPT_FEVER, SYMPT_CHILLS, SYMPT_PAIN, SYMPT_HEADACHE),
+  weakness=c(SYMPT_ASTHENIA, SYMPT_ANOREXIA)
+)
 
