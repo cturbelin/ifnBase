@@ -1,3 +1,10 @@
+# ifnBase 0.6
+
+* Add common variables in eu templates 
+* Allow to check mapping completeness
+* Migrate to github actions instead of travis
+* add helper `var_labels()`
+
 # ifnBase 0.5.3
 
 * fix tests for R 4
