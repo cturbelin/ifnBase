@@ -2,7 +2,7 @@
 % Please edit documentation in R/platform.R
 \name{platform_import}
 \alias{platform_import}
-\title{Import a file in the platform enviroment}
+\title{Import a file in the platform environment}
 \usage{
 platform_import(name)
 }
@@ -10,7 +10,7 @@ platform_import(name)
 \item{name}{relative name in the platform path without .R extension}
 }
 \description{
-Import a file in the platform enviroment
+Import a file in the platform environment
 }
 \seealso{
 \link{concepts}

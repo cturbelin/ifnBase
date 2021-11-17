@@ -4,7 +4,7 @@
 \alias{recode_var}
 \title{Recode values with a given mapping}
 \usage{
-recode_var(x, mapping, translate = FALSE)
+recode_var(x, mapping, translate = FALSE, check_mapping = FALSE)
 }
 \arguments{
 \item{x}{value to recode}
@@ -12,6 +12,8 @@ recode_var(x, mapping, translate = FALSE)
 \item{mapping}{list of mapping db value to label, label as name and db value as value}
 
 \item{translate}{if TRUE translate labels with \code{\link{i18n}}}
+
+\item{check_mapping}{if TRUE check if mapping is complete (if code in data are not mapped), NULL=apply default value in options}
 }
 \value{
 factor vector of recoded values
