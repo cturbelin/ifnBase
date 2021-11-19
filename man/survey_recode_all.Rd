@@ -4,7 +4,7 @@
 \alias{survey_recode_all}
 \title{Recode all known variables in survey data}
 \usage{
-survey_recode_all(data, survey, warn = FALSE)
+survey_recode_all(data, survey, warn = FALSE, check_mapping = NULL)
 }
 \arguments{
 \item{data}{data.frame with weekly data}
@@ -12,6 +12,8 @@ survey_recode_all(data, survey, warn = FALSE)
 \item{survey}{survey name (as it is registered in \code{\link{platform_define_survey}})}
 
 \item{warn}{if TRUE show warning if a variable is already recoded, default is FALSE}
+
+\item{check_mapping}{check mapping completeness see \code{\link{recode_var}}}
 }
 \value{
 data with recoded variable (to factor)

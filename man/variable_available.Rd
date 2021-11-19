@@ -15,7 +15,7 @@ variable_available(value, seasons)
 Define availability of variables
 }
 \details{
-If seasons is a quosure it will be evalualted in the survey_load_results environment.
+If seasons is a quosure it will be evaluated in the survey_load_results environment.
 It must be evaluate as a single logical result
 Especially the expression can evaluate the season
 }

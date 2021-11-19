@@ -1,7 +1,5 @@
 # Utility function to defined platform files
 
-
-
 #' create a recoding alias
 #'
 #' The recoding will be proceeded using the name provided. This avoid to copy paste the recode mapping
@@ -26,7 +24,7 @@ override = function(data) {
 #' @param seasons either a vector of season or an rlang::quosure (see details)
 #'
 #' @details
-#' If seasons is a quosure it will be evalualted in the survey_load_results environment.
+#' If seasons is a quosure it will be evaluated in the survey_load_results environment.
 #' It must be evaluate as a single logical result
 #' Especially the expression can evaluate the season
 #'
@@ -45,4 +43,20 @@ variable_available = function(value, seasons) {
   }
   attr(value, "available") <- seasons
   value
+}
+
+#' Define a label for survey variables, labels are used to identify a subset of variables using a name
+#'
+#' The name is useable with \code{\link{survey_labels}} to get the list of the variables
+#'
+#' A label can be defined as a list of variables names or as a glob pattern (like 'myvar.*') if variables
+#' are named using a convenient naming convention.
+#' @param labels list of label or glob pattern to identify variables matching the list
+#' @param exclude list of names to exclude after creating the list with a pattern
+#' @return character
+var_labels = function(labels, exclude=NULL) {
+  if(!is.null(exclude)) {
+    attr(labels, "exclude") <- exclude
+  }
+  labels
 }

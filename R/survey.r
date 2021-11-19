@@ -64,8 +64,13 @@ survey_labels <- function(survey, question) {
 	labels = def$labels[[question]]
 	if(length(labels) == 1) {
 	  pattern = glob2rx(labels)
+	  exclude = attr(labels, "exclude")
 	  n = names(def$aliases)
 	  labels = n[ grep(pattern,n) ]
+
+    if(!is.null(exclude)) {
+      labels = labels[ !labels %in% exclude ]
+    }
 	}
 	labels
 }
@@ -133,13 +138,23 @@ survey_recode <- function(x, variable, survey, translate=F, question=NULL) {
 #' @param x value to recode
 #' @param mapping list of mapping db value to label, label as name and db value as value
 #' @param translate if TRUE translate labels with \code{\link{i18n}}
+#' @param check_mapping if TRUE check if mapping is complete (if code in data are not mapped), NULL=apply default value in options
 #' @return factor vector of recoded values
-recode_var <- function(x, mapping, translate=FALSE) {
+recode_var <- function(x, mapping, translate=FALSE, check_mapping=FALSE) {
   codes = as.vector(mapping)
   labels = names(mapping)
 
   if(length(codes) != length(labels)) {
     rlang::abort("codes and labels should have exact same length", mapping=mapping)
+  }
+
+  if(check_mapping) {
+    values = unique(x)
+    miss = !(values %in% codes)
+    if(any(miss)) {
+      miss = values[miss]
+      warning(paste("Values in x are not in mapped codes ", paste(sQuote(miss), collapse = ", ")))
+    }
   }
 
   if(translate) {

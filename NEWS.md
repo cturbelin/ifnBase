@@ -1,3 +1,15 @@
+# ifnBase 0.6
+
+* Add common variables in eu templates 
+* Allow to check mapping completeness
+* Migrate to github actions instead of travis
+* add helper `var_labels()`
+
+# ifnBase 0.5.3
+
+* fix tests for R 4
+* check variable_available quosure to ensure result is a single logical 
+
 # ifnBase 0.5.2
 
 * Add new symptom as standard (was handled locally now all platforms have them)

@@ -27,7 +27,7 @@ load_platform = function() {
   validate_platform()
 }
 
-#' Import a file in the platform enviroment
+#' Import a file in the platform environment
 #' @family platform
 #' @param name relative name in the platform path without .R extension
 #' @seealso \link{concepts}
@@ -40,7 +40,7 @@ platform_import = function(name) {
 
   file = get_r_file(paste0(ending_slash(path), name), should.exists = TRUE)
 
-  sys.source(file, envir=.Share)
+  rlang::with_abort(sys.source(file, envir=.Share))
 
 }
 
@@ -104,7 +104,14 @@ platform_define_survey <- function(name, survey_id=NULL, table=NULL, mapping=lis
   def$survey_id = survey_id
   def$table = table
 
-  r = create_survey_definition(mapping=mapping, labels=labels, codes=codes, recodes=recodes, template=template, only.errors = TRUE)
+  r = rlang::with_handlers(
+    rlang::with_abort(
+      create_survey_definition(mapping=mapping, labels=labels, codes=codes, recodes=recodes, template=template, only.errors = TRUE)
+    ),
+    error = function(cnd) {
+      rlang::abort(sprintf("Error loading platform file '%s'", name), parent = cnd)
+    }
+  )
 
   errors = Filter(function(x) x$type == "error", r$checks)
   if( length(errors) > 0 ) {
@@ -312,7 +319,7 @@ check_survey_template <- function(template, mapping, recodes, only.errors=TRUE) 
 
   raise_question = function(type, value, problem, message) {
     results[[length(results) + 1]] <<- list(type=type, value=value, problem=problem, message=message, context="mapping")
-    invisible()
+    invisible(NULL)
   }
 
   check_list_mapping(mapping, template$aliases, raise_question, only.errors=only.errors)
@@ -324,7 +331,7 @@ check_survey_template <- function(template, mapping, recodes, only.errors=TRUE) 
 
     raise_recode = function(type, value, problem, message) {
       results[[length(results) + 1]] <<- list(type=type, value=value, problem=problem, message=message, context="recode", name=recode_name)
-      invisible()
+      invisible(NULL)
     }
 
     new = recodes[[recode_name]]
@@ -487,13 +494,18 @@ check_list_mapping = function(new, old, raise, only.errors=TRUE) {
 
   n = names(new)
 
+  if(any(n == "")) {
+    raise(type="error", value=NULL, problem="missing_key", "Some keys are missing, all mapping entries must have name")
+    return()
+  }
+
   new.entries = n[ !n %in% names(old)]
 
   # Check if a new redefine some values already defined in old
   lapply(new.entries, function(name) {
     value = new[[name]]
     if(value %in% old) {
-      # Allow explicit override for some values if it is explicit, althought not recommanded
+      # Allow explicit override for some values if it is explicit, although not recommended
       override = attr(value, "allow_override")
       type = ifelse(isTRUE(override), "warn", "error")
       raise(type=type, value=value, problem="override", paste0("'",name,"' redefine '",value,"'"))
@@ -520,7 +532,7 @@ check_list_mapping = function(new, old, raise, only.errors=TRUE) {
       raise(type="error", value=v, problem="duplicate", paste0("Duplicate value for entries ", paste(n, collapse = ",")))
     })
   }
- invisible()
+ invisible(NULL)
 }
 
 #' Create structure defining an geographic table system.
