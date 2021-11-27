@@ -16,3 +16,11 @@ apply_binary_mask(data, mask, column)
 \description{
 Intersection of columns will be encoded as a binary value (1 column => 1 bit)
 }
+\seealso{
+Other upset: 
+\code{\link{create_binary_groups}()},
+\code{\link{create_binary_mask}()},
+\code{\link{get_labels_from_binary}()},
+\code{\link{upset_plot}()}
+}
+\concept{upset}

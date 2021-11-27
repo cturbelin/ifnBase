@@ -18,3 +18,11 @@ get_labels_from_binary(data, mask, group = "g", trans = FALSE)
 \description{
 Get corresponding label from a binary group value
 }
+\seealso{
+Other upset: 
+\code{\link{apply_binary_mask}()},
+\code{\link{create_binary_groups}()},
+\code{\link{create_binary_mask}()},
+\code{\link{upset_plot}()}
+}
+\concept{upset}

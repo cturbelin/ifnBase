@@ -4,6 +4,7 @@
 
 #' Create a binary mask for each value
 #' @param values character
+#' @family upset
 #' @return vector of integer value as binary mask for each input values, named by input value
 #' @export
 create_binary_mask = function(values) {
@@ -21,6 +22,7 @@ create_binary_mask = function(values) {
 #' @param mask integer vector binary mask for individual labels
 #' @param group name of the column in data containing binary group value
 #' @param trans translate name if TRUE use \code{\link{i18n}}, if function use it a translator
+#' @family upset
 #' @export
 get_labels_from_binary = function(data, mask, group="g", trans=FALSE) {
   nn = names(mask)
@@ -50,6 +52,7 @@ get_labels_from_binary = function(data, mask, group="g", trans=FALSE) {
 #' @param data data.frame
 #' @param mask binary mask for each column (see \code{\link{create_binary_mask}})
 #' @param column name of the column that will contain the group value
+#' @family upset
 #' @export
 apply_binary_mask = function(data, mask, column) {
   data[[column]] = 0L
@@ -71,6 +74,7 @@ apply_binary_mask = function(data, mask, column) {
 #' @param data data.frame
 #' @param groups list of group, each group is a vector of names of columns belonging to this group
 #' @param trans translate label if TRUE see \code{\link{get_labels_from_binary}}
+#' @family upset
 #' @export
 create_binary_groups = function(data, groups, trans=FALSE) {
   d = data.frame(count=data$count)
@@ -130,6 +134,7 @@ create_binary_groups = function(data, groups, trans=FALSE) {
 #'   \itemize{order.freq}{reorder set list by frequency}
 #'  }
 #' @export
+#' @family upset
 #' @importFrom stats reorder
 upset_plot <- function(data, sets, n.max=40, point_size=3, name_size_scale=1, title=NULL, subtitle=NULL, caption=NULL, opts=list()) {
   requireNamespace("cowplot")
