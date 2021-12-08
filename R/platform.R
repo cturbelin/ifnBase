@@ -116,7 +116,7 @@ platform_define_survey <- function(name, survey_id=NULL, table=NULL, mapping=lis
   errors = Filter(function(x) x$type == "error", r$checks)
   if( length(errors) > 0 ) {
     print(r$checks)
-    rlang::abort("Survey error importing templates", survey_errors=r$checks)
+    rlang::abort(sprintf("Survey error importing templates for '%s'", name), survey_errors=r$checks)
    }
 
   if( !is.null(template) ) {
@@ -429,6 +429,9 @@ print.survey_definition <- function(x, ...) {
   if(!is.null(x$survey_id)) {
     cat(" Survey db id:", sQuote(x$survey_id))
   }
+  if(hasName(x, "create_id")) {
+    cat(" create_id: ", x$create_id)
+  }
   cat("\n")
   if(!is.null(x$aliases)) {
     print(x$aliases)
@@ -445,7 +448,7 @@ print.survey_definition <- function(x, ...) {
     print(x$checks)
   }
   nn = names(x)
-  nn = nn[! nn %in% c('aliases','labels','name','template_name','table','single.table','survey_id','recodes','checks')]
+  nn = nn[! nn %in% c('aliases','labels','name','template_name','table','single.table','survey_id','create_id', 'recodes','checks')]
   if(length(nn) > 0) {
     print(x[nn])
   }
