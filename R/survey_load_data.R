@@ -58,7 +58,9 @@ survey_load_results = function(survey, cols, geo=NULL, date=NULL, db.table=NULL,
     cols = survey_variable_available(cols, def, check_season, country=country)
     cols = survey_aliases(cols, def)
     cc = paste0('p."', cols, '"')
-    cc = c('p."id" as "id"', cc)
+    if(!isTRUE(def$create_id)) {
+      cc = c('p."id" as "id"', cc)
+    }
   }
   if(account) {
     cc = c('s."user_id" as "account_id"', cc)
@@ -140,11 +142,11 @@ survey_load_results = function(survey, cols, geo=NULL, date=NULL, db.table=NULL,
   cc = c(cc, cols.sup)
   cc = paste(cc, collapse=',')
   if(length(where) > 0) {
-    where = paste(' WHERE ', paste(where, collapse=' AND '), sep='')
+    where = paste0(' WHERE ', paste(where, collapse=' AND '))
   } else {
     where = ''
   }
-  query = paste0('SELECT s.id as person_id, ',cc,' from ',tb,' p left join ',join_surveyuser('p', 's'), j, where, sep='')
+  query = paste0('SELECT s.id as person_id, ',cc,' from ',tb,' p left join ', join_surveyuser('p', 's'), j, where)
   if(debug) {
     cat(query, "\n")
   }
@@ -153,6 +155,11 @@ survey_load_results = function(survey, cols, geo=NULL, date=NULL, db.table=NULL,
     n = names(r)
     n = survey_aliases(n, def, revert=TRUE)
     names(r) <- n
+  }
+
+  if(isTRUE(def$create_id) && nrow(r) > 0) {
+    r$id = seq_len(nrow(r))
+    attr(r, 'virtual_id') <- TRUE
   }
 
   if(!is.null(geo)) {
