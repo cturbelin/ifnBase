@@ -13,11 +13,11 @@ survey_variable_available(variables, survey, season, country = NULL)
 
 \item{season}{season to check of variable availability}
 
-\item{country}{country to check of variable availability (if platform accepts)}
+\item{country}{country to check of variable availability (if platform is configured to accept it)}
 }
 \value{
 variables if they are available
 }
 \description{
-This function is conservative: only variable registred with an availability clause are checked
+This function is conservative: only variable registered with an availability clause are checked
 }

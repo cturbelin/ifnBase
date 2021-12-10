@@ -6,6 +6,7 @@
 #' by reusing the one defined in the same survey.
 #'
 #' @param name name of the variable to use the recoding from
+#' @family platform-helpers
 #' @export
 recode_alias = function(name) {
   structure(name, class="recode_alias")
@@ -13,6 +14,7 @@ recode_alias = function(name) {
 
 #' Allow override of mapping or recoding from template
 #' @param data value to flag as overrided
+#' @family platform-helpers
 #' @export
 override = function(data) {
   attr(data, "allow_override") <- TRUE
@@ -28,6 +30,7 @@ override = function(data) {
 #' It must be evaluate as a single logical result
 #' Especially the expression can evaluate the season
 #'
+#' @family platform-helpers
 #' @export
 variable_available = function(value, seasons) {
   if(is.vector(seasons)) {
@@ -47,12 +50,13 @@ variable_available = function(value, seasons) {
 
 #' Define a label for survey variables, labels are used to identify a subset of variables using a name
 #'
-#' The name is useable with \code{\link{survey_labels}} to get the list of the variables
+#' The name is useable with \code{\link{survey_labels}} to get the list of the variables, see Survey section of \code{\link{concepts}}
 #'
 #' A label can be defined as a list of variables names or as a glob pattern (like 'myvar.*') if variables
 #' are named using a convenient naming convention.
 #' @param labels list of label or glob pattern to identify variables matching the list
 #' @param exclude list of names to exclude after creating the list with a pattern
+#' @family platform-helpers
 #' @return character
 var_labels = function(labels, exclude=NULL) {
   if(!is.null(exclude)) {

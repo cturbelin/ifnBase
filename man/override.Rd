@@ -12,3 +12,10 @@ override(data)
 \description{
 Allow override of mapping or recoding from template
 }
+\seealso{
+Other platform-helpers: 
+\code{\link{recode_alias}()},
+\code{\link{var_labels}()},
+\code{\link{variable_available}()}
+}
+\concept{platform-helpers}
