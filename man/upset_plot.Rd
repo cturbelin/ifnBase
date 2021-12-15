@@ -72,3 +72,11 @@ General options :
  }
 }
 
+\seealso{
+Other upset: 
+\code{\link{apply_binary_mask}()},
+\code{\link{create_binary_groups}()},
+\code{\link{create_binary_mask}()},
+\code{\link{get_labels_from_binary}()}
+}
+\concept{upset}

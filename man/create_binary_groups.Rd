@@ -16,3 +16,11 @@ create_binary_groups(data, groups, trans = FALSE)
 \description{
 Names of new groups will be the name of groups entry
 }
+\seealso{
+Other upset: 
+\code{\link{apply_binary_mask}()},
+\code{\link{create_binary_mask}()},
+\code{\link{get_labels_from_binary}()},
+\code{\link{upset_plot}()}
+}
+\concept{upset}

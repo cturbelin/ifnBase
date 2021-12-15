@@ -15,3 +15,11 @@ vector of integer value as binary mask for each input values, named by input val
 \description{
 Create a binary mask for each value
 }
+\seealso{
+Other upset: 
+\code{\link{apply_binary_mask}()},
+\code{\link{create_binary_groups}()},
+\code{\link{get_labels_from_binary}()},
+\code{\link{upset_plot}()}
+}
+\concept{upset}

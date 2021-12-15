@@ -12,6 +12,7 @@
 #' \itemize{
 #'  \item{eu:intake}
 #'  \item{eu:weekly}
+#'  \item{eu:vaccination}
 #' }
 #'
 #' @param name name of the template to get
@@ -57,8 +58,32 @@ labels_activities = c(
   'activity.other'="8"
 )
 
+# Labels Yes/No/DontKnow with Yes=0 and No=1 (historical form for good or bad)
 labels_ynp = as_mapping(c(0:2), YES_NO_DNK)
 
+# Labels Yes/No/DontKnow with Yes=1
+labels_y1np = c('Yes'=1,'No'=0,'DNK'=2)
+
+covid.vaccine.list = list(
+  "same"=0,
+  "pfizer"=1,
+  "moderna"=2,
+  "astra"=3,
+  "jonhson"=4,
+  "DNK"=99
+)
+
+covid.vaccine.doses = list(
+    "one"=1,
+    "two"=2,
+    "more_2"=3, # First version
+    "three"=4, # Second version
+    "more_3"=5, # Second version
+    "DNK"=99
+)
+
+
+from_2020 = rlang::quo(season >= 2020)
 
 #' survey templates list
 #' @noRd
@@ -190,7 +215,31 @@ survey_templates[["eu:intake"]] = list(
     "hear.internet"="Q17_2",
     "hear.poster"="Q17_3",
     "hear.family"="Q17_4",
-    "hear.work"="Q17_5"
+    "hear.work"="Q17_5",
+
+    'covid.vaccine'=variable_available("Q35", from_2020),
+    'covid.vaccine.which'=variable_available("Q35b", from_2020),
+    'covid.vaccine.doses'=variable_available("Q35c", from_2020),
+    "covid.vaccine.when1"=variable_available("Q35d", from_2020),
+    "covid.vaccine.when1.date"=variable_available("Q35d_1_open", from_2020),
+    "covid.vaccine.when2"=variable_available("Q35e", from_2020),
+    "covid.vaccine.when2.date"=variable_available("Q35e_1_open", from_2020),
+    "covid.vaccine.which2"=variable_available("Q35g", from_2020),
+
+    "covid.vacc.reason.risk"=variable_available("Qcov35f_0", from_2020), # At risk of Complication
+    "covid.vacc.reason.get"=variable_available("Qcov35f_1", from_2020), # Reduce risk of getting
+    "covid.vacc.reason.transm"=variable_available("Qcov35f_2", from_2020), # Reduce risk of transmission
+    "covid.vacc.reason.doctor"=variable_available("Qcov35f_3", from_2020), # Recommended by doctor
+    "covid.vacc.reason.work"=variable_available("Qcov35f_4", from_2020), # Recommended by workplace/school
+    "covid.vacc.reason.avail"=variable_available("Qcov35f_5", from_2020), # Available
+    "covid.vacc.reason.free"=variable_available("Qcov35f_6", from_2020), # Free
+    "covid.vacc.reason.miss"=variable_available("Qcov35f_7", from_2020), # Dont want to miss work
+    "covid.vacc.reason.always"=variable_available("Qcov35f_8", from_2020), # I always get the vaccine
+    "covid.vacc.reason.other"=variable_available("Qcov35f_9", from_2020), # Other
+    "covid.vacc.reason.other.txt"=variable_available("Qcov35f_9_open", from_2020), # Other text
+    "covid.vacc.reason.close"=variable_available("Qcov35f_20", from_2020), # I work with people in close contact
+    "covid.vacc.reason.pha"=variable_available("Qcov35f_21", from_2020) # Recommended By Public Health
+
   ),
   labels=list(
     # Patterns
@@ -204,7 +253,8 @@ survey_templates[["eu:intake"]] = list(
     pets          = 'pets.*',
     house         = 'house.*',
     vacc.reason   = 'vacc.reason.*',
-    notvac.reason = 'notvac.reason.*'
+    notvac.reason = 'notvac.reason.*',
+    covid.vacc.reason="covid.vacc.reason.*"
   ),
   recodes = list(
 
@@ -265,9 +315,160 @@ survey_templates[["eu:intake"]] = list(
         'smoker.dkn'="4",
         'smoker.stopped'="5",
         'smoker.juststop'="6"
-      )
+      ),
+    "covid.vaccine"=labels_y1np,
+    "covid.vaccine.which"=covid.vaccine.list,
+    "covid.vaccine.which2"=covid.vaccine.list,
+    covid.vaccine.doses=covid.vaccine.doses
   )
 ) # eu:intake
+
+from_2021 = rlang::quo(season >= 2021)
+
+survey_templates[['eu:vaccination']] = list(
+  aliases=list(
+    # Flu Vaccination
+    "vacc.lastseason"="Q9",
+    "vacc.curseason"="Q10",
+    "vacc.when"="Q10b",
+    "vacc.date"="Q10b_1_open",
+
+    # Flu vaccination reasons
+    "vacc.reason.risk"="Q10c_0",
+    "vacc.reason.myrisk"="Q10c_1", # decrease my risk
+    "vacc.reason.spread"="Q10c_2", # decrease risk of spreading
+    "vacc.reason.doctor"="Q10c_3", # doctor recommended it
+    "vacc.reason.work"="Q10c_4", # work & school
+    "vacc.reason.available"="Q10c_5", # vaccination was available
+    "vacc.reason.free"="Q10c_6", # vaccin was free
+    "vacc.reason.miss"="Q10c_7", # I don't want to miss work/school
+    "vacc.reason.always"="Q10c_8", # I always get the vaccine
+    "vacc.reason.other"="Q10c_9", # I always get the vaccine
+    "vacc.reason.covid19"=variable_available("Q10c_12", quo(season > 2020)),
+
+    # Flu not vaccination reasons
+    "notvac.reason.plan"="Q10d_0",
+    "notvac.reason.offer"="Q10d_1", # Haven't been offered
+    "notvac.reason.risk"="Q10d_2", # Don't belong to risk group
+    "notvac.reason.own"="Q10d_3", # Better to get own immunity
+    "notvac.reason.doubt"="Q10d_4", # Doubt about vaccine effectiveness
+    "notvac.reason.minor"="Q10d_5", # Influenza is a minor illness
+    "notvac.reason.likely"="Q10d_6", # I don't think I am likely to get influenza
+    "notvac.reason.cause"="Q10d_7", # I believe that influenza vaccine can cause influenza
+    "notvac.reason.safety"="Q10d_8", # I am worried that the vaccine is not safe or will cause illness or other adverse events
+    "notvac.reason.vaccin"="Q10d_9", # I don't like having vaccinations
+    "notvac.reason.available"="Q10d_10", # The vaccine is not readily available to me
+    "notvac.reason.free"="Q10d_11", # The vaccine is not free
+    "notvac.reason.no"="Q10d_12", # no particular reason
+    "notvac.reason.doctor"="Q10d_13", # Although my doctor recommended a vaccine, I did not get one
+    "notvac.reason.other"="Q10d_14", #
+
+    'covid.vaccine'="Q35",
+    'covid.vaccine.which'="Q35b", # Vaccine brand for 1st dose
+    'covid.vaccine.doses'="Q35c",
+    "covid.vaccine.when1"="Q35d",
+    "covid.vaccine.when1.date"="Q35d_1_open",
+    "covid.vaccine.when2"="Q35e",
+    "covid.vaccine.when2.date"="Q35e_1_open",
+    "covid.vaccine.which2"="Q35g",
+
+    "covid.vacc.reason.risk"="Q35f_0", # At risk of Complication
+    "covid.vacc.reason.get"="Q35f_1", # Reduce risk of getting
+    "covid.vacc.reason.transm"="Q35f_2", # Reduce risk of transmission
+    "covid.vacc.reason.doctor"="Q35f_3", # Recommended by doctor
+    "covid.vacc.reason.work"="Q35f_4", # Recommended by workplace/school
+    "covid.vacc.reason.avail"="Q35f_5", # Available
+    "covid.vacc.reason.free"="Q35f_6", # Free
+    "covid.vacc.reason.miss"="Q35f_7", # Dont want to miss work
+    "covid.vacc.reason.always"="Q35f_8", # I always get the vaccine
+    "covid.vacc.reason.other"="Q35f_9", # Other
+    "covid.vacc.reason.close"="Q35f_20", # I work with people in close contact
+    "covid.vacc.reason.pha"="Q35f_21", # Recommended By Public Health
+    "covid.vacc.reason.mandatory"="Q35f_22",
+    "covid.vacc.reason.pass"="Q35f_23 ",
+    "covid.vacc.reason.other.txt"="Q35f_9_open", # Other text
+
+    "covid.vacc.reason.risk"="Q35f_0", # At risk of Complication
+    "covid.vacc.reason.get"="Q35f_1", # Reduce risk of getting
+    "covid.vacc.reason.transm"="Q35f_2", # Reduce risk of transmission
+    "covid.vacc.reason.doctor"="Q35f_3", # Recommended by doctor
+    "covid.vacc.reason.work"="Q35f_4", # Recommended by workplace/school
+    "covid.vacc.reason.avail"="Q35f_5", # Available
+    "covid.vacc.reason.free"="Q35f_6", # Free
+    "covid.vacc.reason.miss"="Q35f_7", # Dont want to miss work
+    "covid.vacc.reason.always"="Q35f_8", # I always get the vaccine
+    "covid.vacc.reason.other"="Q35f_9", # Other
+    "covid.vacc.reason.close"="Q35f_20", # I work with people in close contact
+    "covid.vacc.reason.pha"="Q35f_21", # Recommended By Public Health
+    "covid.vacc.reason.mandatory"="Q35f_22",
+    "covid.vacc.reason.pass"="Q35f_23 ",
+    "covid.vacc.reason.other.txt"="Q35f_9_open", # Other text
+
+    # New questions for vaccination v2 (only available from 2021 but depends on country for real availability)
+    covid.vaccine.which.pfizer=variable_available("Q35i_1", from_2021),
+    covid.vaccine.which.moderna=variable_available("Q35i_2", from_2021),
+    covid.vaccine.which.astra=variable_available("Q35i_3", from_2021),
+    covid.vaccine.which.jonhson=variable_available("Q35i_4", from_2021),
+    covid.vaccine.which.dnk=variable_available("Q35i_99", from_2021),
+
+    covid.vaccine.last.when=variable_available("Q35j", from_2021),
+    covid.vaccine.last.date=variable_available("Q35j_1_open", from_2021),
+
+    covid.vaccine.second.plan=variable_available("Q35k", from_2021),
+
+    covid.vacc.one.reason=variable_available("Q35l", from_2021), # Reason fon single dose
+
+    "covid.vacc.one.reason.other"=variable_available("Q35l_6_open", from_2021),
+
+    covid.nvac.reason.plan =variable_available("Q35m_0", from_2021), # I plan to get the vaccine
+    covid.nvac.reason.notproposed =variable_available("Q35m_1", from_2021), # Not proposed
+    covid.nvac.reason.pregnant.disc =variable_available("Q35m_15", from_2021), #  Adviced to get the vaccine because I'm pregnant
+    covid.nvac.reason.pregnant.fear =variable_available("Q35m_16", from_2021), #  Pregnant and fear for my baby 16
+    covid.nvac.reason.notriskgroup =variable_available("Q35m_2", from_2021), #  Dont belong to a risk group 2
+    covid.nvac.reason.natural =variable_available("Q35m_3", from_2021), #  Better to get their own natural immunity 3
+    covid.nvac.reason.efficacy =variable_available("Q35m_4", from_2021), #  Doubt about efficacy 4
+    covid.nvac.reason.benign =variable_available("Q35m_5", from_2021), #  Covid is not a severe disease 5
+    covid.nvac.reason.avoid.hs =variable_available("Q35m_17", from_2021), #  Avoid health seeking because of the pandemic 17
+    covid.nvac.reason.unlikely =variable_available("Q35m_6", from_2021), #  Not suspeptible 6
+    covid.nvac.reason.cause.covid =variable_available("Q35m_7", from_2021), #  Vaccine can cause the disease 7
+    covid.nvac.reason.adverse =variable_available("Q35m_8", from_2021), #  Fear of adverse event, Not safe 8
+    covid.nvac.reason.dontlike =variable_available("Q35m_9", from_2021), #  Dont like to get vaccine 9
+    covid.nvac.reason.accessible =variable_available("Q35m_10", from_2021), #  Not available for me 10
+    covid.nvac.reason.disagree =variable_available("Q35m_20", from_2021), #  Disagree vaccine policy 20
+    covid.nvac.reason.other =variable_available("Q35m_14", from_2021), #  Other 14
+    covid.nvac.reason.dnk =variable_available("Q35m_12", from_2021), #  Dont know 12
+
+    "covid.nvac.reason.other.txt"=variable_available("Q35m_14_open", from_2021)
+
+  ),
+  labels=list(
+    "covid.vacc.reason"=var_labels("covid.vacc.reason.*", exclude="covid.vacc.reason.other.txt"),
+    "covid.nvac.reason"=var_labels("covid.nvac.reason.*", exclude="covid.nvac.reason.other.txt"),
+    vacc.reason   = 'vacc.reason.*',
+    notvac.reason = 'notvac.reason.*',
+    "covid.vacc.reason"=var_labels("covid.vacc.reason.*", exclude="covid.vacc.reason.other.txt"),
+    "covid.nvac.reason"=var_labels("covid.nvac.reason.*", exclude="covid.nvac.reason.other.txt"),
+    covid.vaccine.which="covid.vaccine.which.*"
+  ),
+  recodes=list(
+    vacc.curseason=labels_ynp,
+    vacc.lastseason=labels_ynp,
+    "covid.vaccine"=labels_y1np,
+    "covid.vaccine.which"=covid.vaccine.list,
+    "covid.vaccine.which2"=covid.vaccine.list,
+    "covid.vaccine.doses"=covid.vaccine.doses,
+    covid.vaccine.second.plan=labels_y1np,
+    covid.vacc.one.reason=c(
+      "covid.infection.before"="1",
+      "covid.infection.after"="2",
+      "covid.jonhson"="3",
+      "counter.indication"="4",
+      "changed.mind"="5",
+      "other"="6",
+      "DNK"="0"
+    )
+  )
+)
 
 survey_templates[["eu:weekly"]] = list(
   aliases=list(
