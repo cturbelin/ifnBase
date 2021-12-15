@@ -1,3 +1,17 @@
+# ifnBase 0.6.2
+
+* Improve error message from survey definition (platform file parsing)
+* enable to create a virtual row id
+* add template for vaccination survey 'eu:vaccination'
+* Update docs & add families
+
+# ifnBase 0.6.1
+
+* fix vomiting constant `SYMPT_VOMITING`
+* add constant `SYMPTOMS_TOPIC` with symptoms names by topics
+* add Upset graph functions and binary grouping
+
+
 # ifnBase 0.6
 
 * Add common variables in eu templates 
