@@ -27,3 +27,19 @@ check_int = function(value, min=1) {
   }
   value
 }
+
+with_abort <- function(expr) {
+  if(packageVersion("rlang") >= numeric_version("1.0")) {
+    try_fetch(
+      expr,
+      simpleError = function(cnd) {
+        abort(
+          conditionMessage(cnd),
+          call = conditionCall(cnd)
+        )
+      }
+    )
+  } else {
+    rlang::with_abort(expr)
+  }
+}

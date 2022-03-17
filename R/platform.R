@@ -39,9 +39,7 @@ platform_import = function(name) {
   }
 
   file = get_r_file(paste0(ending_slash(path), name), should.exists = TRUE)
-
-  rlang::with_abort(sys.source(file, envir=.Share))
-
+  with_abort(sys.source(file, envir=.Share))
 }
 
 
@@ -105,7 +103,7 @@ platform_define_survey <- function(name, survey_id=NULL, table=NULL, mapping=lis
   def$table = table
 
   r = rlang::with_handlers(
-    rlang::with_abort(
+    with_abort(
       create_survey_definition(mapping=mapping, labels=labels, codes=codes, recodes=recodes, template=template, only.errors = TRUE)
     ),
     error = function(cnd) {
