@@ -30,10 +30,10 @@ check_int = function(value, min=1) {
 
 with_abort <- function(expr) {
   if(packageVersion("rlang") >= numeric_version("1.0")) {
-    try_fetch(
+    rlang::try_fetch(
       expr,
       simpleError = function(cnd) {
-        abort(
+        rlang::abort(
           conditionMessage(cnd),
           call = conditionCall(cnd)
         )
