@@ -1,3 +1,7 @@
+# ifnBase 0.6.3
+
+* Fix rlang::with_abort() for rlang >= 1.0
+
 # ifnBase 0.6.2
 
 * Improve error message from survey definition (platform file parsing)
