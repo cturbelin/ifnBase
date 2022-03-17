@@ -4,7 +4,7 @@
 \alias{survey_participant_previous_season}
 \alias{survey_participant_previous_season.multiple_table}
 \alias{survey_participant_previous_season.single_table}
-\title{List of participants registred in weekly at least once in previous season (regarding given [season])}
+\title{List of participants registered in weekly at least once in previous season (regarding given [season])}
 \usage{
 survey_participant_previous_season(
   season,
@@ -46,7 +46,7 @@ survey_participant_previous_season.single_table(
 \item{verbose}{show verbose messages}
 }
 \description{
-List of participants registred in weekly at least once in previous season (regarding given [season])
+List of participants registered in weekly at least once in previous season (regarding given [season])
 
 Implementation for multiple table data model
 we have to check season by season

@@ -21,6 +21,7 @@ names:
 \itemize{
  \item{eu:intake}
  \item{eu:weekly}
+ \item{eu:vaccination}
 }
 }
 \seealso{

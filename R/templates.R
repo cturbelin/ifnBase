@@ -388,22 +388,6 @@ survey_templates[['eu:vaccination']] = list(
     "covid.vacc.reason.pass"="Q35f_23 ",
     "covid.vacc.reason.other.txt"="Q35f_9_open", # Other text
 
-    "covid.vacc.reason.risk"="Q35f_0", # At risk of Complication
-    "covid.vacc.reason.get"="Q35f_1", # Reduce risk of getting
-    "covid.vacc.reason.transm"="Q35f_2", # Reduce risk of transmission
-    "covid.vacc.reason.doctor"="Q35f_3", # Recommended by doctor
-    "covid.vacc.reason.work"="Q35f_4", # Recommended by workplace/school
-    "covid.vacc.reason.avail"="Q35f_5", # Available
-    "covid.vacc.reason.free"="Q35f_6", # Free
-    "covid.vacc.reason.miss"="Q35f_7", # Dont want to miss work
-    "covid.vacc.reason.always"="Q35f_8", # I always get the vaccine
-    "covid.vacc.reason.other"="Q35f_9", # Other
-    "covid.vacc.reason.close"="Q35f_20", # I work with people in close contact
-    "covid.vacc.reason.pha"="Q35f_21", # Recommended By Public Health
-    "covid.vacc.reason.mandatory"="Q35f_22",
-    "covid.vacc.reason.pass"="Q35f_23 ",
-    "covid.vacc.reason.other.txt"="Q35f_9_open", # Other text
-
     # New questions for vaccination v2 (only available from 2021 but depends on country for real availability)
     covid.vaccine.which.pfizer=variable_available("Q35i_1", from_2021),
     covid.vaccine.which.moderna=variable_available("Q35i_2", from_2021),
@@ -442,8 +426,6 @@ survey_templates[['eu:vaccination']] = list(
 
   ),
   labels=list(
-    "covid.vacc.reason"=var_labels("covid.vacc.reason.*", exclude="covid.vacc.reason.other.txt"),
-    "covid.nvac.reason"=var_labels("covid.nvac.reason.*", exclude="covid.nvac.reason.other.txt"),
     vacc.reason   = 'vacc.reason.*',
     notvac.reason = 'notvac.reason.*',
     "covid.vacc.reason"=var_labels("covid.vacc.reason.*", exclude="covid.vacc.reason.other.txt"),

@@ -29,17 +29,21 @@ In some case you can have several alternatives platform definitions, each in a p
 \section{Survey}{
 
 
-In this package perspective, a survey is a name associated with a set of parameters, registred in the package
-A survey has a unique name, known by the package, which whith you can manipulate the data.
+In this package perspective, a survey is a name associated with a set of parameters, registered to the package (using the platform file) by \code{\link{platform_define_survey}()}
+A survey has a unique name, known by the package, you use to request and manipulate the data.
 
-A survey can be associated with a table name in the database, and variable mapping (to recode database column name to
-more meaningfull names), and a value to label mapping (recoding a value in the database to a label)
+A survey can be associated with a table name in the database (for the package to know fromwhere to fetch the data), and variable mapping (to recode database column name to
+more meaningful names), and a value to label mapping ('recodes' entry recoding a value in the database to a label). It can also have a set of 'labels' (see below).
 
-The package also provide two survey templates for weekly and intake survey (see \code{\link{survey_template}()}) respectively
-named 'eu:weekly' and 'eu:intake'.
+The package also provide two survey templates for weekly, intake, and vaccination survey (see \code{\link{survey_template}()}) respectively
+named 'eu:weekly' and 'eu:intake', 'eu:vaccination'.
 
-A survey is a set of variables for this package, some variables can be related to the same question in the survey (for example in case of multiple choice), this is handled by defining
-a named set of labels in the survey (list of variable names or grob like pattern). see \code{\link{survey_labels}()}
+For this package, a survey is a set of variables, some variables can be related to the same question in the survey (for example in case of multiple choice), the survey labels can
+be used to handle this list (and do not repeat everywhere the harcoded list of variables names).
+
+A survey label is a named list of variable names (as character vector). When creating a survey definition they can be defined as an explicit list (all the names given) or implicitly
+by using a glob pattern (like "vac.flu.*'). In this last case, the pattern will be used to create the full list using the available variables in the survey definition.
+The function helper \code{\link{var_labels}()} can be used to defined a pattern with some exclusion (if all variables names matching the pattern are not to be included in the list)
 
 See \code{vignette("surveys", "ifnBase")}
 }
@@ -48,10 +52,10 @@ See \code{vignette("surveys", "ifnBase")}
 
 
 A participant is an individual subject of a survey response (either by filling by himself the survey or delegate to someone else). Each
-survey response is registrer to belonging to a participant (with "global_id" value in the database).
+survey response is connected to a participant (with the "global_id" column in the database).
 This package doesnt use global_id but match it with survey_user table id, assigning one numerical id to each participant.
 
-An influenzanet user, is not a participant but an individual connected to an account, and several participant can be registred in one account
+An influenzanet user, is not a participant but an individual connected to an account, and several participant can be registered in one account
 (the set of participants of an account is often called "household").
 }
 

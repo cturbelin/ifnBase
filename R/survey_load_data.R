@@ -207,13 +207,13 @@ check_season_dates = function(def, date) {
 
 #' Check if variables are available for a given season
 #'
-#' This function is conservative: only variable registred with an availability clause are checked
+#' This function is conservative: only variable registered with an availability clause are checked
 #'
 #'
 #' @param variables character vector of name of variables (not db name)
 #' @param survey survey name or survey_definition from \code{\link{survey_definition}()}
 #' @param season season to check of variable availability
-#' @param country country to check of variable availability (if platform accepts)
+#' @param country country to check of variable availability (if platform is configured to accept it)
 #' @return variables if they are available
 #' @export
 survey_variable_available <- function(variables, survey, season, country=NULL) {
@@ -257,7 +257,7 @@ join_surveyuser = function(survey_alias, user_alias) {
 
 
 #' Get list of participant id (person_id = survey_user_id)
-#' List of participants registred in weekly at least once for a given season
+#' List of participants registered in weekly at least once for a given season
 #' @param season season number to get, if several seasons are given use min and max of seasons dates
 #' @param use.season.dates restrict to season's starting & ending dates. forced if single table model for weekly
 #' @param use.min us minimal date of the given season, if FALSE use all before the end of the season (only for single table model)
@@ -306,7 +306,7 @@ survey_participant_season = function(season, use.season.dates=FALSE, use.min=TRU
   p$person_id
 }
 
-#' List of participants registred in weekly at least once in previous season (regarding given [season])
+#' List of participants registered in weekly at least once in previous season (regarding given [season])
 #' @param season season year
 #' @param ids list of participants to keep
 #' @param use.season.dates if TRUE restrict weekly scan to the official date of each season \code{\link{get_historical_tables}}

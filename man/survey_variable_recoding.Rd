@@ -21,8 +21,10 @@ Get the recoding mapping of a variable in a survey
 }
 \seealso{
 Other survey: 
+\code{\link{SurveyLabeller}},
 \code{\link{survey_aliases}()},
 \code{\link{survey_definition}()},
+\code{\link{survey_labeller}()},
 \code{\link{survey_labels}()},
 \code{\link{survey_recode}()},
 \code{\link{survey_recodings}()},

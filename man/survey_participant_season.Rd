@@ -3,7 +3,7 @@
 \name{survey_participant_season}
 \alias{survey_participant_season}
 \title{Get list of participant id (person_id = survey_user_id)
-List of participants registred in weekly at least once for a given season}
+List of participants registered in weekly at least once for a given season}
 \usage{
 survey_participant_season(
   season,
@@ -23,7 +23,7 @@ survey_participant_season(
 }
 \description{
 Get list of participant id (person_id = survey_user_id)
-List of participants registred in weekly at least once for a given season
+List of participants registered in weekly at least once for a given season
 }
 \seealso{
 Other survey-load: 

@@ -18,7 +18,9 @@ Description of mapping are defined in the survey  by \code{\link{platform_define
 }
 \seealso{
 Other survey: 
+\code{\link{SurveyLabeller}},
 \code{\link{survey_definition}()},
+\code{\link{survey_labeller}()},
 \code{\link{survey_labels}()},
 \code{\link{survey_recode}()},
 \code{\link{survey_recodings}()},

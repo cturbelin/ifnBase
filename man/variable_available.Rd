@@ -19,3 +19,10 @@ If seasons is a quosure it will be evaluated in the survey_load_results environm
 It must be evaluate as a single logical result
 Especially the expression can evaluate the season
 }
+\seealso{
+Other platform-helpers: 
+\code{\link{override}()},
+\code{\link{recode_alias}()},
+\code{\link{var_labels}()}
+}
+\concept{platform-helpers}

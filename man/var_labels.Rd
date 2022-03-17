@@ -15,9 +15,16 @@ var_labels(labels, exclude = NULL)
 character
 }
 \description{
-The name is useable with \code{\link{survey_labels}} to get the list of the variables
+The name is useable with \code{\link{survey_labels}} to get the list of the variables, see Survey section of \code{\link{concepts}}
 }
 \details{
 A label can be defined as a list of variables names or as a glob pattern (like 'myvar.*') if variables
 are named using a convenient naming convention.
 }
+\seealso{
+Other platform-helpers: 
+\code{\link{override}()},
+\code{\link{recode_alias}()},
+\code{\link{variable_available}()}
+}
+\concept{platform-helpers}

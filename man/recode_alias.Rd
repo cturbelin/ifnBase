@@ -13,3 +13,10 @@ recode_alias(name)
 The recoding will be proceeded using the name provided. This avoid to copy paste the recode mapping
 by reusing the one defined in the same survey.
 }
+\seealso{
+Other platform-helpers: 
+\code{\link{override}()},
+\code{\link{var_labels}()},
+\code{\link{variable_available}()}
+}
+\concept{platform-helpers}

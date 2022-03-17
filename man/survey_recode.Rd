@@ -26,8 +26,10 @@ defined \code{\link{platform_define_survey}} usually in the platform file
 }
 \seealso{
 Other survey: 
+\code{\link{SurveyLabeller}},
 \code{\link{survey_aliases}()},
 \code{\link{survey_definition}()},
+\code{\link{survey_labeller}()},
 \code{\link{survey_labels}()},
 \code{\link{survey_recodings}()},
 \code{\link{survey_rename_columns}()},
