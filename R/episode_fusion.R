@@ -216,18 +216,22 @@ episode_fusion.simple_strategy = function(strategy, weekly, episode.column, ...)
      "max" = ~max(., na.rm=TRUE),
      "mean" = ~mean(., na.rm=TRUE),
      "first"= function(y) {
-       i = which.min(!is.na(y))
+       i = min(which(!is.na(y)))
        if(!is.na(i)) {
          return(y[i])
        }
-       return(NA)
+       v = y[1] # Return NA value of the vector to keep NA with the good type
+       is.na(v) <- TRUE
+       v
      },
      'last'=function(y) {
-       i = which.max(!is.na(y))
+       i = max(which(!is.na(y)))
        if(!is.na(i)) {
          return(y[i])
        }
-       return(NA)
+       v = y[1] # Return NA value of the vector to keep NA with the good type
+       is.na(v) <- TRUE
+       v
      },
      match.fun(paste0("strategy_", strategy$strategy))
   )
@@ -235,7 +239,10 @@ episode_fusion.simple_strategy = function(strategy, weekly, episode.column, ...)
   fusion_fun = rlang::as_function(fusion_fun)
 
   apply_strategy = function(y) {
-    ifelse(all(is.na(y)), NA, fusion_fun(y))
+    if(all(is.na(y))) {
+      return(y[1]) # Return NA value of the vector to keep NA with the good type
+    }
+    v = fusion_fun(y)
   }
 
   weekly %>% group_by_episode(episode.column = episode.column) %>% dplyr::summarize_at(vv, .funs = apply_strategy)

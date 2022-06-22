@@ -108,3 +108,56 @@ for(i in seq_along(tests$sets)) {
 
 }
 
+tests.simple = list(
+  list(
+    episodes = list(
+      c('covid','covid',NA, 'flu'),
+      c(NA, NA, NA),
+      c('covid',NA,'covid')
+    ),
+    expected=c('flu',NA, 'covid'),
+    type="factor",
+    strategy="last"
+  ),
+  list(
+    episodes = list(
+      c('covid','covid',NA, 'flu'),
+      c(NA, NA, NA),
+      c('flu',NA,'covid')
+    ),
+    expected=c('covid',NA, 'flu'),
+    type="factor",
+    strategy="first"
+  )
+)
+
+for(i in seq_along(tests.simple)) {
+  test = tests.simple[[i]]
+
+  test_that(paste0("episode_fusion.", test$strategy,"_strategy:", i), {
+
+    weekly = Map(function(v, idx) {
+      data.frame(episode=idx, value=v)
+    }, test$episodes, seq_along(test$episodes))
+
+    weekly = bind_rows(!!!weekly)
+    weekly$person_id = 295
+
+    if(test$type == "factor") {
+      weekly$value = factor(weekly$value)
+    }
+
+    result = episode_fusion.simple_strategy(list(strategy=test$strategy, vars="value"), weekly, "episode")
+
+    rr = result$value
+    if(test$type == "factor") {
+      testthat::expect_s3_class(result$value, "factor")
+      rr = as.character(result$value) # Keep only character label because the expected has expected to have the same levels
+    }
+    expect_identical(rr, test$expected)
+
+  })
+
+}
+
+
