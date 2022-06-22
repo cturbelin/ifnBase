@@ -1,3 +1,7 @@
+# ifnBase 0.6.4
+
+* Fix episode last & first strategy for factors, add unit test
+
 # ifnBase 0.6.3
 
 * Fix rlang::with_abort() for rlang >= 1.0
