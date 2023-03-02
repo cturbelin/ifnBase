@@ -182,6 +182,8 @@ plot_age_pyramid = function(data, female, prop=T, w=.5, scales=list()) {
     female = rlang::eval_tidy(female, data=data)
   }
 
+  data = data[!is.na(female), ]
+
   data$prop[female] = -data$prop[female]
   data$w = ifelse(data$pop == "pop", w * .8, .8)
   ggplot(data, ggplot2::aes(x = age.cat, group=pop, fill=pop, y=prop, width=w, alpha=pop)) +
