@@ -260,7 +260,8 @@ survey_templates[["eu:intake"]] = list(
 
     gender = c(
       'male'='0',
-      'female'='1'
+      'female'='1',
+      'other'='2'
     ),
 
     activities = labels_activities,
@@ -419,6 +420,7 @@ survey_templates[['eu:vaccination']] = list(
     covid.nvac.reason.dontlike =variable_available("Q35m_9", from_2021), #  Dont like to get vaccine 9
     covid.nvac.reason.accessible =variable_available("Q35m_10", from_2021), #  Not available for me 10
     covid.nvac.reason.disagree =variable_available("Q35m_20", from_2021), #  Disagree vaccine policy 20
+    covid.nvac.reason.notfree =variable_available("Q35m_11", from_2021), #  Vaccine is not free
     covid.nvac.reason.other =variable_available("Q35m_14", from_2021), #  Other 14
     covid.nvac.reason.dnk =variable_available("Q35m_12", from_2021), #  Dont know 12
 
