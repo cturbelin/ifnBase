@@ -496,7 +496,18 @@ check_list_mapping = function(new, old, raise, only.errors=TRUE) {
   n = names(new)
 
   if(any(n == "")) {
-    raise(type="error", value=NULL, problem="missing_key", "Some keys are missing, all mapping entries must have name")
+    idx = which(n == "")
+    tips = c()
+    for(i in idx) {
+      b = c(i - 1, i + 1)
+      b = b[ b >= 1 & b <= length(n)]
+      if(length(b) == 2) {
+        tips = c(tips, paste("between", paste(sQuote(n[b]), collapse = ' and ')))
+      } else {
+        tips = c(tips, paste(ifelse(b > i, "after", "before"), n[b]))
+      }
+    }
+    raise(type="error", value=NULL, problem="missing_key", paste0("Some keys are missing, all mapping entries must have name", paste(tips, collapse = ",")))
     return()
   }
 
