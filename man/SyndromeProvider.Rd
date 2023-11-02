@@ -22,16 +22,16 @@ influenzanet base syndrome names : ili, cold, allergy, gastro )
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-compute}{\code{SyndromeProvider$compute()}}
-\item \href{#method-compute_age}{\code{SyndromeProvider$compute_age()}}
-\item \href{#method-is_sudden}{\code{SyndromeProvider$is_sudden()}}
-\item \href{#method-syndromes}{\code{SyndromeProvider$syndromes()}}
-\item \href{#method-clone}{\code{SyndromeProvider$clone()}}
+\item \href{#method-SyndromeProvider-compute}{\code{SyndromeProvider$compute()}}
+\item \href{#method-SyndromeProvider-compute_age}{\code{SyndromeProvider$compute_age()}}
+\item \href{#method-SyndromeProvider-is_sudden}{\code{SyndromeProvider$is_sudden()}}
+\item \href{#method-SyndromeProvider-syndromes}{\code{SyndromeProvider$syndromes()}}
+\item \href{#method-SyndromeProvider-clone}{\code{SyndromeProvider$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-compute"></a>}}
-\if{latex}{\out{\hypertarget{method-compute}{}}}
+\if{html}{\out{<a id="method-SyndromeProvider-compute"></a>}}
+\if{latex}{\out{\hypertarget{method-SyndromeProvider-compute}{}}}
 \subsection{Method \code{compute()}}{
 Compute syndrome
 \subsection{Usage}{
@@ -52,8 +52,8 @@ data.frame() with id column from weekly and extra column for each syndrome
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-compute_age"></a>}}
-\if{latex}{\out{\hypertarget{method-compute_age}{}}}
+\if{html}{\out{<a id="method-SyndromeProvider-compute_age"></a>}}
+\if{latex}{\out{\hypertarget{method-SyndromeProvider-compute_age}{}}}
 \subsection{Method \code{compute_age()}}{
 Compute age for each weekly using intake
 \subsection{Usage}{
@@ -72,8 +72,8 @@ Common function, compute sudden symptomes using both variables}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-is_sudden"></a>}}
-\if{latex}{\out{\hypertarget{method-is_sudden}{}}}
+\if{html}{\out{<a id="method-SyndromeProvider-is_sudden"></a>}}
+\if{latex}{\out{\hypertarget{method-SyndromeProvider-is_sudden}{}}}
 \subsection{Method \code{is_sudden()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{SyndromeProvider$is_sudden(r)}\if{html}{\out{</div>}}
@@ -88,8 +88,8 @@ Common function, compute sudden symptomes using both variables}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-syndromes"></a>}}
-\if{latex}{\out{\hypertarget{method-syndromes}{}}}
+\if{html}{\out{<a id="method-SyndromeProvider-syndromes"></a>}}
+\if{latex}{\out{\hypertarget{method-SyndromeProvider-syndromes}{}}}
 \subsection{Method \code{syndromes()}}{
 Get available syndromes names
 \subsection{Usage}{
@@ -101,8 +101,8 @@ character()
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-SyndromeProvider-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-SyndromeProvider-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

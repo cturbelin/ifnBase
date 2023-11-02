@@ -31,23 +31,23 @@ Syndrome Provider
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{SyndromeProviderCountry$new()}}
-\item \href{#method-compute}{\code{SyndromeProviderCountry$compute()}}
-\item \href{#method-clone}{\code{SyndromeProviderCountry$clone()}}
+\item \href{#method-SyndromeProviderCountry-new}{\code{SyndromeProviderCountry$new()}}
+\item \href{#method-SyndromeProviderCountry-compute}{\code{SyndromeProviderCountry$compute()}}
+\item \href{#method-SyndromeProviderCountry-clone}{\code{SyndromeProviderCountry$clone()}}
 }
 }
-\if{html}{
-\out{<details open ><summary>Inherited methods</summary>}
-\itemize{
-\item \out{<span class="pkg-link" data-pkg="ifnBase" data-topic="SyndromeProvider" data-id="compute_age">}\href{../../ifnBase/html/SyndromeProvider.html#method-compute_age}{\code{ifnBase::SyndromeProvider$compute_age()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="ifnBase" data-topic="SyndromeProvider" data-id="is_sudden">}\href{../../ifnBase/html/SyndromeProvider.html#method-is_sudden}{\code{ifnBase::SyndromeProvider$is_sudden()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="ifnBase" data-topic="SyndromeProvider" data-id="syndromes">}\href{../../ifnBase/html/SyndromeProvider.html#method-syndromes}{\code{ifnBase::SyndromeProvider$syndromes()}}\out{</span>}
-}
-\out{</details>}
-}
+\if{html}{\out{
+<details open><summary>Inherited methods</summary>
+<ul>
+<li><span class="pkg-link" data-pkg="ifnBase" data-topic="SyndromeProvider" data-id="compute_age"><a href='../../ifnBase/html/SyndromeProvider.html#method-SyndromeProvider-compute_age'><code>ifnBase::SyndromeProvider$compute_age()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="ifnBase" data-topic="SyndromeProvider" data-id="is_sudden"><a href='../../ifnBase/html/SyndromeProvider.html#method-SyndromeProvider-is_sudden'><code>ifnBase::SyndromeProvider$is_sudden()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="ifnBase" data-topic="SyndromeProvider" data-id="syndromes"><a href='../../ifnBase/html/SyndromeProvider.html#method-SyndromeProvider-syndromes'><code>ifnBase::SyndromeProvider$syndromes()</code></a></span></li>
+</ul>
+</details>
+}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-SyndromeProviderCountry-new"></a>}}
+\if{latex}{\out{\hypertarget{method-SyndromeProviderCountry-new}{}}}
 \subsection{Method \code{new()}}{
 Instanciate
 \subsection{Usage}{
@@ -80,8 +80,8 @@ Instanciate
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-compute"></a>}}
-\if{latex}{\out{\hypertarget{method-compute}{}}}
+\if{html}{\out{<a id="method-SyndromeProviderCountry-compute"></a>}}
+\if{latex}{\out{\hypertarget{method-SyndromeProviderCountry-compute}{}}}
 \subsection{Method \code{compute()}}{
 Compute definitions for all syndromes
 \subsection{Usage}{
@@ -99,8 +99,8 @@ Compute definitions for all syndromes
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-SyndromeProviderCountry-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-SyndromeProviderCountry-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

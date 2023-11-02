@@ -64,16 +64,16 @@ Apply the full algorithm for rs2014 incidence computation
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{IncidenceRS2014$new()}}
-\item \href{#method-prepare}{\code{IncidenceRS2014$prepare()}}
-\item \href{#method-compute_week}{\code{IncidenceRS2014$compute_week()}}
-\item \href{#method-compute}{\code{IncidenceRS2014$compute()}}
-\item \href{#method-clone}{\code{IncidenceRS2014$clone()}}
+\item \href{#method-IncidenceRS2014-new}{\code{IncidenceRS2014$new()}}
+\item \href{#method-IncidenceRS2014-prepare}{\code{IncidenceRS2014$prepare()}}
+\item \href{#method-IncidenceRS2014-compute_week}{\code{IncidenceRS2014$compute_week()}}
+\item \href{#method-IncidenceRS2014-compute}{\code{IncidenceRS2014$compute()}}
+\item \href{#method-IncidenceRS2014-clone}{\code{IncidenceRS2014$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-IncidenceRS2014-new"></a>}}
+\if{latex}{\out{\hypertarget{method-IncidenceRS2014-new}{}}}
 \subsection{Method \code{new()}}{
 instanciate object
 \subsection{Usage}{
@@ -109,8 +109,8 @@ instanciate object
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-prepare"></a>}}
-\if{latex}{\out{\hypertarget{method-prepare}{}}}
+\if{html}{\out{<a id="method-IncidenceRS2014-prepare"></a>}}
+\if{latex}{\out{\hypertarget{method-IncidenceRS2014-prepare}{}}}
 \subsection{Method \code{prepare()}}{
 Prepare data for incidence computation with RS2014 method
 
@@ -124,8 +124,8 @@ Estimate incidence with rs2014 method for a given week
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-compute_week"></a>}}
-\if{latex}{\out{\hypertarget{method-compute_week}{}}}
+\if{html}{\out{<a id="method-IncidenceRS2014-compute_week"></a>}}
+\if{latex}{\out{\hypertarget{method-IncidenceRS2014-compute_week}{}}}
 \subsection{Method \code{compute_week()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{IncidenceRS2014$compute_week(yw)}\if{html}{\out{</div>}}
@@ -141,8 +141,8 @@ Compute incidence}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-compute"></a>}}
-\if{latex}{\out{\hypertarget{method-compute}{}}}
+\if{html}{\out{<a id="method-IncidenceRS2014-compute"></a>}}
+\if{latex}{\out{\hypertarget{method-IncidenceRS2014-compute}{}}}
 \subsection{Method \code{compute()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{IncidenceRS2014$compute(
@@ -168,8 +168,8 @@ Compute incidence}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-IncidenceRS2014-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-IncidenceRS2014-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

@@ -115,7 +115,7 @@ Get the structure describing the organization of geographic levels (created by *
 Get the areas in the given level (from the database)
 ```{r eval=FALSE}
  load_geo_zone("nuts2") # Load all areas known in nuts2 level
-````
+```
 
 *load_population(level, year)*
 Get the population at the given geographic level and the year

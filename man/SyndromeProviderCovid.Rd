@@ -40,24 +40,24 @@ To run need weekly with get_columns_for_incidence() column list
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{SyndromeProviderCovid$new()}}
-\item \href{#method-syndromes}{\code{SyndromeProviderCovid$syndromes()}}
-\item \href{#method-check_definitions}{\code{SyndromeProviderCovid$check_definitions()}}
-\item \href{#method-compute}{\code{SyndromeProviderCovid$compute()}}
-\item \href{#method-clone}{\code{SyndromeProviderCovid$clone()}}
+\item \href{#method-SyndromeProviderCovid-new}{\code{SyndromeProviderCovid$new()}}
+\item \href{#method-SyndromeProviderCovid-syndromes}{\code{SyndromeProviderCovid$syndromes()}}
+\item \href{#method-SyndromeProviderCovid-check_definitions}{\code{SyndromeProviderCovid$check_definitions()}}
+\item \href{#method-SyndromeProviderCovid-compute}{\code{SyndromeProviderCovid$compute()}}
+\item \href{#method-SyndromeProviderCovid-clone}{\code{SyndromeProviderCovid$clone()}}
 }
 }
-\if{html}{
-\out{<details open ><summary>Inherited methods</summary>}
-\itemize{
-\item \out{<span class="pkg-link" data-pkg="ifnBase" data-topic="SyndromeProvider" data-id="compute_age">}\href{../../ifnBase/html/SyndromeProvider.html#method-compute_age}{\code{ifnBase::SyndromeProvider$compute_age()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="ifnBase" data-topic="SyndromeProvider" data-id="is_sudden">}\href{../../ifnBase/html/SyndromeProvider.html#method-is_sudden}{\code{ifnBase::SyndromeProvider$is_sudden()}}\out{</span>}
-}
-\out{</details>}
-}
+\if{html}{\out{
+<details open><summary>Inherited methods</summary>
+<ul>
+<li><span class="pkg-link" data-pkg="ifnBase" data-topic="SyndromeProvider" data-id="compute_age"><a href='../../ifnBase/html/SyndromeProvider.html#method-SyndromeProvider-compute_age'><code>ifnBase::SyndromeProvider$compute_age()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="ifnBase" data-topic="SyndromeProvider" data-id="is_sudden"><a href='../../ifnBase/html/SyndromeProvider.html#method-SyndromeProvider-is_sudden'><code>ifnBase::SyndromeProvider$is_sudden()</code></a></span></li>
+</ul>
+</details>
+}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-SyndromeProviderCovid-new"></a>}}
+\if{latex}{\out{\hypertarget{method-SyndromeProviderCovid-new}{}}}
 \subsection{Method \code{new()}}{
 instanciate object
 \subsection{Usage}{
@@ -75,8 +75,8 @@ instanciate object
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-syndromes"></a>}}
-\if{latex}{\out{\hypertarget{method-syndromes}{}}}
+\if{html}{\out{<a id="method-SyndromeProviderCovid-syndromes"></a>}}
+\if{latex}{\out{\hypertarget{method-SyndromeProviderCovid-syndromes}{}}}
 \subsection{Method \code{syndromes()}}{
 Get available syndromes names
 \subsection{Usage}{
@@ -88,8 +88,8 @@ character()
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-check_definitions"></a>}}
-\if{latex}{\out{\hypertarget{method-check_definitions}{}}}
+\if{html}{\out{<a id="method-SyndromeProviderCovid-check_definitions"></a>}}
+\if{latex}{\out{\hypertarget{method-SyndromeProviderCovid-check_definitions}{}}}
 \subsection{Method \code{check_definitions()}}{
 Update definitions list to compute
 \subsection{Usage}{
@@ -105,8 +105,8 @@ Update definitions list to compute
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-compute"></a>}}
-\if{latex}{\out{\hypertarget{method-compute}{}}}
+\if{html}{\out{<a id="method-SyndromeProviderCovid-compute"></a>}}
+\if{latex}{\out{\hypertarget{method-SyndromeProviderCovid-compute}{}}}
 \subsection{Method \code{compute()}}{
 Compute definitions for all syndromes
 \subsection{Usage}{
@@ -131,8 +131,8 @@ data.frame with each computed syndrome in column, and "id" column from weekly
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-SyndromeProviderCovid-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-SyndromeProviderCovid-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

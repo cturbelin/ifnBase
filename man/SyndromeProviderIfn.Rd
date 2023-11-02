@@ -20,14 +20,14 @@ Syndrome provider base class for historical Influenzanet syndromic classifier
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{SyndromeProviderIfn$new()}}
-\item \href{#method-compute}{\code{SyndromeProviderIfn$compute()}}
-\item \href{#method-clone}{\code{SyndromeProviderIfn$clone()}}
+\item \href{#method-SyndromeProvider-new}{\code{SyndromeProviderIfn$new()}}
+\item \href{#method-SyndromeProvider-compute}{\code{SyndromeProviderIfn$compute()}}
+\item \href{#method-SyndromeProvider-clone}{\code{SyndromeProviderIfn$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-SyndromeProvider-new"></a>}}
+\if{latex}{\out{\hypertarget{method-SyndromeProvider-new}{}}}
 \subsection{Method \code{new()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{SyndromeProviderIfn$new(version = 2012, regroup = TRUE)}\if{html}{\out{</div>}}
@@ -44,8 +44,8 @@ Syndrome provider base class for historical Influenzanet syndromic classifier
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-compute"></a>}}
-\if{latex}{\out{\hypertarget{method-compute}{}}}
+\if{html}{\out{<a id="method-SyndromeProvider-compute"></a>}}
+\if{latex}{\out{\hypertarget{method-SyndromeProvider-compute}{}}}
 \subsection{Method \code{compute()}}{
 Compute syndrome
 \subsection{Usage}{
@@ -66,8 +66,8 @@ data.frame() with id column from weekly and extra column for each syndrome
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-SyndromeProvider-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-SyndromeProvider-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

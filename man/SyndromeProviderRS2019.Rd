@@ -40,24 +40,24 @@ To run need weekly with get_columns_for_incidence() column list
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{SyndromeProviderRS2019$new()}}
-\item \href{#method-update_definitions}{\code{SyndromeProviderRS2019$update_definitions()}}
-\item \href{#method-compute}{\code{SyndromeProviderRS2019$compute()}}
-\item \href{#method-clone}{\code{SyndromeProviderRS2019$clone()}}
+\item \href{#method-SyndromeProviderRS2019-new}{\code{SyndromeProviderRS2019$new()}}
+\item \href{#method-SyndromeProviderRS2019-update_definitions}{\code{SyndromeProviderRS2019$update_definitions()}}
+\item \href{#method-SyndromeProviderRS2019-compute}{\code{SyndromeProviderRS2019$compute()}}
+\item \href{#method-SyndromeProviderRS2019-clone}{\code{SyndromeProviderRS2019$clone()}}
 }
 }
-\if{html}{
-\out{<details open ><summary>Inherited methods</summary>}
-\itemize{
-\item \out{<span class="pkg-link" data-pkg="ifnBase" data-topic="SyndromeProvider" data-id="compute_age">}\href{../../ifnBase/html/SyndromeProvider.html#method-compute_age}{\code{ifnBase::SyndromeProvider$compute_age()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="ifnBase" data-topic="SyndromeProvider" data-id="is_sudden">}\href{../../ifnBase/html/SyndromeProvider.html#method-is_sudden}{\code{ifnBase::SyndromeProvider$is_sudden()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="ifnBase" data-topic="SyndromeProvider" data-id="syndromes">}\href{../../ifnBase/html/SyndromeProvider.html#method-syndromes}{\code{ifnBase::SyndromeProvider$syndromes()}}\out{</span>}
-}
-\out{</details>}
-}
+\if{html}{\out{
+<details open><summary>Inherited methods</summary>
+<ul>
+<li><span class="pkg-link" data-pkg="ifnBase" data-topic="SyndromeProvider" data-id="compute_age"><a href='../../ifnBase/html/SyndromeProvider.html#method-SyndromeProvider-compute_age'><code>ifnBase::SyndromeProvider$compute_age()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="ifnBase" data-topic="SyndromeProvider" data-id="is_sudden"><a href='../../ifnBase/html/SyndromeProvider.html#method-SyndromeProvider-is_sudden'><code>ifnBase::SyndromeProvider$is_sudden()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="ifnBase" data-topic="SyndromeProvider" data-id="syndromes"><a href='../../ifnBase/html/SyndromeProvider.html#method-SyndromeProvider-syndromes'><code>ifnBase::SyndromeProvider$syndromes()</code></a></span></li>
+</ul>
+</details>
+}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-SyndromeProviderRS2019-new"></a>}}
+\if{latex}{\out{\hypertarget{method-SyndromeProviderRS2019-new}{}}}
 \subsection{Method \code{new()}}{
 instanciate object
 \subsection{Usage}{
@@ -81,8 +81,8 @@ instanciate object
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-update_definitions"></a>}}
-\if{latex}{\out{\hypertarget{method-update_definitions}{}}}
+\if{html}{\out{<a id="method-SyndromeProviderRS2019-update_definitions"></a>}}
+\if{latex}{\out{\hypertarget{method-SyndromeProviderRS2019-update_definitions}{}}}
 \subsection{Method \code{update_definitions()}}{
 Update definitions list to compute
 \subsection{Usage}{
@@ -98,8 +98,8 @@ Update definitions list to compute
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-compute"></a>}}
-\if{latex}{\out{\hypertarget{method-compute}{}}}
+\if{html}{\out{<a id="method-SyndromeProviderRS2019-compute"></a>}}
+\if{latex}{\out{\hypertarget{method-SyndromeProviderRS2019-compute}{}}}
 \subsection{Method \code{compute()}}{
 Compute definitions for all syndromes
 \subsection{Usage}{
@@ -129,8 +129,8 @@ data.frame with each computed syndrome in column, and "id" column from weekly
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-SyndromeProviderRS2019-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-SyndromeProviderRS2019-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

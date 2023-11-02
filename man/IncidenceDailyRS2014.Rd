@@ -52,16 +52,16 @@ Parameters:
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{IncidenceDailyRS2014$new()}}
-\item \href{#method-prepare}{\code{IncidenceDailyRS2014$prepare()}}
-\item \href{#method-compute_date}{\code{IncidenceDailyRS2014$compute_date()}}
-\item \href{#method-compute}{\code{IncidenceDailyRS2014$compute()}}
-\item \href{#method-clone}{\code{IncidenceDailyRS2014$clone()}}
+\item \href{#method-IncidenceDailyRS2014-new}{\code{IncidenceDailyRS2014$new()}}
+\item \href{#method-IncidenceDailyRS2014-prepare}{\code{IncidenceDailyRS2014$prepare()}}
+\item \href{#method-IncidenceDailyRS2014-compute_date}{\code{IncidenceDailyRS2014$compute_date()}}
+\item \href{#method-IncidenceDailyRS2014-compute}{\code{IncidenceDailyRS2014$compute()}}
+\item \href{#method-IncidenceDailyRS2014-clone}{\code{IncidenceDailyRS2014$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-IncidenceDailyRS2014-new"></a>}}
+\if{latex}{\out{\hypertarget{method-IncidenceDailyRS2014-new}{}}}
 \subsection{Method \code{new()}}{
 instanciate object
 \subsection{Usage}{
@@ -96,8 +96,8 @@ instanciate object
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-prepare"></a>}}
-\if{latex}{\out{\hypertarget{method-prepare}{}}}
+\if{html}{\out{<a id="method-IncidenceDailyRS2014-prepare"></a>}}
+\if{latex}{\out{\hypertarget{method-IncidenceDailyRS2014-prepare}{}}}
 \subsection{Method \code{prepare()}}{
 Prepare data before to compute
 Prepare participants data to be able to apply selection rules
@@ -107,8 +107,8 @@ Prepare participants data to be able to apply selection rules
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-compute_date"></a>}}
-\if{latex}{\out{\hypertarget{method-compute_date}{}}}
+\if{html}{\out{<a id="method-IncidenceDailyRS2014-compute_date"></a>}}
+\if{latex}{\out{\hypertarget{method-IncidenceDailyRS2014-compute_date}{}}}
 \subsection{Method \code{compute_date()}}{
 Internal function
 Estimate incidence with rs2014 method for a given date
@@ -125,8 +125,8 @@ Estimate incidence with rs2014 method for a given date
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-compute"></a>}}
-\if{latex}{\out{\hypertarget{method-compute}{}}}
+\if{html}{\out{<a id="method-IncidenceDailyRS2014-compute"></a>}}
+\if{latex}{\out{\hypertarget{method-IncidenceDailyRS2014-compute}{}}}
 \subsection{Method \code{compute()}}{
 Compute weekly incidence for all requested weeks
 Apply the full algorithm for rs2014 incidence computation
@@ -148,8 +148,8 @@ prepare data and then compute for each week by calling estimate_incidence_rs2014
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-IncidenceDailyRS2014-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-IncidenceDailyRS2014-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

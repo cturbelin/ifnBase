@@ -33,7 +33,8 @@ In this package perspective, a survey is a name associated with a set of paramet
 A survey has a unique name, known by the package, you use to request and manipulate the data.
 
 A survey can be associated with a table name in the database (for the package to know fromwhere to fetch the data), and variable mapping (to recode database column name to
-more meaningful names), and a value to label mapping ('recodes' entry recoding a value in the database to a label). It can also have a set of 'labels' (see below).
+more meaningful names), and a recoding mapping ('recodes' entry, recoding a value in the database to an explicit  label). It can also have a set of 'labels' (see below)
+to handle variable user defined variables lists.
 
 The package also provide two survey templates for weekly, intake, and vaccination survey (see \code{\link{survey_template}()}) respectively
 named 'eu:weekly' and 'eu:intake', 'eu:vaccination'.

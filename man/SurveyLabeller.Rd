@@ -34,15 +34,15 @@ Other survey:
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{SurveyLabeller$new()}}
-\item \href{#method-list}{\code{SurveyLabeller$list()}}
-\item \href{#method-unprefix}{\code{SurveyLabeller$unprefix()}}
-\item \href{#method-clone}{\code{SurveyLabeller$clone()}}
+\item \href{#method-SurveyLabeller-new}{\code{SurveyLabeller$new()}}
+\item \href{#method-SurveyLabeller-list}{\code{SurveyLabeller$list()}}
+\item \href{#method-SurveyLabeller-unprefix}{\code{SurveyLabeller$unprefix()}}
+\item \href{#method-SurveyLabeller-clone}{\code{SurveyLabeller$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-SurveyLabeller-new"></a>}}
+\if{latex}{\out{\hypertarget{method-SurveyLabeller-new}{}}}
 \subsection{Method \code{new()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{SurveyLabeller$new(survey, name)}\if{html}{\out{</div>}}
@@ -60,8 +60,8 @@ Get list of labels}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-list"></a>}}
-\if{latex}{\out{\hypertarget{method-list}{}}}
+\if{html}{\out{<a id="method-SurveyLabeller-list"></a>}}
+\if{latex}{\out{\hypertarget{method-SurveyLabeller-list}{}}}
 \subsection{Method \code{list()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{SurveyLabeller$list(.data = NULL)}\if{html}{\out{</div>}}
@@ -77,8 +77,8 @@ Remove common prefix labels (only works with glob pattern defined labels like 'v
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-unprefix"></a>}}
-\if{latex}{\out{\hypertarget{method-unprefix}{}}}
+\if{html}{\out{<a id="method-SurveyLabeller-unprefix"></a>}}
+\if{latex}{\out{\hypertarget{method-SurveyLabeller-unprefix}{}}}
 \subsection{Method \code{unprefix()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{SurveyLabeller$unprefix()}\if{html}{\out{</div>}}
@@ -89,8 +89,8 @@ function to remove prefix, can be use as a labeller function (in ggplot2 for exa
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-SurveyLabeller-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-SurveyLabeller-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{
