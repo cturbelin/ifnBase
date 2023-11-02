@@ -1,3 +1,8 @@
+# ifnBase 0.6.5
+
+* Handling new response mapping for `gender` (other)
+* Improve error message when mapping key is missing (show keys besides the missing one to make easier to locate the problem)
+
 # ifnBase 0.6.4
 
 * Fix episode last & first strategy for factors, add unit test

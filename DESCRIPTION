@@ -1,7 +1,7 @@
 Package: ifnBase
 Type: Package
 Title: InfluenzaNet Data Analysis Base
-Version: 0.6.4
+Version: 0.6.5
 Imports:
   methods,
   swMisc,
@@ -12,7 +12,7 @@ Imports:
   utils,
   stats
 Depends: 
-  R (>= 3.5.0)
+  R (>= 3.6.0)
 Suggests: 
     cowplot,
     tidyr (>= 1.0),
@@ -38,8 +38,7 @@ Description: This package contains base functions to work with Influenzanet data
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.3
 VignetteBuilder: knitr
 NeedsCompilation: no
 Remotes: sentiweb/swMisc
- 
