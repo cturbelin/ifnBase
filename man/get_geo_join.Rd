@@ -27,11 +27,11 @@ Other geography:
 \code{\link{geo_definition}()},
 \code{\link{geo_hierarchy}()},
 \code{\link{geo_is_type}()},
+\code{\link{geo_level}()},
 \code{\link{geo_level_nav}()},
 \code{\link{geo_level_table}()},
-\code{\link{geo_level}()},
 \code{\link{load_geo_zone}()},
-\code{\link{load_population_age}()},
-\code{\link{load_population}()}
+\code{\link{load_population}()},
+\code{\link{load_population_age}()}
 }
 \concept{geography}

@@ -50,9 +50,9 @@ Other geography:
 \code{\link{geo_definition}()},
 \code{\link{geo_hierarchy}()},
 \code{\link{geo_is_type}()},
+\code{\link{geo_level}()},
 \code{\link{geo_level_nav}()},
 \code{\link{geo_level_table}()},
-\code{\link{geo_level}()},
 \code{\link{get_geo_join}()},
 \code{\link{load_geo_zone}()},
 \code{\link{load_population}()}

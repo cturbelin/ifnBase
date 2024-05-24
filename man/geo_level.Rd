@@ -27,7 +27,7 @@ Other geography:
 \code{\link{geo_level_table}()},
 \code{\link{get_geo_join}()},
 \code{\link{load_geo_zone}()},
-\code{\link{load_population_age}()},
-\code{\link{load_population}()}
+\code{\link{load_population}()},
+\code{\link{load_population_age}()}
 }
 \concept{geography}

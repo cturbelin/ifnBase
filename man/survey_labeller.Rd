@@ -7,6 +7,11 @@ Will to replace \code{\link{survey_labels}()} returns a \code{\link{SurveyLabell
 \usage{
 survey_labeller(survey, name)
 }
+\arguments{
+\item{survey}{character survey name (as registered in platform file)}
+
+\item{name}{variable name}
+}
 \description{
 Get a labeller object for a given name in the survey
 Will to replace \code{\link{survey_labels}()} returns a \code{\link{SurveyLabeller}} object
