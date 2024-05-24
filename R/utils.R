@@ -29,7 +29,8 @@ check_int = function(value, min=1) {
 }
 
 with_abort <- function(expr) {
-  if(packageVersion("rlang") >= numeric_version("1.0")) {
+  version = packageVersion("rlang")
+  if(version >= numeric_version("1.0")) {
     rlang::try_fetch(
       expr,
       simpleError = function(cnd) {
@@ -40,6 +41,7 @@ with_abort <- function(expr) {
       }
     )
   } else {
-    rlang::with_abort(expr)
+    requireNamespace("rlang")
+    do.call("with_abort", list(expr))
   }
 }
