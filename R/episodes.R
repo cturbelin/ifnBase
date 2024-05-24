@@ -47,7 +47,11 @@ episode_design = function(delay_episode=15, max_episode_duration=11, median_epis
 
 }
 
-print.episode_design = function(x) {
+#' Print method for episode_design
+#' @param x episode_design object
+#' @param ... other arguments (ignored)
+#' @export
+print.episode_design = function(x, ...) {
   cat("Episode Design\n")
   cat("Computation parameters:\n")
   cat(" - Method : ", x$method,"\n")

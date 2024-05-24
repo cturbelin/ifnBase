@@ -8,7 +8,7 @@
 #' @importFrom graphics axTicks axis polygon rect segments points
 #' @importFrom methods is
 #' @importFrom stats aggregate as.formula
-#' @importFrom utils glob2rx str tail hasName
+#' @importFrom utils glob2rx str tail hasName packageVersion
 #' @importFrom swMisc merge_list ending_slash get_r_file
 #' @importFrom rlang abort `:=`
 #' @importFrom R6 R6Class

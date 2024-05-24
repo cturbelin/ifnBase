@@ -64,7 +64,8 @@ SurveyLabeller <- R6::R6Class("SurveyLabeller",
 #' Get a labeller object for a given name in the survey
 #' Will to replace \code{\link{survey_labels}()} returns a \code{\link{SurveyLabeller}} object
 #' @family survey
-#'
+#' @param survey character survey name (as registered in platform file)
+#' @param name variable name
 #' @export
 survey_labeller = function(survey, name) {
   SurveyLabeller$new(survey, name)
