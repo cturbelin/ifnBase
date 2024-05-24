@@ -252,7 +252,11 @@ survey_variable_available <- function(variables, survey, season, country=NULL) {
 #' @param survey_alias table alias name of the survey table
 #' @param user_alias table to use for the survey_user table
 join_surveyuser = function(survey_alias, user_alias) {
-  paste0(' survey_surveyuser ',user_alias,' on ',survey_alias,'.global_id=',user_alias,'.global_id ')
+  q = paste0(' survey_surveyuser ',user_alias, ' on ',survey_alias,'."global_id"=',user_alias,'."global_id" ')
+  if(isTRUE(platform_env("use.country"))) {
+    q = paste0(q, ' and ', survey_alias,'."country"=',user_alias,'."country"')
+  }
+  q
 }
 
 
