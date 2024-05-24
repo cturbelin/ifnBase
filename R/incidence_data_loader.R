@@ -359,7 +359,12 @@ complete_intake = function(data, intake, intake.columns, geo=NULL, max.year=NA, 
         ii$timestamp.org = ii$timestamp
         ii$timestamp = min_time
       }
-      intake = dplyr::bind_rows(intake, ii)
+      # If intake is empty, columns types are infered to character, which cannot be merged with loaded data
+      if(nrow(intake) > 0) {
+        intake = dplyr::bind_rows(intake, ii)
+      } else {
+        intake = ii
+      }
     }
   } else {
     message("No need to complete intakes")
