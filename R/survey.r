@@ -241,16 +241,12 @@ survey_definition = function(survey) {
 
 #' Keep the last survey for each participant
 #'
-#' Some survey could have exactly the same timestamp
-#' So using this function is safer than only using timestamp
+#' Some survey could have exactly the same timestamp, for this case the first one is picked up
 #'
-#' @param data data.frame with at least (timestamp,person_id, id) columns
+#' @param data data.frame with at least (timestamp, person_id) columns
+#' @family survey
 #' @export
 keep_last_survey = function(data) {
-  data = data[ order(data$person_id, data$timestamp), ]
-  ii = aggregate(id ~ person_id, data=data, tail, n=1)
-  data = merge(ii, data, by='id', all.x=T, suffixes=c('','.1'))
-  data = subset(data, select=-person_id.1)
-  data
+  data %>% arrange(desc(timestamp)) %>% group_by(person_id) %>% slice(1) %>% ungroup()
 }
 
