@@ -1,6 +1,10 @@
+# ifnBase 0.6.7
+
+* Fix keep_last_survey() to avoid using 'id' column, which is not reliable in some case (with new platform data)
+
 # ifnBase 0.6.6
 
-* Fix complete_intake() where no intake loaded in the season (wrong type inferered by db driver if no result)
+* Fix complete_intake() where no intake loaded in the season (wrong type inferred by db driver if no result)
 * fix various notices in doc
 * fix rlang::with_abort() notice, support for rlang < 1.0 will be removed soon.
 
