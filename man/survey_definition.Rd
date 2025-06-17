@@ -19,6 +19,7 @@ They are defined by \code{\link{platform_define_survey}} usually in the platform
 \seealso{
 Other survey: 
 \code{\link{SurveyLabeller}},
+\code{\link{keep_last_survey}()},
 \code{\link{survey_aliases}()},
 \code{\link{survey_labeller}()},
 \code{\link{survey_labels}()},

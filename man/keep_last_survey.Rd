@@ -7,9 +7,22 @@
 keep_last_survey(data)
 }
 \arguments{
-\item{data}{data.frame with at least (timestamp,person_id, id) columns}
+\item{data}{data.frame with at least (timestamp, person_id) columns}
 }
 \description{
-Some survey could have exactly the same timestamp
-So using this function is safer than only using timestamp
+Some survey could have exactly the same timestamp, for this case the first one is picked up
 }
+\seealso{
+Other survey: 
+\code{\link{SurveyLabeller}},
+\code{\link{survey_aliases}()},
+\code{\link{survey_definition}()},
+\code{\link{survey_labeller}()},
+\code{\link{survey_labels}()},
+\code{\link{survey_recode}()},
+\code{\link{survey_recodings}()},
+\code{\link{survey_rename_columns}()},
+\code{\link{survey_variable_recoding}()},
+\code{\link{survey_variables_like}()}
+}
+\concept{survey}
