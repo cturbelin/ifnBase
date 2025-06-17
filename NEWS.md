@@ -1,3 +1,7 @@
+# ifnBase 0.6.8
+
+* Fix option matrix$set.labels not used when passed as a vector in `upset_plot()`
+
 # ifnBase 0.6.7
 
 * Fix keep_last_survey() to avoid using 'id' column, which is not reliable in some case (with new platform data)
