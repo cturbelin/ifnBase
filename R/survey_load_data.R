@@ -1,6 +1,24 @@
 ##
 # Load Results & Participation data
 
+
+.Share$survey.results.hook = NULL
+
+#' Register a function to be applied on the data when loading data of a survey
+#' @param hook function with signature function(survey, data), returning transformed data
+#' @param force logical if TRUE force replacement if hook already exists, if FALSE raise an error
+register_survey_results_hook = function(hook, force=FALSE) {
+  if(!is.function(hook)) {
+    rlang::abort("`hook` must be a function")
+  }
+  if(!is.null(.Share$survey.results.hook)) {
+    if(!isTRUE(force)) {
+      rlang::abort(paste("`hook` is already defined for survey", sQuote(survey), "use `force` to override the hook"))
+    }
+  }
+  .Share$survey.results.hook = hook
+}
+
 #' load a survey results set
 #'
 #' survey_load_results loads results set for a given survey. It handles several features:
@@ -164,6 +182,12 @@ survey_load_results = function(survey, cols, geo=NULL, date=NULL, db.table=NULL,
 
   if(!is.null(geo)) {
     r = geo_normalize(r, columns=gg)
+  }
+
+  # Check if a loading hook is registered for this survey
+  hook = .Share$survey.results.hook
+  if(!is.null(hook)) {
+    r = hook(survey, r)
   }
 
   attr(r,'survey') <- survey
@@ -412,7 +436,6 @@ survey_participant_previous_season.single_table = function(season, ids=NULL, fro
   }
   previous
 }
-
 
 #' Load participants data
 #' @param active.account logical only active user account if TRUE
