@@ -50,25 +50,25 @@ General options :
 \section{Frequency plot options}{
 
 \describe{
-  \itemize{bar.color}{}
-  \itemize{bar.fill}{fill color}
-  \itemize{label}{label of the axis}
-  \itemize{prop}{list, Compute cumulative proportion options}
+  \item{bar.color}{}
+  \item{bar.fill}{fill color}
+  \item{label}{label of the axis}
+  \item{prop}{list, Compute cumulative proportion options}
 }
 }
 
 \section{Matrix plot options}{
 
 \describe{
-  \itemize{point.color}{Color of point}
-  \itemize{point.empty}{Color if set size is empty}
-  \itemize{point.size}{Size of the point}
-  \itemize{name.size}{Size of the name}
-  \itemize{grid.color}{Color of the grid}
-  \itemize{line.size}{Size of the line connecting association}
-  \itemize{line.color}{color of the line connecting association}
-  \itemize{set.labels}{vector of labels of each set name or function(lab) to get set label from set name}
-  \itemize{order.freq}{reorder set list by frequency}
+  \item{point.color}{Color of point}
+  \item{point.empty}{Color if set size is empty}
+  \item{point.size}{Size of the point}
+  \item{name.size}{Size of the name}
+  \item{grid.color}{Color of the grid}
+  \item{line.size}{Size of the line connecting association}
+  \item{line.color}{color of the line connecting association}
+  \item{set.labels}{vector of labels of each set name or function(lab) to get set label from set name}
+  \item{order.freq}{reorder set list by frequency}
  }
 }
 
