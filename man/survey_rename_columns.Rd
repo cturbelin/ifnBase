@@ -20,6 +20,7 @@ This function can be used when loading data stored in the database format (with 
 \seealso{
 Other survey: 
 \code{\link{SurveyLabeller}},
+\code{\link{keep_last_survey}()},
 \code{\link{survey_aliases}()},
 \code{\link{survey_definition}()},
 \code{\link{survey_labeller}()},

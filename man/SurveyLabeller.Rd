@@ -11,6 +11,7 @@ Labeller object expose several methods useful to manipulate labels set
 Survey section \link{concepts}
 
 Other survey: 
+\code{\link{keep_last_survey}()},
 \code{\link{survey_aliases}()},
 \code{\link{survey_definition}()},
 \code{\link{survey_labeller}()},

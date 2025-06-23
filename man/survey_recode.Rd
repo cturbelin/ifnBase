@@ -27,6 +27,7 @@ defined \code{\link{platform_define_survey}} usually in the platform file
 \seealso{
 Other survey: 
 \code{\link{SurveyLabeller}},
+\code{\link{keep_last_survey}()},
 \code{\link{survey_aliases}()},
 \code{\link{survey_definition}()},
 \code{\link{survey_labeller}()},

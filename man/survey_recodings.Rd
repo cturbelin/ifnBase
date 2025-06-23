@@ -18,6 +18,7 @@ Get all the recodings defined in a survey
 \seealso{
 Other survey: 
 \code{\link{SurveyLabeller}},
+\code{\link{keep_last_survey}()},
 \code{\link{survey_aliases}()},
 \code{\link{survey_definition}()},
 \code{\link{survey_labeller}()},

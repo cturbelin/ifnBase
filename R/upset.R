@@ -256,8 +256,11 @@ upset_plot <- function(data, sets, n.max=40, point_size=3, name_size_scale=1, ti
   if(!is.null(mat_opts$set.labels)) {
     if(is.function(mat_opts$set.labels)) {
       set_labels = mat_opts$set.labels(set_labels)
+    } else {
+      set_labels = mat_opts$set.labels
     }
   }
+
   mat = as.matrix(d[, n])
   mm <- expand.grid(group=seq(nrow(mat)), symptom=seq(ncol(mat)))
   mm <- data.frame(mm, intersection = as.vector(mat))

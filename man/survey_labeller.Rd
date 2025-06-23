@@ -19,6 +19,7 @@ Will to replace \code{\link{survey_labels}()} returns a \code{\link{SurveyLabell
 \seealso{
 Other survey: 
 \code{\link{SurveyLabeller}},
+\code{\link{keep_last_survey}()},
 \code{\link{survey_aliases}()},
 \code{\link{survey_definition}()},
 \code{\link{survey_labels}()},
