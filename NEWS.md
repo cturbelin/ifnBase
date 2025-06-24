@@ -1,3 +1,9 @@
+# ifnBase 1.0.0
+
+* Remove old functions related to old platform implementation : `survey_load_all()`, `survey_load_questions()`, `survey_load_options()`, `survey_load_translation`, `survey_question_id`
+* Add duckdb driver
+* Add `platform_generate_seasons()` and platform_set_seasons()`
+
 # ifnBase 0.6.8
 
 * Fix option matrix$set.labels not used when passed as a vector in `upset_plot()`
