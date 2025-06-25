@@ -22,7 +22,7 @@
 .Share = new.env()
 
 # Hold translations
-.Share$i18n = list()
+.Share$i18n = fastmap::fastmap()
 
 #' Get package option from name
 #' From 'ifn' options() entry

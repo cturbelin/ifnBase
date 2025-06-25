@@ -14,10 +14,12 @@
 #' @param debug show verbose messages when loading a file
 #' @export
 i18n_load <- function(..., language=NULL, debug=F) {
- if( is.null(language) ) language = .Share$language
+ if( is.null(language) ) {
+   language = .Share$language
+ }
  files = list(...)
  for(file in files) {
-   if( grepl("/$",file) ) {
+   if( grepl("/$", file) ) {
     f = swMisc::get_r_file(paste0(file, language))
    } else {
      f = swMisc::get_r_file(paste(file, language, sep='.'))
@@ -45,7 +47,7 @@ i18n_load <- function(..., language=NULL, debug=F) {
        env = r
      }
      # Update i18n with new ones
-     .Share$i18n = merge_list(env, .Share$i18n)
+     i18n_set(!!!env)
    }
  }
  invisible()
@@ -69,11 +71,9 @@ i18n <- function(x) {
 #' @rdname i18n
 #' @export
 i18n.default <- function(x) {
- n = names(.Share$i18n)
- i = match(x, n)
- f = !is.na(i)
- if( any(f) ) {
-	x[ f ] = unlist(.Share$i18n[ i[f] ])
+ for(i in seq_along(x)) {
+   v = as.character(x[i])
+   x[i] = .Share$i18n$get(v, v)
  }
  x
 }
@@ -129,11 +129,20 @@ i18n_names = function(data) {
   data
 }
 
+#' Register new translations from a list
+#' @param ... named value for text to be translated
+#' @export
 i18n_set = function(...) {
-  r = rlang::dots_list(..., .ignore_empty = "all", .homonyms = "error")
-  trans = .Share$i18n
-  for(n in names(r)) {
-    trans[[n]] = r[[n]]
+  values = rlang::dots_list(..., .ignore_empty = "all", .homonyms = "error")
+  nn = names(values)
+  for(i in seq_along(values)) {
+    key = nn[i]
+    trans = values[[i]]
+    if(key == "") {
+      rlang::warn(paste("i18n doesnt have name value ", i, " with text ", dQuote(trans)))
+    } else {
+      .Share$i18n$set(key, trans)
+    }
   }
-  .Share$i18n = trans
 }
+

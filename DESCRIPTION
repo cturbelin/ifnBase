@@ -10,7 +10,8 @@ Imports:
   rlang (>= 0.4.7),
   R6 (>= 2.2),
   utils,
-  stats
+  stats,
+  fastmap
 Depends: 
   R (>= 3.6.0)
 Suggests: 
