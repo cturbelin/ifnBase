@@ -411,7 +411,7 @@ load_population_age <- function(geo, year, age.breaks=NULL, version=NULL, ...) {
 #' @param overall logical compute overall population (population by age, at the uppest geo level)
 #'
 #' @noRd
-aggregate_pop_age = function(pop, year, geo, age.breaks=NULL, type=NULL, col_geo, overall) {
+aggregate_pop_age = function(pop, year, geo, age.breaks=NULL, type=NULL, col_geo, overall, .attr=NULL) {
   # Restrict on type if necessary
   if( !is.null(type) ) {
     pop = pop[ geo_is_type(geo, type, pop[, col_geo]), ]
@@ -434,6 +434,13 @@ aggregate_pop_age = function(pop, year, geo, age.breaks=NULL, type=NULL, col_geo
     }
     pop = aggregate(as.list(pop[, c('all','male','female')]), pop[ , column, drop=FALSE],  sum)
   }
+
+  if(!is.null(.attr)) {
+    for(n in names(.attr)) {
+      attr(pop, n) <- .attr[[n]]
+    }
+  }
+
   pop
 }
 
@@ -453,6 +460,12 @@ aggregate_pop_age = function(pop, year, geo, age.breaks=NULL, type=NULL, col_geo
 load_population_age.impl <- function(loader_type, geo, year, age.breaks=NULL, type=NULL, country=NULL,...) {
 
   overall = F # if true make the overall sum by age (used when geo is null)
+
+  .attr = list( # Attributes to pass to final data.frame
+    "geo"= geo,
+    "loader_type"=loader_type
+  )
+
   if( is.null(geo) ) {
     ll = geo_hierarchy()
     geo = ll[length(ll)] # consider the last upper level
@@ -470,8 +483,17 @@ load_population_age.impl <- function(loader_type, geo, year, age.breaks=NULL, ty
   # This is only for the european database.
   use.country = can_use_country(country)
 
+  use.lastyear = isTRUE(attr(year, "max_available"))
+
   if(loader_type == "db") {
-    query = paste0('select "',col_geo,'", "age_min" as "age.min", "age_max" as "age.max", "all","male","female" from pop_age5_',geo,' where "year"=',year)
+
+    if(use.lastyear) {
+      op_year = '<='
+    } else {
+      op_year = '='
+    }
+
+    query = paste0('select "',col_geo,'", "age_min" as "age.min", "age_max" as "age.max", "all","male","female" from pop_age5_',geo,' where "year"', op_year ,year)
     if(use.country) {
       query = paste0(query, ' and ', db_equal("country", country))
     }
@@ -503,10 +525,9 @@ load_population_age.impl <- function(loader_type, geo, year, age.breaks=NULL, ty
       rlang::abort(paste0("File ", sQuote(file)," doesnt exists"))
     }
 
+    .attr$file = file
+
     pop = utils::read.csv2(file)
-
-    pop = pop[ pop$year %in% year, ]
-
 
     if(nrow(pop) > 0) {
 
@@ -521,15 +542,33 @@ load_population_age.impl <- function(loader_type, geo, year, age.breaks=NULL, ty
       }
     }
 
-
-
   }
+
+  if(use.lastyear) {
+      max.year = max(pop$year[ pop$year <= year ])
+      pop = pop[ pop$year == max.year, ]
+      if(max.year < year) {
+        rlang::warn(paste0("Population by age for year ",year," is not available, using population from year ", max.year))
+      }
+      .attr$max.year = year
+  } else {
+      pop = pop[ pop$year %in% year, ]
+  }
+
+  .attr$year = year
 
   if(nrow(pop) == 0) {
     rlang::warn(paste("No population for year", year,"at", geo, " level"))
     return(pop)
   }
 
-  aggregate_pop_age(pop, geo=geo, year=year, age.breaks=age.breaks, type=type, col_geo=col_geo, overall = overall)
+  aggregate_pop_age(pop, geo=geo, year=year, age.breaks=age.breaks, type=type, col_geo=col_geo, overall = overall, .attr = .attr)
 
+}
+
+#' Allow the population year to be the last available
+#' @export
+max_year_available=function(year) {
+  attr(year, "max_available") <- TRUE
+  year
 }

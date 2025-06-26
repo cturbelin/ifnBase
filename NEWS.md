@@ -1,5 +1,6 @@
 # ifnBase 1.0.0
 
+* Add `max_year_available()` to load population using the last year available if requested year is not available.
 * Remove old functions related to old platform implementation : `survey_load_all()`, `survey_load_questions()`, `survey_load_options()`, `survey_load_translation`, `survey_question_id`
 * Add duckdb driver
 * Add `platform_generate_seasons()` and platform_set_seasons()`
