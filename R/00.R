@@ -12,6 +12,7 @@
 #' @importFrom swMisc merge_list ending_slash get_r_file
 #' @importFrom rlang abort `:=`
 #' @importFrom R6 R6Class
+#' @importFrom fastmap fastmap
 #' @import dplyr
 #' @import ggplot2
 "_PACKAGE"

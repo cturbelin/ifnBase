@@ -733,7 +733,7 @@ platform_season_history <- function(season, dates, ...) {
 }
 
 #' Set all the seasons from a list
-#' seasons list must have season number as key
+#' @param seasons list must have season number as key
 #' @export
 platform_set_seasons = function(seasons) {
   .Share$historical.tables = seasons

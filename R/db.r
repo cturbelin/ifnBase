@@ -82,7 +82,7 @@ dbConnect.RSQLite <- function(dsn) {
   dbiConnect <- DBI::dbConnect
 
   args = list(
-    dub::SQLite()
+    RSQLite::SQLite()
   )
 
   for(n in names(dsn)) {

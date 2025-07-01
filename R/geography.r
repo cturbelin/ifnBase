@@ -567,6 +567,12 @@ load_population_age.impl <- function(loader_type, geo, year, age.breaks=NULL, ty
 }
 
 #' Allow the population year to be the last available
+#'
+#' This function wrap the requested year number adding attribute to inform the population
+#' loader that it can provide population of previous years if the requested year is not available
+#' This allow to use an older population if the population data source is not up to date yet.
+#'
+#' @param year requested year
 #' @export
 max_year_available=function(year) {
   attr(year, "max_available") <- TRUE
