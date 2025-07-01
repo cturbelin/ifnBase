@@ -2,12 +2,13 @@
 % Please edit documentation in R/platform.R
 \name{platform_set_seasons}
 \alias{platform_set_seasons}
-\title{Set all the seasons from a list
-seasons list must have season number as key}
+\title{Set all the seasons from a list}
 \usage{
 platform_set_seasons(seasons)
 }
+\arguments{
+\item{seasons}{list must have season number as key}
+}
 \description{
 Set all the seasons from a list
-seasons list must have season number as key
 }

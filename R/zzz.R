@@ -31,6 +31,11 @@
       oo[[name]] <- get(old.name, envir = env)
     }
   }
+
+  if(hasName(oo, "base.out.path")) {
+    warning("`OUT_PATH` is not handled by this package and wont have any effect")
+  }
+
   # BASE_PATH
   # In case of base path defined, it is assumed the workspace is organized
   # with a share/ directory holding

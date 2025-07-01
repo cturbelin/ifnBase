@@ -6,6 +6,11 @@
 \usage{
 max_year_available(year)
 }
+\arguments{
+\item{year}{requested year}
+}
 \description{
-Allow the population year to be the last available
+This function wrap the requested year number adding attribute to inform the population
+loader that it can provide population of previous years if the requested year is not available
+This allow to use an older population if the population data source is not up to date yet.
 }
