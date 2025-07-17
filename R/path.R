@@ -2,7 +2,12 @@
 
 to_path = function(path_name, file) {
   path = get_option(path_name)
-
+  if(!is.null(path) && path != "") {
+    path = ending_slash(path)
+  } else {
+    path = ""
+  }
+  paste0(path, file)
 }
 
 #' Get file in lib path
@@ -10,7 +15,7 @@ to_path = function(path_name, file) {
 #' @param file file name to load
 #' @export
 share.lib.path <- function(file) {
-  paste0(get_option("share.lib.path"), file)
+  to_path("share.lib.path", file)
 }
 
 #' return the path of a file in cache files
@@ -18,7 +23,7 @@ share.lib.path <- function(file) {
 #' @param file file name to load
 #' @export
 share.cache.path <- function(file='') {
-  paste0(get_option('share.cache'), file)
+  to_path('share.cache', file)
 }
 
 #' path of a file in data
@@ -26,7 +31,7 @@ share.cache.path <- function(file='') {
 #' @param file file name to load
 #' @export
 share.data.path <- function(file='') {
-  paste0(get_option('share.data'), file)
+  to_path('share.data', file)
 }
 
 #' path of a file in share/ directory
@@ -34,7 +39,7 @@ share.data.path <- function(file='') {
 #' @param file file name to load
 #' @export
 share_path <- function(file='') {
- paste0(get_option('share.path'), file)
+  to_path('share.path', file)
 }
 
 #' @rdname share_path
