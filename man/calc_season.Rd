@@ -10,7 +10,8 @@ calc_season(d)
 \item{d}{date to compute season number from}
 }
 \description{
-Currently the season is defined from september to august of the next year and the season number is the year of the september month
+Warning, old season definition using a fixed season start date for all years.
+The season is defined from september to august of the next year and the season number is the year of the september month
 (i.e. the first year of the season).
 }
 \details{

@@ -99,7 +99,7 @@ get_historical_season_start = function() {
 }
 
 #' Compute season number of a date form historical seasons definition
-#' @returns
+#' @returns season number for each date
 #' @export
 calc_season_of_date = function(date) {
   if(!inherits(date, "Date")) {
