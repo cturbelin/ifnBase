@@ -9,6 +9,10 @@ New features:
 * Add duckdb driver
 * Add `platform_generate_seasons()` and `platform_set_seasons()`
 
+# ifnBase 0.6.9
+
+* Add function `calc_season_of_date()`
+
 # ifnBase 0.6.8
 
 * Fix option matrix$set.labels not used when passed as a vector in `upset_plot()`

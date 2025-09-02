@@ -174,7 +174,8 @@ calc_season_fixed = function(inc,
 
 #' Return the season number of a yearweek or a Date
 #'
-#' Currently the season is defined from september to august of the next year and the season number is the year of the september month
+#' Warning, old season definition using a fixed season start date for all years.
+#' The season is defined from september to august of the next year and the season number is the year of the september month
 #' (i.e. the first year of the season).
 #'
 #' A season number is the number of the year of the september month in the season. So for the season 2010-2011, the season number is 2010,

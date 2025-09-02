@@ -90,3 +90,36 @@ parse_season = function(season, accept.several=FALSE) {
   }
   s
 }
+
+#' Get start date for each season from historical seasons definition
+#'
+#' @returns vector of start date, season number as name
+get_historical_season_start = function() {
+  as.Date(sapply(get_historical_tables(), \(s) s$dates$start))
+}
+
+#' Compute season number of a date form historical seasons definition
+#' @returns
+#' @export
+calc_season_of_date = function(date) {
+  if(!inherits(date, "Date")) {
+    org.date = date
+    date = as.Date(date)
+    if(is.na(date)) {
+      rlang::abort(paste("Cannot compute season for NA value, casted from ", sQuote(org.date)))
+    }
+  }
+  starts = get_historical_season_start()
+  sn = sapply(date, function(d) {
+    i = max(which(starts <= d))
+    start = starts[i]
+    season = names(start)
+    if(as.integer(d - start) > 365) {
+      rlang::warn(paste("Season ",season,", duration with date ", sQuote(d), "is over 365 days"))
+    }
+    season = as.integer(season)
+    attr(season, "season_start") <- start
+    season
+  })
+  sn
+}
