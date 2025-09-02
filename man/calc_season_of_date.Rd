@@ -6,6 +6,9 @@
 \usage{
 calc_season_of_date(date)
 }
+\value{
+season number for each date
+}
 \description{
 Compute season number of a date form historical seasons definition
 }
