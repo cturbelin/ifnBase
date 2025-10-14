@@ -123,5 +123,3 @@ calc_season_of_date = function(date) {
   })
   sn
 }
-
-

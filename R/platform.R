@@ -732,6 +732,14 @@ platform_season_history <- function(season, dates, ...) {
   .Share$historical.tables[[as.character(season)]] <- def
 }
 
+#' Set all the seasons from a list
+#' @param seasons list must have season number as key
+#' @export
+platform_set_seasons = function(seasons) {
+  .Share$historical.tables = seasons
+}
+
+
 #' Define  platform options
 #' @param ... list of options to set
 #'
@@ -883,4 +891,46 @@ can_use_country = function(country) {
   return(FALSE)
 }
 
+#' Generate Default dates bound of a season using 1st of September
+#' Season are defined from 1s September of season year, to next 31 august
+#' @param season season number
+#' @param start cutting date as month-day, default is 1st of September
+default_season_dates = function(season, start="09-01") {
+  date.start = as.Date(paste0(season, "-", start))
+  date.end = as.Date(paste0(season + 1, "-", start)) - 1
+  list(start=date.start, end=date.end)
+}
 
+
+#' Generate historical tables for seasons until now
+#' @param from season number starting
+#' @param tables list of tables
+#' @param year.pop year of the population to use for the season, can be a fixed number of a function with season number as argument
+#' @param dates function(season) return list(start, end) with date bound of the seasons, if null use default_season_dates()
+#' @export
+platform_generate_seasons = function(from, tables, year.pop=NULL, dates=NULL) {
+  current = calc_season(Sys.Date())
+  if(from > current) {
+    rlang::abort(paste0("`from` cannot be greater than the current season number (", current,")"))
+  }
+  hh = list()
+
+  if(is.null(dates)) {
+    dates = default_season_dates
+  }
+
+  for(season in seq.int(from, current)) {
+    h = tables
+    if(!is.null(year.pop)) {
+      if(is.function(year.pop)) {
+        h$year.pop = year.pop(season)
+      } else {
+        year.pop = year.pop
+      }
+    }
+    h$dates = dates(season)
+    h = structure(h, class="season_definition")
+    hh[[as.character(season)]] = h
+  }
+  hh
+}

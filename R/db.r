@@ -10,17 +10,20 @@ dbConnect <- function() {
   driver = get_option('db_driver')
   dsn = get_option('db_dsn')
 
-  online = !is.null(driver) && !is.null(dsn) && driver %in% c('RPostgreSQL','RODBC', 'RSQLite')
+  init_func = get0(paste0("dbConnect.", driver), mode="function", envir = topenv())
+
+  online = !is.null(driver) && !is.null(dsn) && !is.null(init_func)
+
+  if(is.null(init_func)) {
+    rlang::warn(paste("Unknown driver", sQuote(driver), "cannot connect to database"))
+  }
 
   if(online) {
-    init_func = get(paste0("dbConnect.", driver), mode="function", envir = topenv())
     query_func = get(paste0("dbQuery.", driver), mode="function", envir = topenv())
-
     .Share$dbQuery <- query_func
-
     init_func(dsn)
   } else {
-    message("Unknown driver, using offline mode")
+    message("No db driver provided, using offline mode")
     .Share$dbQuery = function(...) {
       message("Offline driver nothing is done")
     }
@@ -109,6 +112,45 @@ dbQuery.RSQLite <- function(..., show.errors = T, dbHandle=NULL) {
   str(.Share$dbLastError)
   return(-1)
 }
+
+dbConnect.duckdb <- function(dsn) {
+  if( !requireNamespace("duckdb") ) {
+    rlang::abort("duckdb needed to use this driver")
+  }
+  dbiConnect <- DBI::dbConnect
+
+  args = list(
+    duckdb::duckdb()
+  )
+
+  for(n in names(dsn)) {
+    args[[n]] = dsn[[n]]
+  }
+
+  .Share$dbHandle <- do.call(dbiConnect, args)
+  .Share$dbHandle
+}
+
+dbQuery.duckdb <- function(..., show.errors = T, dbHandle=NULL) {
+  if( is.null(dbHandle) ) {
+    dbHandle = .Share$dbHandle
+  }
+  query = paste0(...)
+  if(isTRUE(.Share$debug.query)) {
+    debug_query(query)
+  }
+  stm <- DBI::dbGetQuery(dbHandle, query)
+  if( is.data.frame(stm) || (is.logical(stm) && stm )) {
+    return( stm )
+  }
+  # handle error
+  .Share$dbLastError <- DBI::dbGetException(dbHandle)
+  cat('SQLite error', "\n")
+  cat('query : ', query, "\n")
+  str(.Share$dbLastError)
+  return(-1)
+}
+
 
 # Connect to DB
 dbConnect.RODBC <- function(dsn) {

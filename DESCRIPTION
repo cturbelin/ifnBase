@@ -10,7 +10,8 @@ Imports:
   rlang (>= 0.4.7),
   R6 (>= 2.2),
   utils,
-  stats
+  stats,
+  fastmap
 Depends: 
   R (>= 3.6.0)
 Suggests: 
@@ -21,13 +22,15 @@ Suggests:
     DBI,
     RODBC,
     RSQLite,
+    duckdb,
     RColorBrewer,
     svglite,
     epitools,
     knitr,
     scales,
     testthat,
-    rmarkdown
+    rmarkdown,
+    workspace
 URL: https://github.com/cturbelin/ifnBase
 Additional_repositories: https://cran.sentiweb.fr/
 BugReports: https://github.com/cturbelin/ifnBase/issues
@@ -41,4 +44,4 @@ LazyData: true
 RoxygenNote: 7.3.2
 VignetteBuilder: knitr
 NeedsCompilation: no
-Remotes: sentiweb/swMisc
+Remotes: sentiweb/swMisc sentiweb/workspace

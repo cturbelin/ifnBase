@@ -45,6 +45,5 @@ Features :
 * Misc
   * Provides internationalization set of functions `i18n*`() allowing the use of language independent labels, translatable on render time
   * ISO 8601 Week computation & manipulation yearweek number
-  * Filesystem path abstraction function init.path(), my.path() to write settings independent programs
-  
+
 

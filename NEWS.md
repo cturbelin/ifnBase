@@ -1,3 +1,14 @@
+# ifnBase 1.0.0
+
+Breaking changes:
+* Paths function `init.path()`, `my.path()`, `create_path()`, `add_path_prefix()` are removed (transferred to  package `workspace`)
+* Remove old functions related to old platform implementation : `survey_load_all()`, `survey_load_questions()`, `survey_load_options()`, `survey_load_translation`, `survey_question_id`
+
+New features:
+* Add `max_year_available()` to load population using the last year available if requested year is not available.
+* Add duckdb driver
+* Add `platform_generate_seasons()` and `platform_set_seasons()`
+
 # ifnBase 0.6.9
 
 * Add function `calc_season_of_date()`
@@ -139,6 +150,7 @@
 * add functions to manage paths : `get_current_paths()`, `add_path_prefix()`
 
 # ifnBase 0.4.1
+
 * use roxygen 7
 * fix recoding name for `main.activity` variable
 * recoding are now S3 class `survey_recode` allowing pretty print
@@ -169,6 +181,7 @@
 * Fix function name
 
 # ifnBase 0.3.1
+
 * add `compute_weekly_syndromes` to create syndrome columns in weekly using several kind of strategies
 * add `complete_intake_strategy()` and `complete_intake()` for intake survey completion accross seasons
 * add `load_results_for_incidence` to load & prepare data in order to compute incidence
@@ -176,6 +189,7 @@
 * add `SyndromeProviderClass` as base R6 class for syndrome provider classes
 
 # ifnBase 0.3
+
 * `SyndromeProviderRS2019` R6 class compute 2019 revised syndrom definition
 * adding incidence functions as `R6` classes `IncidenceRS2014` and `IncidenceDailyRS2014`
 * fix `plot_age_pyramid()` scale
