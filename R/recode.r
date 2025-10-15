@@ -309,17 +309,31 @@ survey_recode_all  <- function(data, survey, warn=FALSE, check_mapping=NULL) {
 }
 
 
-#' Recode weekly dates
-#' Recode weekly dates
+#' Recodes weekly dates
+#' Recodes weekly dates ensure sympt.start, fever.start & sympt.end are Date and restrict
+#' data to the current date of the survey (date after submission will be replaced by NA)
 #' @param weekly weekly data
 recode_weekly_date = function(weekly) {
 
-  if(!is(weekly$sympt.start,"Date")) {
-    weekly$sympt.start = as.Date(as.character(weekly$sympt.start))
+  if(hasName(weekly, "sympt.start")) {
+
+    if(!is(weekly$sympt.start,"Date")) {
+      weekly$sympt.start = as.Date(as.character(weekly$sympt.start))
+    }
+
+    weekly$sympt.start[ !is.na(weekly$sympt.start) & weekly$sympt.start > weekly$date ] <- NA
+
   }
 
-  if(!is(weekly$fever.start,"Date")) {
-    weekly$fever.start = as.Date(as.character(weekly$fever.start))
+  if(hasName(weekly, "fever.start")) {
+
+    if(!is(weekly$fever.start,"Date")) {
+      weekly$fever.start = as.Date(as.character(weekly$fever.start))
+    }
+
+    # Set date in the future to NA (not possible cases)
+    weekly$fever.start[ !is.na(weekly$fever.start) & weekly$fever.start > weekly$date ] <- NA
+
   }
 
   if(hasName(weekly, "sympt.end")) {
@@ -330,10 +344,6 @@ recode_weekly_date = function(weekly) {
     weekly$sympt.end[ !is.na(weekly$sympt.end) & weekly$sympt.end > weekly$date ] <- NA
 
   }
-
-  # Set date in the future to NA (not possible cases)
-  weekly$sympt.start[ !is.na(weekly$sympt.start) & weekly$sympt.start > weekly$date ] <- NA
-  weekly$fever.start[ !is.na(weekly$fever.start) & weekly$fever.start > weekly$date ] <- NA
 
   attr(weekly, "recode_weekly_date") <- TRUE
 

@@ -2,8 +2,9 @@
 % Please edit documentation in R/recode.r
 \name{recode_weekly_date}
 \alias{recode_weekly_date}
-\title{Recode weekly dates
-Recode weekly dates}
+\title{Recodes weekly dates
+Recodes weekly dates ensure sympt.start, fever.start & sympt.end are Date and restrict
+data to the current date of the survey (date after submission will be replaced by NA)}
 \usage{
 recode_weekly_date(weekly)
 }
@@ -11,6 +12,7 @@ recode_weekly_date(weekly)
 \item{weekly}{weekly data}
 }
 \description{
-Recode weekly dates
-Recode weekly dates
+Recodes weekly dates
+Recodes weekly dates ensure sympt.start, fever.start & sympt.end are Date and restrict
+data to the current date of the survey (date after submission will be replaced by NA)
 }
