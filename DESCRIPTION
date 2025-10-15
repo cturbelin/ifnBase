@@ -1,7 +1,7 @@
 Package: ifnBase
 Type: Package
 Title: InfluenzaNet Data Analysis Base
-Version: 1.0.0
+Version: 1.0.1
 Imports:
   methods,
   swMisc,
@@ -13,7 +13,7 @@ Imports:
   stats,
   fastmap
 Depends: 
-  R (>= 3.6.0)
+  R (>= 4.0)
 Suggests: 
     cowplot,
     tidyr (>= 1.0),
@@ -44,4 +44,4 @@ LazyData: true
 RoxygenNote: 7.3.2
 VignetteBuilder: knitr
 NeedsCompilation: no
-Remotes: sentiweb/swMisc sentiweb/workspace
+Remotes: github::sentiweb/swMisc github::sentiweb/workspace

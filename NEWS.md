@@ -1,3 +1,10 @@
+
+# ifnBase 1.0.1
+
+Minor fix:
+
+* recode_weekly() only recodes `sympt.start`, `fever.start` and `sympt.end` if columns are provided
+
 # ifnBase 1.0.0
 
 Breaking changes:
