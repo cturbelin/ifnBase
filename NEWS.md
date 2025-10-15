@@ -1,17 +1,20 @@
 
 # ifnBase 1.0.1
 
-Minor fix:
+## Minor fix:
 
+* Fix remotes reference in DESCRIPTION adding 'github::' prefix
 * recode_weekly() only recodes `sympt.start`, `fever.start` and `sympt.end` if columns are provided
 
 # ifnBase 1.0.0
 
-Breaking changes:
+## Breaking changes:
+
 * Paths function `init.path()`, `my.path()`, `create_path()`, `add_path_prefix()` are removed (transferred to  package `workspace`)
 * Remove old functions related to old platform implementation : `survey_load_all()`, `survey_load_questions()`, `survey_load_options()`, `survey_load_translation`, `survey_question_id`
 
-New features:
+## New features:
+
 * Add `max_year_available()` to load population using the last year available if requested year is not available.
 * Add duckdb driver
 * Add `platform_generate_seasons()` and `platform_set_seasons()`
