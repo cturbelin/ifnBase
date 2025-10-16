@@ -4,10 +4,12 @@
 \alias{i18n_set}
 \title{Register new translations from a list}
 \usage{
-i18n_set(...)
+i18n_set(..., .from = NULL)
 }
 \arguments{
 \item{...}{named value for text to be translated}
+
+\item{.from}{text to use in case of duplicate entry in the warning message}
 }
 \description{
 Register new translations from a list

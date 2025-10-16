@@ -47,7 +47,7 @@ i18n_load <- function(..., language=NULL, debug=F) {
        env = r
      }
      # Update i18n with new ones
-     i18n_set(!!!env)
+     i18n_set(!!!env, .from=f)
    }
  }
  invisible()
@@ -131,9 +131,11 @@ i18n_names = function(data) {
 
 #' Register new translations from a list
 #' @param ... named value for text to be translated
+#' @param .from text to use in case of duplicate entry in the warning message
 #' @export
-i18n_set = function(...) {
-  values = rlang::dots_list(..., .ignore_empty = "all", .homonyms = "error")
+i18n_set = function(..., .from=NULL) {
+  values = rlang::dots_list(..., .ignore_empty = "all", .homonyms = "keep")
+  values = i18n_check_duplicates(values, from = .from)
   nn = names(values)
   for(i in seq_along(values)) {
     key = nn[i]
@@ -146,3 +148,28 @@ i18n_set = function(...) {
   }
 }
 
+#' Check for duplicate entry in names of the provided list
+#' Only keep the last entry in case of duplicate
+#' @param values named list of entries
+#' @param from text to use
+i18n_check_duplicates = function(values, from=NULL) {
+  nn = names(values)
+  tt = table(nn)
+  tt = tt[ tt > 1]
+  if(length(tt) > 1) {
+    if(is.null(from)) {
+      in_msg = ""
+    } else {
+      in_msg = paste(" in", sQuote(from))
+    }
+    for(name in names(tt)) {
+      indexes = which(nn == name)
+      rlang::warn(paste0("Duplicate key ",sQuote(name)," at position ", paste(indexes, collapse = ", "), in_msg))
+      # keep only last
+      indexes = indexes[-length(indexes)]
+      values = values[ -indexes ]
+    }
+    rlang::warn("In case of duplicates in translation set only last entry is kept")
+  }
+  values
+}
